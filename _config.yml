@@ -1,9 +1,9 @@
 # Site settings
-title: LZ Blog
-SEOTitle: 尖耳熊的博客 | LZ Blog
+title: XiaoZhi Blog
+SEOTitle: 尖耳熊的博客 | XZ Blog
 header-img: img/post-bg-desk.jpg
 email: lizhizhi7@outlook.com
-description: "Every failure is leading towards success."
+description: "Right here waiting for you."
 keyword: "LZ Blog, MATLAB, R, ML, Python, Machine Learning"
 url: "http://lizhizhi7.github.io"          # your host, for absolute URL
 baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
@@ -11,7 +11,7 @@ github_repo: "https://github.com/lizhizhi7/lizhizhi7.github.io" # you code repos
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "Goals determine what you going to be!"
+sidebar-about-description: "Good Good Study , Day Day Up"
 sidebar-avatar: /img/about_me.JPG     # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
@@ -98,9 +98,6 @@ service-worker: true
 # Friends
 friends: [
     {
-        title: "WY",
-        href: "http://zhengwuyang.com"
-    },{
         title: "简书·BY",
         href: "http://www.jianshu.com/u/e71990ada2fd"
     },{
