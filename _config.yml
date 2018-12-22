@@ -14,8 +14,6 @@ sidebar: true                           # whether or not using Sidebar.
 sidebar-about-description: "Good Good Study , Day Day Up"
 sidebar-avatar: /img/about_me.JPG     # use absolute URL, seeing it's used in both `/` and `/about/`
 
-
-
 # SNS settings
 RSS: false
 # weibo_username:     
@@ -23,10 +21,10 @@ zhihu_username:     li-zhi-93-94
 github_username:    lizhizhi7
 facebook_username:  lee.minizhi
 jianshu_username:   a5f544474e9c
-#twitter_username:   
+#twitter_username:
 
-
-
+# 存储
+picURL: "http://pjyyga2z4.bkt.clouddn.com/"
 
 # Build settings
 # from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
@@ -35,14 +33,9 @@ paginate: 10
 exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
 anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
 
-
-
 # Gems
 # from PR#40, to support local preview for Jekyll 3.0
 plugins: [jekyll-paginate]
-
-
-
 
 # Markdown settings
 # replace redcarpet to kramdown,
@@ -52,8 +45,6 @@ markdown: kramdown
 highlighter: rouge
 kramdown:
   input: GFM                            # use Github Flavored Markdown !important
-
-
 
 # 评论系统
 # Disqus（https://disqus.com/）
@@ -69,9 +60,7 @@ gitalk:
   admin: lizhizhi7
   distractionFreeMode: true #是否启用类似FB的阴影遮罩
 
-
 # 统计
-
 # Analytics settings
 # Baidu Analytics
 # ba_track_id: b50bf2b12b5338a1845e33832976fd68
@@ -80,20 +69,13 @@ gitalk:
 # ga_track_id: 'UA-90855596-1'            # Format: UA-xxxxxx-xx
 # ga_domain: auto            # 默认的是 auto, 这里我是自定义了的域名，你如果没有自己的域名，需要改成auto
 
-
-
-
 # Featured Tags
 featured-tags: true                     # 是否使用首页标签
 featured-condition-size: 1              # 相同标签数量大于这个数，才会出现在首页
 
-
-
 # Progressive Web Apps
 chrome-tab-theme-color: "#000000"
 service-worker: true
-
-
 
 # Friends
 friends: [
@@ -106,5 +88,11 @@ friends: [
     },{
         title: "Apple Developer",
         href: "https://developer.apple.com/"
+    },{
+        title: "Android",
+        href: "https://www.android.com/"
+    },{
+        title: "Android Developer",
+        href: "https://developer.android.com/"
     }
 ]
