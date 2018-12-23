@@ -5,7 +5,7 @@ header-img: img/post-bg-desk.jpg
 email: lizhizhi7@outlook.com
 description: "Right here waiting for you."
 keyword: "LZ Blog, MATLAB, R, ML, Python, Machine Learning"
-url: "http://lizhizhi7.github.io"          # your host, for absolute URL
+url: "https://minizhi.cn"          # your host, for absolute URL
 baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
 github_repo: "https://github.com/lizhizhi7/lizhizhi7.github.io" # you code repository
 
