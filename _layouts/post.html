@@ -27,6 +27,7 @@ layout: default
     }
     {% endif %}
 </style>
+
 <header class="intro-header" >
     <div class="header-mask"></div>
     <div class="container">
@@ -207,6 +208,26 @@ layout: default
   });
 </script>
 <script type="text/javascript" src="{{ "/js/MathJax/MathJax.js?config=TeX-MML-AM_CHTML" | prepend: site.baseurl }}"></script>
+
+<!-- jQuery -->
+<script src="{{ "/js/jquery.min.js " | prepend: site.baseurl }}"></script>
+
+ <!--Sequence css font js-->
+<link rel="stylesheet" href="{{ "/js/Sequence/css/sequence-diagram-min.css" | prepend: site.baseurl }}">
+<script src="{{ "/js/Sequence/js/underscore-min.js" | prepend: site.baseurl }}"></script>
+<!-- Snap.svg -->
+<script src="{{ "/js/Sequence/js/snap.svg-min.js" | prepend: site.baseurl }}"></script>
+<!-- or Raphael -->
+<!--<script src="../js/raphael.min.js"></script>-->
+<script src="{{ "/js/Sequence/fonts/daniel/daniel_700.font.js" | prepend: site.baseurl }}"></script>
+<script src="{{ "/js/Sequence/js/webfont.js" | prepend: site.baseurl }}"></script>
+<script src="{{ "/js/Sequence/js/sequence-diagram-min.js" | prepend: site.baseurl }}"></script>
+<script src="{{ "/js/Sequence/js/sequence-diagram-snap-min.js" | prepend: site.baseurl }}"></script>
+
+<!--Sequence JS-->
+<script>
+  $(".language-sequence").sequenceDiagram({theme: 'hand'});
+</script>
 
 {% if site.anchorjs %}
 <!-- async load function -->
