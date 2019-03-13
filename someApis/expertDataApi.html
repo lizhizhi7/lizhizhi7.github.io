@@ -1,0 +1,303 @@
+<!DOCTYPE HTML><html><head><title>ExpertsData API documentation</title><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="generator" content="https://github.com/raml2html/raml2html 7.2.0"><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"><script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script><script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script><script type="text/javascript">
+      $(document).ready(function() {
+        $('.page-header pre code, .top-resource-description pre code, .modal-body pre code').each(function(i, block) {
+          hljs.highlightBlock(block);
+        });
+
+        $('[data-toggle]').click(function() {
+          var selector = $(this).data('target') + ' pre code';
+          $(selector).each(function(i, block) {
+            hljs.highlightBlock(block);
+          });
+        });
+
+        // open modal on hashes like #_action_get
+        $(window).bind('hashchange', function(e) {
+          var anchor_id = document.location.hash.substr(1); //strip #
+          var element = $('#' + anchor_id);
+
+          // do we have such element + is it a modal?  --> show it
+          if (element.length && element.hasClass('modal')) {
+            element.modal('show');
+          }
+        });
+
+        // execute hashchange on first page load
+        $(window).trigger('hashchange');
+
+        // remove url fragment on modal hide
+        $('.modal').on('hidden.bs.modal', function() {
+          try {
+            if (history && history.replaceState) {
+                history.replaceState({}, '', '#');
+            }
+          } catch(e) {}
+        });
+      });
+    </script><style>
+      .hljs {
+        background: transparent;
+      }
+      .parent {
+        color: #999;
+      }
+      .list-group-item > .badge {
+        float: none;
+        margin-right: 6px;
+      }
+      .panel-title > .methods {
+        float: right;
+      }
+      .badge {
+        border-radius: 0;
+        text-transform: uppercase;
+        width: 70px;
+        font-weight: normal;
+        color: #f3f3f6;
+        line-height: normal;
+      }
+      .badge_get {
+        background-color: #63a8e2;
+      }
+      .badge_post {
+        background-color: #6cbd7d;
+      }
+      .badge_put {
+        background-color: #22bac4;
+      }
+      .badge_delete {
+        background-color: #d26460;
+      }
+      .badge_patch {
+        background-color: #ccc444;
+      }
+      .list-group, .panel-group {
+        margin-bottom: 0;
+      }
+      .panel-group .panel+.panel-white {
+        margin-top: 0;
+      }
+      .panel-group .panel-white {
+        border-bottom: 1px solid #F5F5F5;
+        border-radius: 0;
+      }
+      .panel-white:last-child {
+        border-bottom-color: white;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+      }
+      .panel-white .panel-heading {
+        background: white;
+      }
+      .tab-pane ul {
+        padding-left: 2em;
+      }
+      .tab-pane h1 {
+        font-size: 1.3em;
+      }
+      .tab-pane h2 {
+        font-size: 1.2em;
+        padding-bottom: 4px;
+        border-bottom: 1px solid #ddd;
+      }
+      .tab-pane h3 {
+        font-size: 1.1em;
+      }
+      .tab-content {
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        padding: 10px;
+      }
+      #sidebar {
+        margin-top: 30px;
+        padding-right: 5px;
+        overflow: auto;
+        height: 90%;
+      }
+      .top-resource-description {
+        border-bottom: 1px solid #ddd;
+        background: #fcfcfc;
+        padding: 15px 15px 0 15px;
+        margin: -15px -15px 10px -15px;
+      }
+      .resource-description {
+        border-bottom: 1px solid #fcfcfc;
+        background: #fcfcfc;
+        padding: 15px 15px 0 15px;
+        margin: -15px -15px 10px -15px;
+      }
+      .resource-description p:last-child {
+        margin: 0;
+      }
+      .list-group .badge {
+        float: left;
+      }
+      .method_description {
+        margin-left: 85px;
+      }
+      .method_description p:last-child {
+        margin: 0;
+      }
+      .list-group-item {
+        cursor: pointer;
+      }
+      .list-group-item:hover {
+        background-color: #f5f5f5;
+      }
+      pre code {
+        overflow: auto;
+        word-wrap: normal;
+        white-space: pre;
+      }
+      .items {
+        background: #f5f5f5;
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 9.5px;
+        margin: 0 0 10px;
+        font-size: 13px;
+        line-height: 1.42857143;
+      }
+      .examples {
+        margin-left: 0.5em;
+      }
+      .resource-modal li > ul {
+        margin-bottom: 1em;
+      }
+    </style></head><body data-spy="scroll" data-target="#sidebar"><div class="container"><div class="row"><div class="col-md-9" role="main"><div class="page-header"><h1>ExpertsData API documentation <small>version v0.1 beta</small></h1><p>http://api.samplehost.com</p></div><div class="panel panel-default"><div class="panel-heading"><h3 id="login" class="panel-title">/login</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white resource-modal"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_login"><span class="parent"></span>/login</a> <span class="methods"><a href="#login_post"><span class="badge badge_post">post</span></a></span></h4></div><div id="panel_login" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#login_post'" class="list-group-item"><span class="badge badge_post">post</span><div class="method_description"><p>简单登陆接口</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="login_post"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_post">post</span> <span class="parent"></span>/login</h4></div><div class="modal-body"><div class="alert alert-info"><p>简单登陆接口</p></div><ul class="nav nav-tabs"><li class="active"><a href="#login_post_request" data-toggle="tab">Request</a></li><li><a href="#login_post_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="login_post_request"><h3>Query Parameters</h3><ul><li><strong>userName</strong>: <em>required (string)</em><p>用户名</p></li><li><strong>password</strong>: <em>required (string)</em><p>MD5密码</p></li></ul></div><div class="tab-pane" id="login_post_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><strong>Properties</strong><ul><li><strong>status</strong>: <em>required (string)</em><p>请求的状态</p></li><li><strong>message</strong>: <em>required (string)</em><p>状态的附加消息</p></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+"status": "ok",
+"message":"login successfully!"
+}
+</code></pre></div><h2>HTTP status code <a href="http://httpstatus.es/401" target="_blank">401</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><strong>Properties</strong><ul><li><strong>status</strong>: <em>required (string)</em><p>请求的状态</p></li><li><strong>message</strong>: <em>required (string)</em><p>状态的附加消息</p></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+"status": "error",
+"message":"uncorrect username or password!"
+}
+</code></pre></div></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="experts" class="panel-title">/experts</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white resource-modal"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_experts"><span class="parent"></span>/experts</a> <span class="methods"><a href="#experts_get"><span class="badge badge_get">get</span></a> <a href="#experts_post"><span class="badge badge_post">post</span></a></span></h4></div><div id="panel_experts" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#experts_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>获取当前的所有专家信息</p></div><div class="clearfix"></div></div><div onclick="window.location.href = '#experts_post'" class="list-group-item"><span class="badge badge_post">post</span><div class="method_description"><p>添加一个专家信息</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="experts_get"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent"></span>/experts</h4></div><div class="modal-body"><div class="alert alert-info"><p>获取当前的所有专家信息</p></div><ul class="nav nav-tabs"><li class="active"><a href="#experts_get_request" data-toggle="tab">Request</a></li><li><a href="#experts_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="experts_get_request"><h3>Query Parameters</h3><ul><li><strong>Page</strong>: <em>required (integer)</em><p>页数</p></li><li><strong>numPerPage</strong>: <em>required (integer)</em><p>每一页的数据个数</p></li></ul></div><div class="tab-pane" id="experts_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: array of object</p><p><strong>Items</strong>: expertInfo</p><div class="items"><ul><li><strong>name</strong>: <em>required (string)</em><p>专家姓名</p></li><li><strong>sex</strong>: <em>required (integer)</em><p>性别，0男/1女</p></li><li><strong>organization</strong>: <em>required (string)</em><p>工作单位</p></li><li><strong>phone</strong>: <em>required (string)</em><p>联系方式</p></li><li><strong>remark</strong>: <em>(array of string)</em><p>备注内容</p></li><li><strong>id</strong>: <em>required (string)</em><p>专家编码</p></li></ul></div><p><strong>Example</strong>:</p><div class="examples"><pre><code>[{
+"name": "陈某",
+"sex": 0,
+"organization": "东莞市某某制造有限公司" ,
+"phone": "13929291111",
+"id": "A010101_123456"
+} , {
+"name": "李某",
+"sex": 0,
+"organization": "东莞市某某制造有限公司" ,
+"phone": "13929292222",
+"id": "A010101_456123"
+}]
+</code></pre></div></div></div></div></div></div></div><div class="modal fade" tabindex="0" id="experts_post"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_post">post</span> <span class="parent"></span>/experts</h4></div><div class="modal-body"><div class="alert alert-info"><p>添加一个专家信息</p></div><ul class="nav nav-tabs"><li class="active"><a href="#experts_post_request" data-toggle="tab">Request</a></li><li><a href="#experts_post_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="experts_post_request"><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><strong>Properties</strong><ul><li><strong>name</strong>: <em>required (string)</em><p>专家姓名</p></li><li><strong>sex</strong>: <em>required (integer)</em><p>性别，0男/1女</p></li><li><strong>organization</strong>: <em>required (string)</em><p>工作单位</p></li><li><strong>phone</strong>: <em>required (string)</em><p>联系方式</p></li><li><strong>remark</strong>: <em>(array of string)</em><p>备注内容</p></li><li><strong>id</strong>: <em>required (string)</em><p>专家编码</p></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+"name": "陈某",
+"sex": 0,
+"organization": "东莞市某某制造有限公司" ,
+"phone": "13929291111",
+"id": "A010102_123789"
+}
+</code></pre></div></div><div class="tab-pane" id="experts_post_response"><h2>HTTP status code <a href="http://httpstatus.es/201" target="_blank">201</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><strong>Properties</strong><ul><li><strong>status</strong>: <em>required (string)</em><p>请求的状态</p></li><li><strong>message</strong>: <em>required (string)</em><p>状态的附加消息</p></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+"status": "ok",
+"message":"expert created!"
+}
+</code></pre></div><h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><strong>Properties</strong><ul><li><strong>status</strong>: <em>required (string)</em><p>请求的状态</p></li><li><strong>message</strong>: <em>required (string)</em><p>状态的附加消息</p></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+"status": "error",
+"message":"bad request!"
+}
+</code></pre></div></div></div></div></div></div></div></div><div class="panel panel-white resource-modal"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_experts__id_"><span class="parent">/experts</span>/{id}</a> <span class="methods"><a href="#experts__id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_experts__id_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#experts__id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>访问某个具体的专家信息</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="experts__id__get"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/experts</span>/{id}</h4></div><div class="modal-body"><div class="alert alert-info"><p>访问某个具体的专家信息</p></div><ul class="nav nav-tabs"><li class="active"><a href="#experts__id__get_request" data-toggle="tab">Request</a></li><li><a href="#experts__id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="experts__id__get_request"><h3>URI Parameters</h3><ul><li><strong>id</strong>: <em>required (string)</em><p>专家id</p></li></ul></div><div class="tab-pane" id="experts__id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><strong>Properties</strong><ul><li><strong>name</strong>: <em>required (string)</em><p>专家姓名</p></li><li><strong>sex</strong>: <em>required (integer)</em><p>性别，0男/1女</p></li><li><strong>organization</strong>: <em>required (string)</em><p>工作单位</p></li><li><strong>phone</strong>: <em>required (string)</em><p>联系方式</p></li><li><strong>remark</strong>: <em>(array of string)</em><p>备注内容</p></li><li><strong>id</strong>: <em>required (string)</em><p>专家编码</p></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+"name": "陈某",
+"sex": 0,
+"organization": "东莞市某某制造有限公司" ,
+"phone": "13929291111",
+"id": "A010102_123789"
+}
+</code></pre></div><h2>HTTP status code <a href="http://httpstatus.es/404" target="_blank">404</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><strong>Properties</strong><ul><li><strong>status</strong>: <em>required (string)</em><p>请求的状态</p></li><li><strong>message</strong>: <em>required (string)</em><p>状态的附加消息</p></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+"status": "errror",
+"message":"id not found!"
+}
+</code></pre></div></div></div></div></div></div></div></div><div class="panel panel-white resource-modal"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_experts__domain_"><span class="parent">/experts</span>/{domain}</a> <span class="methods"><a href="#experts__domain__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_experts__domain_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#experts__domain__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>访问某领域的所有专家信息</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="experts__domain__get"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/experts</span>/{domain}</h4></div><div class="modal-body"><div class="alert alert-info"><p>访问某领域的所有专家信息</p></div><ul class="nav nav-tabs"><li class="active"><a href="#experts__domain__get_request" data-toggle="tab">Request</a></li><li><a href="#experts__domain__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="experts__domain__get_request"><h3>URI Parameters</h3><ul><li><strong>domain</strong>: <em>required (string)</em><p>专家领域</p></li></ul><h3>Query Parameters</h3><ul><li><strong>localtion</strong>: <em>(string)</em><p>是否有地域限制</p></li></ul></div><div class="tab-pane" id="experts__domain__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: array of object</p><p><strong>Items</strong>: expertInfo</p><div class="items"><ul><li><strong>name</strong>: <em>required (string)</em><p>专家姓名</p></li><li><strong>sex</strong>: <em>required (integer)</em><p>性别，0男/1女</p></li><li><strong>organization</strong>: <em>required (string)</em><p>工作单位</p></li><li><strong>phone</strong>: <em>required (string)</em><p>联系方式</p></li><li><strong>remark</strong>: <em>(array of string)</em><p>备注内容</p></li><li><strong>id</strong>: <em>required (string)</em><p>专家编码</p></li></ul></div><p><strong>Example</strong>:</p><div class="examples"><pre><code>[{
+"name": "陈某",
+"sex": 0,
+"organization": "东莞市某某制造有限公司" ,
+"phone": "13929291111",
+"id": "A010203_789456"
+} , {
+"name": "李某",
+"sex": 0,
+"organization": "东莞市某某制造有限公司" ,
+"phone": "13929292222",
+"id": "A020301_147852"
+}]
+</code></pre></div><h2>HTTP status code <a href="http://httpstatus.es/401" target="_blank">401</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><strong>Properties</strong><ul><li><strong>status</strong>: <em>required (string)</em><p>请求的状态</p></li><li><strong>message</strong>: <em>required (string)</em><p>状态的附加消息</p></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+"status": "error",
+"message":"unauthorized!"
+}
+</code></pre></div><h2>HTTP status code <a href="http://httpstatus.es/404" target="_blank">404</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><strong>Properties</strong><ul><li><strong>status</strong>: <em>required (string)</em><p>请求的状态</p></li><li><strong>message</strong>: <em>required (string)</em><p>状态的附加消息</p></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+"status": "errror",
+"message":"domain not found!"
+}
+</code></pre></div></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="bids" class="panel-title">/bids</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white resource-modal"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_bids"><span class="parent"></span>/bids</a> <span class="methods"><a href="#bids_get"><span class="badge badge_get">get</span></a> <a href="#bids_post"><span class="badge badge_post">post</span></a></span></h4></div><div id="panel_bids" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#bids_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>获取当前的所有投标书信息</p></div><div class="clearfix"></div></div><div onclick="window.location.href = '#bids_post'" class="list-group-item"><span class="badge badge_post">post</span><div class="method_description"><p>添加一个投标书信息</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="bids_get"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent"></span>/bids</h4></div><div class="modal-body"><div class="alert alert-info"><p>获取当前的所有投标书信息</p></div><ul class="nav nav-tabs"><li class="active"><a href="#bids_get_request" data-toggle="tab">Request</a></li><li><a href="#bids_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="bids_get_request"><h3>Query Parameters</h3><ul><li><strong>Page</strong>: <em>required (integer)</em><p>页数</p></li><li><strong>numPerPage</strong>: <em>required (integer)</em><p>每一页的数据个数</p></li></ul></div><div class="tab-pane" id="bids_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: array of object</p><p><strong>Items</strong>: bidInfo</p><div class="items"><ul><li><strong>title</strong>: <em>required (string)</em><p>招标书名称</p></li><li><strong>content</strong>: <em>required (string)</em><p>招标书内容</p></li><li><strong>beginTime</strong>: <em>required (datetime-only)</em><p>开始时间</p></li><li><strong>endTime</strong>: <em>required (datetime-only)</em><p>结束时间</p></li><li><strong>domain</strong>: <em>required (string)</em><p>投标书方向</p></li><li><strong>id</strong>: <em>required (string)</em><p>投标书编码</p></li></ul></div><p><strong>Example</strong>:</p><div class="examples"><pre><code>[{
+"title": "某某某招标",
+"content": "......",
+"beginTime": "2019-01-13T13:13:13",
+"endTime": "2019-02-13T13:13:13" ,
+"domain": "材料",
+"id": "A030205_852369"
+} , {
+"title": "某某某招标",
+"content": "......",
+"beginTime": "2019-01-14T14:14:14",
+"endTime": "2019-02-14T14:14:14" ,
+"domain": "建筑",
+"id": "A020301_456132"
+}]
+</code></pre></div></div></div></div></div></div></div><div class="modal fade" tabindex="0" id="bids_post"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_post">post</span> <span class="parent"></span>/bids</h4></div><div class="modal-body"><div class="alert alert-info"><p>添加一个投标书信息</p></div><ul class="nav nav-tabs"><li class="active"><a href="#bids_post_request" data-toggle="tab">Request</a></li><li><a href="#bids_post_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="bids_post_request"><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><strong>Properties</strong><ul><li><strong>title</strong>: <em>required (string)</em><p>招标书名称</p></li><li><strong>content</strong>: <em>required (string)</em><p>招标书内容</p></li><li><strong>beginTime</strong>: <em>required (datetime-only)</em><p>开始时间</p></li><li><strong>endTime</strong>: <em>required (datetime-only)</em><p>结束时间</p></li><li><strong>domain</strong>: <em>required (string)</em><p>投标书方向</p></li><li><strong>id</strong>: <em>required (string)</em><p>投标书编码</p></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+"title": "某某某招标",
+"content": "......",
+"beginTime": "2019-01-13T13:13:13",
+"endTime": "2019-02-13T13:13:13" ,
+"domain": "材料",
+"id": "A020301_456132"
+}
+</code></pre></div></div><div class="tab-pane" id="bids_post_response"><h2>HTTP status code <a href="http://httpstatus.es/201" target="_blank">201</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><strong>Properties</strong><ul><li><strong>status</strong>: <em>required (string)</em><p>请求的状态</p></li><li><strong>message</strong>: <em>required (string)</em><p>状态的附加消息</p></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+"status": "ok",
+"message":"bid created!"
+}
+</code></pre></div><h2>HTTP status code <a href="http://httpstatus.es/400" target="_blank">400</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><strong>Properties</strong><ul><li><strong>status</strong>: <em>required (string)</em><p>请求的状态</p></li><li><strong>message</strong>: <em>required (string)</em><p>状态的附加消息</p></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+"status": "error",
+"message":"bad request!"
+}
+</code></pre></div></div></div></div></div></div></div></div><div class="panel panel-white resource-modal"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_bids__id_"><span class="parent">/bids</span>/{id}</a> <span class="methods"><a href="#bids__id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_bids__id_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#bids__id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>访问某个具体的招标书信息</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="bids__id__get"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/bids</span>/{id}</h4></div><div class="modal-body"><div class="alert alert-info"><p>访问某个具体的招标书信息</p></div><ul class="nav nav-tabs"><li class="active"><a href="#bids__id__get_request" data-toggle="tab">Request</a></li><li><a href="#bids__id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="bids__id__get_request"><h3>URI Parameters</h3><ul><li><strong>id</strong>: <em>required (string)</em><p>招标书id</p></li></ul></div><div class="tab-pane" id="bids__id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><strong>Properties</strong><ul><li><strong>title</strong>: <em>required (string)</em><p>招标书名称</p></li><li><strong>content</strong>: <em>required (string)</em><p>招标书内容</p></li><li><strong>beginTime</strong>: <em>required (datetime-only)</em><p>开始时间</p></li><li><strong>endTime</strong>: <em>required (datetime-only)</em><p>结束时间</p></li><li><strong>domain</strong>: <em>required (string)</em><p>投标书方向</p></li><li><strong>id</strong>: <em>required (string)</em><p>投标书编码</p></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+"title": "某某某招标",
+"content": "......",
+"beginTime": "2019-01-13T13:13:13",
+"endTime": "2019-02-13T13:13:13" ,
+"domain": "材料",
+"id": "A020301_456132"
+}
+</code></pre></div><h2>HTTP status code <a href="http://httpstatus.es/404" target="_blank">404</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><strong>Properties</strong><ul><li><strong>status</strong>: <em>required (string)</em><p>请求的状态</p></li><li><strong>message</strong>: <em>required (string)</em><p>状态的附加消息</p></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+"status": "errror",
+"message":"id not found!"
+}
+</code></pre></div></div></div></div></div></div></div></div><div class="panel panel-white resource-modal"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_bids__domain_"><span class="parent">/bids</span>/{domain}</a> <span class="methods"><a href="#bids__domain__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_bids__domain_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#bids__domain__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>访问某方向的所有招标信息</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="bids__domain__get"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/bids</span>/{domain}</h4></div><div class="modal-body"><div class="alert alert-info"><p>访问某方向的所有招标信息</p></div><ul class="nav nav-tabs"><li class="active"><a href="#bids__domain__get_request" data-toggle="tab">Request</a></li><li><a href="#bids__domain__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="bids__domain__get_request"><h3>URI Parameters</h3><ul><li><strong>domain</strong>: <em>required (string)</em><p>招标方向</p></li></ul></div><div class="tab-pane" id="bids__domain__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: array of object</p><p><strong>Items</strong>: bidInfo</p><div class="items"><ul><li><strong>title</strong>: <em>required (string)</em><p>招标书名称</p></li><li><strong>content</strong>: <em>required (string)</em><p>招标书内容</p></li><li><strong>beginTime</strong>: <em>required (datetime-only)</em><p>开始时间</p></li><li><strong>endTime</strong>: <em>required (datetime-only)</em><p>结束时间</p></li><li><strong>domain</strong>: <em>required (string)</em><p>投标书方向</p></li><li><strong>id</strong>: <em>required (string)</em><p>投标书编码</p></li></ul></div><p><strong>Example</strong>:</p><div class="examples"><pre><code>[{
+"title": "某某某招标",
+"content": "......",
+"beginTime": "2019-01-13T13:13:13",
+"endTime": "2019-02-13T13:13:13" ,
+"domain": "材料",
+"id": "A020301_456132"
+} , {
+"title": "某某某招标",
+"content": "......",
+"beginTime": "2019-01-14T14:14:14",
+"endTime": "2019-02-14T14:14:14" ,
+"domain": "建筑",
+"id": "A020301_456132"
+}]
+</code></pre></div><h2>HTTP status code <a href="http://httpstatus.es/401" target="_blank">401</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><strong>Properties</strong><ul><li><strong>status</strong>: <em>required (string)</em><p>请求的状态</p></li><li><strong>message</strong>: <em>required (string)</em><p>状态的附加消息</p></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+"status": "error",
+"message":"unauthorized!"
+}
+</code></pre></div><h2>HTTP status code <a href="http://httpstatus.es/404" target="_blank">404</a></h2><h3>Body</h3><p><strong>Media type</strong>: application/json</p><p><strong>Type</strong>: object</p><strong>Properties</strong><ul><li><strong>status</strong>: <em>required (string)</em><p>请求的状态</p></li><li><strong>message</strong>: <em>required (string)</em><p>状态的附加消息</p></li></ul><p><strong>Example</strong>:</p><div class="examples"><pre><code>{
+"status": "errror",
+"message":"domain not found!"
+}
+</code></pre></div></div></div></div></div></div></div></div></div></div></div></div><div class="col-md-3"><div id="sidebar" class="hidden-print affix" role="complementary"><ul class="nav nav-pills nav-stacked"><li><a href="#login">/login</a></li><li><a href="#experts">/experts</a></li><li><a href="#bids">/bids</a></li></ul></div></div></div></div></body></html>
