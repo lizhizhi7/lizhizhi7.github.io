@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Right here waiting for you.">
+    <meta name="keywords"  content="LZ Blog, MATLAB, R, ML, Python, Machine Learning">
+    <meta name="theme-color" content="#000000">
+    
+    <title>有关自动驾驶的数据集 - 尖耳熊的博客 | XZ Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2019/02/26/%E6%9C%89%E5%85%B3%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9B%86/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">XiaoZhi Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/background-selfdriving.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/background-selfdriving.jpg')
+    }
+
+    .table tbody tr td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table thead tr th {
+        vertical-align: middle;
+    }
+
+    .language-sequence {
+        text-align: center;
+    }
+
+    
+</style>
+
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#DATA" title="DATA">DATA</a>
+                        
+                        <a class="tag" href="/tags/#Self Driving" title="Self Driving">Self Driving</a>
+                        
+                        <a class="tag" href="/tags/#Machine Learning" title="Machine Learning">Machine Learning</a>
+                        
+                    </div>
+                    <h1>有关自动驾驶的数据集</h1>
+                    
+                    
+                    <h2 class="subheading">自动驾驶</h2>
+                    
+                    <span class="meta">Posted by Lee on February 26, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h4 id="kitti">KITTI</h4>
+
+<p><strong>数据集介绍</strong>
+发布于2009年，KITTI数据集由德国卡尔斯鲁厄理工学院和丰田美国技术研究院联合创办，主要于算法评测。<br />
+KITTI数据采集平台包括2个灰度摄像机，2个彩色摄像机，一个Velodyne 3D激光雷达，4个光学镜头，以及1个gps导航系统。一共细分为‘Road’, ‘City’, ‘Residential’, ‘Campus’ 和 ‘Person’五类数据；包含市区、乡村高速公路的数据，每张图像最多15辆车及30个行人，而且还包含不同程度的遮挡。整个数据集由389对立体图像和光流图，39.2公里视觉测距序列以及超过200,000 3D标注物体的图像组成。<br />
+KITTI数据集中，目标检测包括了车辆检测、行人检测、自行车三个单项，目标追踪包括车辆追踪、行人追踪两个单项，道路分割包括urban unmarked、urban marked、urban multiple marked三个场景及前三个场景的平均值urban road等四个单项；<br />
+数据集大小超过200G。KITTI数据集是无人驾驶学术圈使用最广泛的数据集之一了。</p>
+
+<p><a href="http://www.cvlibs.net/datasets/kitti/index.php"><strong>项目主页</strong></a><br />
+<a href="http://www.webmail.cvlibs.net/publications/Geiger2012CVPR.pdf"><strong>参考论文链接</strong></a></p>
+
+<h4 id="cityscapes">Cityscapes</h4>
+
+<p>发布于2016年，这是由奔驰采集的面向城市道路街景语义理解的数据集。Cityscapes专注于城市的街景主义理解，其本质就是一个计算机视觉语义分割数据集。提供的下载数据集中测试集和验证集有标注，测试集提供原图，无标注，可以把结果上传到项目主页，然后验证你算法。<br />
+Cityscapes包含50个城市不同场景、不同背景、不同季节的街景，提供5000张精细标注的图像、20000张粗略标注的图像、30类标注物体。用PASCAL VOC标准的intersection-over-union(IoU)得分来对算法性能进行评价。</p>
+
+<p><a href="https://www.cityscapes-dataset.com/"><strong>项目主页</strong></a><br />
+<a href="https://arxiv.org/pdf/1604.01685.pdf"><strong>参考论文链接</strong></a></p>
+
+<h4 id="apolloscape">ApolloScape</h4>
+
+<p>发布于2018年，是由百度Apollo提供的数据集。数据集中提供的图像分辨率为3384×2710，定义了共26个不同语义项的数据实例（例如汽车、自行车、行人、建筑、路灯等），而且将进一步涵盖更复杂的环境、天气和交通状况等。预计2018年数据集将完整发布包含20万帧的图像数据，包含对应的像素级标注和姿态信息。整个数据集将包含逐像素标注的高分辨率图像序列，以及场景语义分割级别的稠密3D Point的RGB视频。</p>
+
+<p><a href="http://apolloscape.auto/"><strong>项目主页</strong></a></p>
+
+<h4 id="mapillary">Mapillary</h4>
+
+<p>数据集介绍：共包含25,000个高分辨率图像（分为18,000个用于训练，2,000个验证，5,000个测试;平均分辨率约为900万像素），具有从200万个手动绘制的多边形的像素点注释；100个对象类别，其中60个实例特定（即枚举对象）；涵盖北美和南美，欧洲，非洲，亚洲和大洋洲的全球地理覆盖；天气条件（太阳，雨，雪，雾，阴霾）和捕获时间（黎明，白天，黄昏甚至夜晚）的高度变异性；相机传感器范围广泛，焦距变化，图像宽高比以及不同类型的相机噪音；不同的拍摄观点（从道路，人行道和越野）。</p>
+
+<p><a href="https://www.mapillary.com"><strong>项目主页</strong></a></p>
+
+<h4 id="bdd100k">BDD100K</h4>
+
+<p>UC Berkeley 发布于2018年，这是目前来说最大规模也是最多样化的驾驶视频数据集，这些数据具有四个主要特征：大规模，多样化，在真实的街道采集，并带有时间信息。</p>
+
+<ol>
+  <li>视频数据：100,000高清视频，累计时长超过1,100个小时，包含GPS位置，IMU数据和时间戳；</li>
+  <li>马路目标检测数据：标注超过100,000张图像，类别包含公共汽车，交通灯，交通标志，行人，自行车，卡车，摩托车，小汽车，火车和骑手；</li>
+  <li>马路目标分类数据：超过10,000张像素级道路目标标注的图片；</li>
+  <li>可行驶区域：提供了100,000张带有像素级可行驶区域的图片；</li>
+  <li>车道标记：多个城市的100,000张带有标注的图片。</li>
+</ol>
+
+<p><a href="https://bdd-data.berkeley.edu/"><strong>项目主页</strong></a><br />
+<a href="http://openaccess.thecvf.com/content_cvpr_2017/papers/Xu_End-To-End_Learning_of_CVPR_2017_paper.pdf"><strong>参考论文链接</strong></a></p>
+
+<h4 id="oxford-robotcar数据集">Oxford RobotCar数据集</h4>
+
+<p>发布于2014年，是在牛津大学校园内路测，总长度1010.64公里，历时一年半所采集的数据集。在各种天气条件下进行收集，包括大雨，夜间，阳光直射和积雪，也包含施工路段行驶场景，具有非常复杂的天气场景，尤其适合评测计算机视觉算法。</p>
+
+<p><a href="https://www.cityscapes-dataset.com/"><strong>数据集地址</strong></a><br />
+<a href="http://robotcar-dataset.robots.ox.ac.uk/images/robotcar_ijrr.pdf"><strong>参考论文链接</strong></a><br />
+<a href="http://ori.ox.ac.uk/publications/"><strong>参考论文链接</strong></a></p>
+
+<h4 id="commonai数据集">Common.ai数据集</h4>
+
+<p>发布于2016年，这是一段高速公路的视频数据集，包括10个可变大小的视频片段，以20Hz的频率记录。数据除了图像之外，还记录了一些测量值，如汽车速度，加速度，转向角，GPS坐标，陀螺仪角度。</p>
+
+<p><a href="https://github.com/commaai/research"><strong>数据集地址</strong></a><br />
+<a href="https://arxiv.org/pdf/1608.01230.pdf"><strong>参考论文链接</strong></a><br />
+<a href="https://github.com/commaai/research0"><strong>参考论文链接</strong></a></p>
+
+<h4 id="udacity数据集">Udacity数据集</h4>
+
+<p>发布于2016年，Udacity是Google开设的线上教育平台，其中有自动驾驶相关线上培训，它也为其自动驾驶算法比赛专门准备了数据集。这个数据集包括在加利福尼亚和邻近城市在白天条件下行驶拍摄的图像，为1920×1200分辨率的9423帧图像，包含超过65000个标签。数据集是由CuldAd使用机器学习算法和研究员共同进行标注。<br />
+除了车辆拍摄的图像以外，还包括车辆本身的属性和参数信息，例如经纬度、制动器、油门、转向度、转速。</p>
+
+<p><a href="https://github.com/udacity/self-driving-car/tree/master/datasets"><strong>数据集地址</strong></a><br />
+<a href="https://github.com/udacity/self-driving-car/tree/master/annotations"><strong>参考论文链接</strong></a></p>
+
+<h4 id="cvpr-workshop">CVPR Workshop</h4>
+
+<p>这是CVPR近几年举办的自动驾驶的workshop，由于深度学习的兴起，计算机视觉等技术被用于自动驾驶的目标检测，语义分割等领域，因此CVPR也开设了若干相关的workshop。具体的单元包括可行驶区域检测，路面的模板检测，跨域的语义分割，以及移动目标的实例级别的分割。</p>
+
+<h4 id="gta数据集">GTA数据集</h4>
+
+<p>英特尔的GTA的AI和这个虚拟世界给予了训练自动驾驶的可行性，一款赛车游戏《Grand Theft Auto 5》也被用来训练自动驾驶的模型，而且是一个相对廉价且适合初级人工智能探索的自动驾驶试验场。GTA是以语义分割为主，基于虚拟的游戏环境，但接近真实世界，其中几乎涵盖了各种各样的道路状况，包括山区、郊区和城市。还有各种各样的车辆，比如警车、救护车、出租车、货车等车型。</p>
+
+<p><a href="http://www.rockstargames.com/grandtheftauto/"><strong>数据集地址</strong></a></p>
+
+<h4 id="torcs数据集">TORCS数据集</h4>
+
+<p>TORCS是一种高度便携的多平台赛车模拟，被用作普通的赛车游戏，可以作为AI赛车游戏和研究平台。</p>
+
+<p><a href="http://torcs.sourceforge.net/"><strong>数据集地址</strong></a></p>
+
+<h4 id="nuscenes数据集">nuScenes数据集</h4>
+
+<p>发布于2018年，是由NuTonomy编辑的，并将于2019年推出最全的nuScenes数据集。采集了1000多个场景，其中包含140万幅图像、40万次激光雷达扫描（判断物体之间距离）和110万个三维边界框（用RGB相机、雷达和激光雷达组合检测的物体）。此次数据的搜集使用了6个摄像头、1个激光雷达、 5个毫米波雷达、GPS及惯导系统，包括了对于自动驾驶系统来说非常具有挑战性的复杂道路、天气条件等情况。</p>
+
+<p><a href="https://d3u7q4379vrm7e.cloudfront.net/download"><strong>数据集地址</strong></a></p>
+
+<h4 id="carla">CARLA</h4>
+
+<p>英特尔&amp;丰田联合开源城市驾驶模拟器CARLA<br />
+CARLA is an open-source simulator for autonomous driving research. CARLA has been developed from the ground up to support development, training, and validation of autonomous urban driving systems. In addition to open-source code and protocols, CARLA provides open digital assets (urban layouts, buildings, vehicles) that were created for this purpose and can be used freely. The simulation platform supports flexible specification of sensor suites and environmental conditions.</p>
+
+<p><a href="https://arxiv.org/pdf/1711.03938.pdf"><strong>参考论文链接</strong></a></p>
+
+<h4 id="carcraft">Carcraft</h4>
+
+<p>谷歌母公司Alphabet的自动驾驶子公司Waymo开发的一款软件，用来在诸如加州山景城和得克萨斯州奥斯汀等虚拟重建城市中测试无人驾驶汽车软件。该公司每天要开1287万公里的虚拟里程，专注于特别棘手的道路状况。<br />
+在虚拟的奥斯汀、山景城、凤凰城，以及那些模拟的测试场景里，有25000辆虚拟的无人车穿梭其中。它们每天总共要行驶800万英里（约1287万公里），去年一整年，Waymo的虚拟无人车行驶了25亿英里，而实体测试车全年累积的里程，只有300万英里。<br />
+另外，Waymo还在美国加州中央山谷地区的小城默塞德附近建了一个叫做castle的无人驾驶基地，综合了多种路况，利用多种道具建立了一个小型“城市”。</p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/02/26/%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97%E5%92%8C%E9%A2%84%E5%A4%84%E7%90%86/" data-toggle="tooltip" data-placement="top" title="数据清洗和预处理">
+                        Previous<br>
+                        <span>数据清洗和预处理</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/02/27/Python%E5%A5%BD%E7%94%A8%E7%9A%84%E4%BB%A3%E7%A0%81/" data-toggle="tooltip" data-placement="top" title="Python好用的代码">
+                        Next<br>
+                        <span>Python好用的代码</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="/js/md5.min.js"></script>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: '7194056b4e3867bdf12c',
+                    clientSecret: '0ee17ceedb52c45e6a8553399a0fbeaab0e9f43f',
+                    repo: 'lizhizhi7.github.io',
+                    owner: 'lizhizhi7',
+                    admin: ['lizhizhi7'],
+                    distractionFreeMode: true,
+                    id: md5(location.pathname),
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Git" title="Git" rel="4">
+                                    Git
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Android" title="Android" rel="10">
+                                    Android
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#YAML" title="YAML" rel="2">
+                                    YAML
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python" title="Python" rel="5">
+                                    Python
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Jupyter" title="Jupyter" rel="2">
+                                    Jupyter
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Android View" title="Android View" rel="4">
+                                    Android View
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MATLAB" title="MATLAB" rel="8">
+                                    MATLAB
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Java" title="Java" rel="13">
+                                    Java
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#NETWORK" title="NETWORK" rel="2">
+                                    NETWORK
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#HTTP" title="HTTP" rel="2">
+                                    HTTP
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MySQL" title="MySQL" rel="3">
+                                    MySQL
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#DataBase" title="DataBase" rel="4">
+                                    DataBase
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#化学前沿" title="化学前沿" rel="3">
+                                    化学前沿
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#DATA" title="DATA" rel="2">
+                                    DATA
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python3" title="Python3" rel="3">
+                                    Python3
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="https://apple.com">Apple</a></li>
+                    
+                        <li><a href="https://developer.apple.com/">Apple Developer</a></li>
+                    
+                        <li><a href="https://www.android.com/">Android</a></li>
+                    
+                        <li><a href="https://developer.android.com/">Android Developer</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!--MathJax-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    showProcessingMessages: false,
+    messageStyle: "none",
+    tex2jax: {
+        inlineMath: [["$","$"],["\\(","\\)"]],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+    },
+  });
+</script>
+<script type="text/javascript" src="/js/MathJax/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+ <!--Sequence css font js-->
+<link rel="stylesheet" href="/js/Sequence/css/sequence-diagram-min.css">
+<script src="/js/Sequence/js/underscore-min.js"></script>
+<!-- Snap.svg -->
+<script src="/js/Sequence/js/snap.svg-min.js"></script>
+<!-- or Raphael -->
+<!--<script src="../js/raphael.min.js"></script>-->
+<script src="/js/Sequence/fonts/daniel/daniel_700.font.js"></script>
+<script src="/js/Sequence/js/webfont.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-min.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-snap-min.js"></script>
+
+<!--Sequence JS-->
+<script>
+  $(".language-sequence").sequenceDiagram({theme: 'hand'});
+</script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a5f544474e9c">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/li-zhi-93-94">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/lee.minizhi">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/lizhizhi7">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; XiaoZhi Blog 2019
+                    <br>
+                    Theme on <a href="https://github.com/lizhizhi7/lizhizhi7.github.io">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=lizhizhi7&repo=lizhizhi7.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Right here waiting for you.">
+    <meta name="keywords"  content="LZ Blog, MATLAB, R, ML, Python, Machine Learning">
+    <meta name="theme-color" content="#000000">
+    
+    <title>SpringMVC基础配置 - 尖耳熊的博客 | XZ Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2019/01/11/SpringMVC%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">XiaoZhi Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/background-spring.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/background-spring.jpg')
+    }
+
+    .table tbody tr td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table thead tr th {
+        vertical-align: middle;
+    }
+
+    .language-sequence {
+        text-align: center;
+    }
+
+    
+</style>
+
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spring" title="Spring">Spring</a>
+                        
+                        <a class="tag" href="/tags/#Spring MVC" title="Spring MVC">Spring MVC</a>
+                        
+                        <a class="tag" href="/tags/#MVC" title="MVC">MVC</a>
+                        
+                    </div>
+                    <h1>SpringMVC基础配置</h1>
+                    
+                    
+                    <h2 class="subheading">SpringMVC</h2>
+                    
+                    <span class="meta">Posted by Lee on January 11, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h4 id="springmvc的优势">SpringMVC的优势</h4>
+
+<ol>
+  <li>角色划分：控制器(controller)、验证器(validator)、命令对象(command obect)、表单对象(form object)、模型对象(model object)、Servlet分发器(DispatcherServlet)、处理器映射(handler mapping)、试图解析器(view resoler)。每一个角色都可以由一个专门的对象来实现。</li>
+  <li>配置方式：可以使用XML配置，也可以使用代码来实现零配置（下面会说）</li>
+  <li>代码重用：可以使用现有的业务对象作为命令或表单对象，而不需要去扩展某个特定框架的基类。</li>
+  <li>restful风格：spring提供从最简单的URL映射，到复杂的、专用的定制策略。</li>
+  <li>灵活的model转换：使用基于Map的键/值对来达到轻易的与各种视图技术集成。</li>
+  <li>强大的标签库：使用在JSP编写更加容易。</li>
+  <li>性能比Struts2好</li>
+</ol>
+
+<h4 id="使用xml配置springmvc实例">使用xml配置SpringMVC实例</h4>
+
+<p>1.创建web项目，拷贝所需要的包，也可以使用maven来构建</p>
+
+<p>2.配置web.xml文件</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;web-app</span> <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="na">xmlns=</span><span class="s">"http://java.sun.com/xml/ns/javaee"</span> <span class="na">xsi:schemaLocation=</span><span class="s">"http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"</span> <span class="na">id=</span><span class="s">"WebApp_ID"</span> <span class="na">version=</span><span class="s">"3.0"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;display-name&gt;</span>Springmvc<span class="nt">&lt;/display-name&gt;</span>
+  <span class="nt">&lt;welcome-file-list&gt;</span>
+    <span class="nt">&lt;welcome-file&gt;</span>index.html<span class="nt">&lt;/welcome-file&gt;</span>
+    <span class="nt">&lt;welcome-file&gt;</span>index.htm<span class="nt">&lt;/welcome-file&gt;</span>
+    <span class="nt">&lt;welcome-file&gt;</span>index.jsp<span class="nt">&lt;/welcome-file&gt;</span>
+    <span class="nt">&lt;welcome-file&gt;</span>default.html<span class="nt">&lt;/welcome-file&gt;</span>
+    <span class="nt">&lt;welcome-file&gt;</span>default.htm<span class="nt">&lt;/welcome-file&gt;</span>
+    <span class="nt">&lt;welcome-file&gt;</span>default.jsp<span class="nt">&lt;/welcome-file&gt;</span>
+  <span class="nt">&lt;/welcome-file-list&gt;</span>
+  <span class="c">&lt;!-- Spring ContextLoaderListener --&gt;</span>
+  <span class="nt">&lt;listener&gt;</span>
+    <span class="nt">&lt;listener-class&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="nt">&lt;/listener-class&gt;</span>
+  <span class="nt">&lt;/listener&gt;</span>
+  <span class="c">&lt;!--配置Spring--&gt;</span>
+  <span class="nt">&lt;context-param&gt;</span>
+    <span class="nt">&lt;param-name&gt;</span>contextConfigLocation<span class="nt">&lt;/param-name&gt;</span>
+    <span class="nt">&lt;param-value&gt;</span>/WEB-INF/spring/applicationContext.xml<span class="nt">&lt;/param-value&gt;</span>
+  <span class="nt">&lt;/context-param&gt;</span>
+  <span class="c">&lt;!--配置SpringMVC--&gt;</span>
+  <span class="nt">&lt;servlet&gt;</span>
+    <span class="nt">&lt;servlet-name&gt;</span>spring-mvc<span class="nt">&lt;/servlet-name&gt;</span>
+    <span class="nt">&lt;servlet-class&gt;</span>
+        org.springframework.web.servlet.DispatcherServlet
+    <span class="nt">&lt;/servlet-class&gt;</span>
+    <span class="nt">&lt;init-param&gt;</span>  
+        <span class="nt">&lt;param-name&gt;</span>contextConfigLocation<span class="nt">&lt;/param-name&gt;</span>  
+        <span class="c">&lt;!--mvc的配置文件，最好在这里配置一下，以免找不文件而报错--&gt;</span>
+        <span class="nt">&lt;param-value&gt;</span>/WEB-INF/spring/spring-mvc-serlvet.xml<span class="nt">&lt;/param-value&gt;</span>  
+    <span class="nt">&lt;/init-param&gt;</span>  
+    <span class="c">&lt;!--服务器启动就加载--&gt;</span>
+    <span class="nt">&lt;load-on-startup&gt;</span>1<span class="nt">&lt;/load-on-startup&gt;</span>
+  <span class="nt">&lt;/servlet&gt;</span> 
+  <span class="nt">&lt;servlet-mapping&gt;</span>
+    <span class="nt">&lt;servlet-name&gt;</span>spring-mvc<span class="nt">&lt;/servlet-name&gt;</span>
+    <span class="nt">&lt;url-pattern&gt;</span>/<span class="nt">&lt;/url-pattern&gt;</span>
+  <span class="nt">&lt;/servlet-mapping&gt;</span>   
+<span class="nt">&lt;/web-app&gt;</span>
+</code></pre></div></div>
+
+<p>3.配置Spring参数</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+    <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+    <span class="na">xmlns:context=</span><span class="s">"http://www.springframework.org/schema/context"</span>
+    <span class="na">xmlns:mvc=</span><span class="s">"http://www.springframework.org/schema/mvc"</span>
+    <span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-4.3.xsd 
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context-4.3.xsd 
+      http://www.springframework.org/schema/mvc
+      http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd"</span><span class="nt">&gt;</span>
+    <span class="c">&lt;!-- 启用注解驱动,即解决了@Controller注解的使用前提配置 --&gt;</span>
+    <span class="nt">&lt;mvc:annotation-driven/&gt;</span>
+    <span class="c">&lt;!-- 在xml配置了这个标签后，spring可以自动去扫描base-pack下面或者子包下面的Java文件，
+     如果扫描到有@Component @Controller@Service等这些注解的类，则把这些类注册为bean
+           注意：如果配置了&lt;context:component-scan&gt;那么&lt;context:annotation-config/&gt;标签
+           就可以不用再xml中配置了，因为前者包含了后者  --&gt;</span> 
+    <span class="nt">&lt;context:component-scan</span> <span class="na">base-package=</span><span class="s">"com.xxxx.mvc"</span><span class="nt">&gt;&lt;/context:component-scan&gt;</span>
+<span class="nt">&lt;/beans&gt;</span>
+</code></pre></div></div>
+
+<p>4.SpringMVC配置文件</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span>  <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+    <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+    <span class="na">xmlns:p=</span><span class="s">"http://www.springframework.org/schema/p"</span>
+    <span class="na">xmlns:context=</span><span class="s">"http://www.springframework.org/schema/context"</span>
+    <span class="na">xmlns:mvc=</span><span class="s">"http://www.springframework.org/schema/mvc"</span>
+    <span class="na">xmlns:beans=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+    <span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-4.3.xsd 
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context-4.3.xsd 
+      http://www.springframework.org/schema/mvc
+      http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd"</span><span class="nt">&gt;</span>
+    <span class="c">&lt;!-- 配置视图解析器 --&gt;</span>
+    <span class="nt">&lt;bean</span>
+       <span class="na">class=</span><span class="s">"org.springframework.web.servlet.view.InternalResourceViewResolver"</span><span class="nt">&gt;</span>
+       <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"prefix"</span><span class="nt">&gt;</span>
+           <span class="nt">&lt;value&gt;</span>/WEB-INF/jsp/<span class="nt">&lt;/value&gt;</span>
+       <span class="nt">&lt;/property&gt;</span>
+       <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"suffix"</span><span class="nt">&gt;</span>
+           <span class="nt">&lt;value&gt;</span>.jsp<span class="nt">&lt;/value&gt;</span>
+       <span class="nt">&lt;/property&gt;</span>       
+   <span class="nt">&lt;/bean&gt;</span>
+   <span class="c">&lt;!-- 配置资源 --&gt;</span>
+   <span class="nt">&lt;mvc:resources</span> <span class="na">location=</span><span class="s">"/css"</span> <span class="na">mapping=</span><span class="s">"/css"</span><span class="nt">&gt;&lt;/mvc:resources&gt;</span>
+   <span class="nt">&lt;mvc:resources</span> <span class="na">location=</span><span class="s">"/js"</span> <span class="na">mapping=</span><span class="s">"/js"</span><span class="nt">&gt;&lt;/mvc:resources&gt;</span>
+   <span class="nt">&lt;mvc:resources</span> <span class="na">location=</span><span class="s">"/img"</span> <span class="na">mapping=</span><span class="s">"/img"</span><span class="nt">&gt;&lt;/mvc:resources&gt;</span>
+<span class="nt">&lt;/beans&gt;</span>
+</code></pre></div></div>
+
+<p>5.Controller类</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">xxxx</span><span class="o">.</span><span class="na">mvc</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.springframework.stereotype.Controller</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.stereotype.Service</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.ui.Model</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.RequestMapping</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.RequestParam</span><span class="o">;</span>
+
+<span class="cm">/**
+ *@description
+ *@author create by
+ *@date   
+ */</span>
+<span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloController</span> <span class="o">{</span>
+
+    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">index</span><span class="o">(</span><span class="n">Model</span> <span class="n">model</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"hello"</span><span class="o">);</span>
+         <span class="c1">//转到helloworld.jsp</span>
+         <span class="k">return</span> <span class="s">"hello"</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span><span class="o">=</span><span class="s">"/hello*"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">hello</span><span class="o">(</span><span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">hello</span> <span class="o">,</span><span class="n">Model</span> <span class="n">model</span><span class="o">)</span>
+    <span class="o">{</span>
+         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">hello</span><span class="o">);</span><span class="c1">//获取url请求的参数</span>
+         <span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"greeting"</span><span class="o">,</span> <span class="s">"Hello Spring MVC"</span><span class="o">);</span>
+         <span class="c1">//转到helloworld.jsp</span>
+         <span class="k">return</span> <span class="s">"helloworld"</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>6.hello.jsp</p>
+<div class="language-jsp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;%@ page </span><span class="na">language=</span><span class="s">"java"</span><span class="na"> contentType=</span><span class="s">"text/html; charset=ISO-8859-1"</span><span class="na">
+    pageEncoding=</span><span class="s">"ISO-8859-1"</span><span class="nt">%&gt;</span>
+<span class="cp">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+<span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"Content-Type"</span> <span class="na">content=</span><span class="s">"text/html; charset=ISO-8859-1"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;title&gt;</span>Insert title here<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+        <span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">"hello.do?${hello}"</span><span class="nt">&gt;</span><span class="c">&lt;!--传递请求参数--&gt;</span>
+              <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">"hello"</span> <span class="na">id=</span><span class="s">"hello"</span> <span class="na">type=</span><span class="s">"text"</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">"submit"</span> <span class="na">name=</span><span class="s">"submit"</span> <span class="na">type=</span><span class="s">"submit"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;/form&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<p>7.helloworld.jsp</p>
+<div class="language-jsp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;%@ page </span><span class="na">language=</span><span class="s">"java"</span><span class="na"> contentType=</span><span class="s">"text/html; charset=ISO-8859-1"</span><span class="na">
+    pageEncoding=</span><span class="s">"ISO-8859-1"</span><span class="nt">%&gt;</span>
+<span class="cp">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+<span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"Content-Type"</span> <span class="na">content=</span><span class="s">"text/html; charset=ISO-8859-1"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;title&gt;</span>Insert title here<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+        <span class="nt">&lt;h1&gt;</span>${greeting}<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<p>8.输入localhost:8080/SpringMVCTest/</p>
+
+<p>9.注意的细节</p>
+
+<ul>
+  <li>配置文件中版本号最好与你的jar版本号对应，比如我的Spring的jar包都是4.3的
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://www.springframework.org/schema/beans/spring-beans-4.3.xsd 
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-4.3.xsd 
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd"&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>注意配置文件的开头要配置成这样：</li>
+</ul>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;beans</span>  <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+</code></pre></div></div>
+
+<p>不能这样配置：</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;beans</span>  <span class="na">xmlns:bean=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+</code></pre></div></div>
+
+<p>会报异常：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Line 13 in XML document from ServletContext resource [/WEB-INF/spring/spring-mvc-serlvet.xml] is invalid; nested exception is org.xml.sax.SAXParseException; lineNumber: 13; columnNumber: 70; cvc-elt.1: 找不到元素 'beans' 的声明。
+</code></pre></div></div>
+
+<h4 id="springmvc零配置实现">SpringMVC零配置实现</h4>
+
+<p>HelloWorldInitializer实现WebApplicationInitializer替代web.xml。这个类在Servlet容器启动时就会加载</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">xxxx</span><span class="o">.</span><span class="na">config</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.servlet.ServletContext</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.ServletException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.ServletRegistration</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.springframework.web.WebApplicationInitializer</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.context.support.AnnotationConfigWebApplicationContext</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.DispatcherServlet</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer</span><span class="o">;</span>
+
+<span class="cm">/**
+ *@description 代替web.xml
+ *@author create by
+ *@date   
+ *此类在servlet容器启动时加载
+ */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldInitializer</span> <span class="kd">implements</span> <span class="n">WebApplicationInitializer</span> <span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStartup</span><span class="o">(</span><span class="n">ServletContext</span> <span class="n">container</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ServletException</span> <span class="o">{</span>
+        <span class="c1">// TODO Auto-generated method stub</span>
+        <span class="n">AnnotationConfigWebApplicationContext</span> <span class="n">ctx</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AnnotationConfigWebApplicationContext</span><span class="o">();</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="n">HelloWorldConfiguration</span><span class="o">.</span><span class="na">class</span><span class="o">);</span><span class="c1">//把我们的配置到这里相当于我们把--servlet.xml配置到web.xml里</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="na">setServletContext</span><span class="o">(</span><span class="n">container</span><span class="o">);</span>
+        <span class="c1">//相当于 &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;</span>
+        <span class="n">ServletRegistration</span><span class="o">.</span><span class="na">Dynamic</span> <span class="n">servlet</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="na">addServlet</span><span class="o">(</span><span class="s">"dispatcher"</span><span class="o">,</span> <span class="k">new</span> <span class="n">DispatcherServlet</span><span class="o">(</span><span class="n">ctx</span><span class="o">));</span>
+        <span class="c1">//&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;</span>
+        <span class="n">servlet</span><span class="o">.</span><span class="na">setLoadOnStartup</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="c1">// &lt;servlet-name&gt;spring-mvc&lt;/servlet-name&gt;url-pattern&gt;/&lt;/url-pattern&gt;</span>
+        <span class="n">servlet</span><span class="o">.</span><span class="na">addMapping</span><span class="o">(</span><span class="s">"/"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>也可以继承AbstractAnnotationConfigDispatcherServletInitializer然后实现 
+getRootConfigClasses() ；getServletConfigClasses() ；getServletMappings() 。其中getRootConfigClasses()相当于我们在web.xml中配置spring-mvc-servlet.xml。getServletMappings()方法就是相当于在web.xml文件中配置访问映射。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">xxxx</span><span class="o">.</span><span class="na">config</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.servlet.ServletContext</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.ServletException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.servlet.ServletRegistration</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.springframework.web.WebApplicationInitializer</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.context.support.AnnotationConfigWebApplicationContext</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.DispatcherServlet</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer</span><span class="o">;</span>
+
+<span class="cm">/**
+ *@description 代替web.xml
+ *@author create by
+ *@date   
+ *此类在servlet容器启动时加载
+ */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldInitializer</span> <span class="kd">extends</span> <span class="n">AbstractAnnotationConfigDispatcherServletInitializer</span>
+<span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="n">Class</span><span class="o">&lt;?&gt;[]</span> <span class="n">getRootConfigClasses</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// TODO Auto-generated method stub</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Class</span><span class="o">[]{</span><span class="n">HelloWorldConfiguration</span><span class="o">.</span><span class="na">class</span><span class="o">};</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="n">Class</span><span class="o">&lt;?&gt;[]</span> <span class="n">getServletConfigClasses</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// TODO Auto-generated method stub</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="n">String</span><span class="o">[]</span> <span class="nf">getServletMappings</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// TODO Auto-generated method stub</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">String</span><span class="o">[]{</span><span class="s">"/"</span><span class="o">};</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+
+<p>HelloWorldConfiguration替代spring-mvc-servlet.xml配置</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">xxxx</span><span class="o">.</span><span class="na">config</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.context.annotation.Bean</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.context.annotation.ComponentScan</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.context.annotation.Configuration</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.ViewResolver</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.config.annotation.EnableWebMvc</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.view.InternalResourceViewResolver</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.servlet.view.JstlView</span><span class="o">;</span>
+
+<span class="cm">/**
+ *@description 配置类相当于spring-mvc-servlet.xml
+ *@author create by 
+ *@date   
+ */</span>
+<span class="nd">@EnableWebMvc</span>
+<span class="nd">@Configuration</span>
+<span class="nd">@ComponentScan</span><span class="o">(</span><span class="n">basePackages</span> <span class="o">=</span> <span class="s">"com.xxxx.controller"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldConfiguration</span> <span class="o">{</span>
+
+    <span class="nd">@Bean</span>
+    <span class="kd">public</span> <span class="n">ViewResolver</span> <span class="nf">getViewResolver</span><span class="o">()</span>
+    <span class="o">{</span>
+        <span class="c1">//视图解析器</span>
+        <span class="n">InternalResourceViewResolver</span> <span class="n">resolver</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InternalResourceViewResolver</span><span class="o">();</span>
+        <span class="n">resolver</span><span class="o">.</span><span class="na">setViewClass</span><span class="o">(</span><span class="n">JstlView</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">resolver</span><span class="o">.</span><span class="na">setSuffix</span><span class="o">(</span><span class="s">".jsp"</span><span class="o">);</span>
+        <span class="n">resolver</span><span class="o">.</span><span class="na">setPrefix</span><span class="o">(</span><span class="s">"/WEB-INF/views/"</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">resolver</span><span class="o">;</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+
+<p>最后的效果和xml配置是一样的。</p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/01/08/Java%E8%AF%81%E4%B9%A6%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" data-toggle="tooltip" data-placement="top" title="Java证书库的使用">
+                        Previous<br>
+                        <span>Java证书库的使用</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/01/11/%E4%BB%A3%E7%90%86%E7%9A%84%E5%BB%BA%E7%AB%8B-%E4%B8%80/" data-toggle="tooltip" data-placement="top" title="代理的建立(一)">
+                        Next<br>
+                        <span>代理的建立(一)</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="/js/md5.min.js"></script>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: '7194056b4e3867bdf12c',
+                    clientSecret: '0ee17ceedb52c45e6a8553399a0fbeaab0e9f43f',
+                    repo: 'lizhizhi7.github.io',
+                    owner: 'lizhizhi7',
+                    admin: ['lizhizhi7'],
+                    distractionFreeMode: true,
+                    id: md5(location.pathname),
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Git" title="Git" rel="4">
+                                    Git
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Android" title="Android" rel="10">
+                                    Android
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#YAML" title="YAML" rel="2">
+                                    YAML
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python" title="Python" rel="5">
+                                    Python
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Jupyter" title="Jupyter" rel="2">
+                                    Jupyter
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Android View" title="Android View" rel="4">
+                                    Android View
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MATLAB" title="MATLAB" rel="8">
+                                    MATLAB
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Java" title="Java" rel="13">
+                                    Java
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#NETWORK" title="NETWORK" rel="2">
+                                    NETWORK
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#HTTP" title="HTTP" rel="2">
+                                    HTTP
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MySQL" title="MySQL" rel="3">
+                                    MySQL
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#DataBase" title="DataBase" rel="4">
+                                    DataBase
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#化学前沿" title="化学前沿" rel="3">
+                                    化学前沿
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#DATA" title="DATA" rel="2">
+                                    DATA
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python3" title="Python3" rel="3">
+                                    Python3
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="https://apple.com">Apple</a></li>
+                    
+                        <li><a href="https://developer.apple.com/">Apple Developer</a></li>
+                    
+                        <li><a href="https://www.android.com/">Android</a></li>
+                    
+                        <li><a href="https://developer.android.com/">Android Developer</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!--MathJax-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    showProcessingMessages: false,
+    messageStyle: "none",
+    tex2jax: {
+        inlineMath: [["$","$"],["\\(","\\)"]],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+    },
+  });
+</script>
+<script type="text/javascript" src="/js/MathJax/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+ <!--Sequence css font js-->
+<link rel="stylesheet" href="/js/Sequence/css/sequence-diagram-min.css">
+<script src="/js/Sequence/js/underscore-min.js"></script>
+<!-- Snap.svg -->
+<script src="/js/Sequence/js/snap.svg-min.js"></script>
+<!-- or Raphael -->
+<!--<script src="../js/raphael.min.js"></script>-->
+<script src="/js/Sequence/fonts/daniel/daniel_700.font.js"></script>
+<script src="/js/Sequence/js/webfont.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-min.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-snap-min.js"></script>
+
+<!--Sequence JS-->
+<script>
+  $(".language-sequence").sequenceDiagram({theme: 'hand'});
+</script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a5f544474e9c">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/li-zhi-93-94">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/lee.minizhi">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/lizhizhi7">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; XiaoZhi Blog 2019
+                    <br>
+                    Theme on <a href="https://github.com/lizhizhi7/lizhizhi7.github.io">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=lizhizhi7&repo=lizhizhi7.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

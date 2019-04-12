@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Right here waiting for you.">
+    <meta name="keywords"  content="LZ Blog, MATLAB, R, ML, Python, Machine Learning">
+    <meta name="theme-color" content="#000000">
+    
+    <title>MySQL推荐规范 - 尖耳熊的博客 | XZ Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2019/02/19/MySQL%E6%8E%A8%E8%8D%90%E8%A7%84%E8%8C%83/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">XiaoZhi Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/background-mysql.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/background-mysql.jpg')
+    }
+
+    .table tbody tr td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table thead tr th {
+        vertical-align: middle;
+    }
+
+    .language-sequence {
+        text-align: center;
+    }
+
+    
+</style>
+
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#MySQL" title="MySQL">MySQL</a>
+                        
+                        <a class="tag" href="/tags/#DataBase" title="DataBase">DataBase</a>
+                        
+                    </div>
+                    <h1>MySQL推荐规范</h1>
+                    
+                    
+                    <h2 class="subheading">MySQL系列文章</h2>
+                    
+                    <span class="meta">Posted by Lee on February 19, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h3 id="数据库命令规范">数据库命令规范</h3>
+
+<ul>
+  <li>所有数据库对象名称必须使用小写字母并用下划线分割。</li>
+  <li>所有数据库对象名称禁止使用 MySQL 保留关键字（如果表名中包含关键字查询时，需要将其用单引号括起来）。</li>
+  <li>数据库对象的命名要能做到见名识意，并且最后不要超过32个字符。</li>
+  <li>临时库表必须以 tmp_ 为前缀并以日期为后缀，备份表必须以 bak_ 为前缀并以日期 ( 时间戳 ) 为后缀。</li>
+  <li>所有存储相同数据的列名和列类型必须一致（一般作为关联列，如果查询时关联列类型不一致会自动进行数据类型隐式转换，会造成列上的索引失效，导致查询效率降低）。</li>
+</ul>
+
+<h3 id="数据库基本设计规范">数据库基本设计规范</h3>
+
+<ul>
+  <li><strong>所有表必须使用 InnoDB 存储引擎。</strong>没有特殊要求（即 InnoDB 无法满足的功能如：列存储，存储空间数据等）的情况下，所有表必须使用 InnoDB 存储引擎（MySQL 5.5 之前默认使用 Myisam，5.6 以后默认的为 InnoDB）InnoDB 支持事务，支持行级锁，更好的恢复性，高并发下性能更好。</li>
+  <li><strong>数据库和表的字符集统一使用 UTF8。</strong>统一字符集可以避免由于字符集转换产生的乱码，不同的字符集进行比较前需要进行转换会造成索引失效。</li>
+  <li><strong>所有表和字段都需要添加注释。</strong>使用 comment 从句添加表和列的备注 从一开始就进行数据字典的维护。</li>
+  <li><strong>尽量控制单表数据量的大小，建议控制在 500 万以内。</strong>500 万并不是 MySQL 数据库的限制，过大会造成修改表结构、备份、恢复都会有很大的问题，可以用历史数据归档（应用于日志数据），分库分表（应用于业务数据）等手段来控制数据量大小。</li>
+  <li><strong>谨慎使用 MySQL 分区表。</strong>分区表在物理上表现为多个文件，在逻辑上表现为一个表 谨慎选择分区键，跨分区查询效率可能更低 建议采用物理分表的方式管理大数据。</li>
+  <li><strong>尽量做到冷热数据分离，减小表的宽度。</strong>MySQL 限制每个表最多存储 4096 列，并且每一行数据的大小不能超过 65535 字节 减少磁盘 IO，保证热数据的内存缓存命中率（表越宽，把表装载进内存缓冲池时所占用的内存也就越大,也会消耗更多的 IO） 更有效的利用缓存，避免读入无用的冷数据 经常一起使用的列放到一个表中（避免更多的关联操作）</li>
+  <li><strong>禁止在表中建立预留字段。</strong>预留字段的命名很难做到见名识义 预留字段无法确认存储的数据类型，所以无法选择合适的类型 对预留字段类型的修改，会对表进行锁定</li>
+  <li><strong>禁止在数据库中存储图片，文件等大的二进制数据。</strong>通常文件很大，会短时间内造成数据量快速增长，数据库进行数据库读取时，通常会进行大量的随机 IO 操作，文件很大时，IO 操作很耗时 通常存储于文件服务器，数据库只存储文件地址信息。</li>
+  <li><strong>禁止在线上做数据库压力测试</strong></li>
+  <li><strong>禁止从开发环境，测试环境直接连接生成环境数据库</strong></li>
+</ul>
+
+<h3 id="数据库字段设计规范">数据库字段设计规范</h3>
+
+<ol>
+  <li>优先选择符合存储需要的最小的数据类型
+原因：列的字段越大，建立索引时所需要的空间也就越大，这样一页中所能存储的索引节点的数量也就越少也越少，在遍历时所需要的IO次数也就越多， 索引的性能也就越差。
+<strong>a.将字符串转换成数字类型存储，如：将IP地址转换成整形数据。</strong>
+MySQL 提供了两个方法来处理 IP 地址
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inet_aton 把ip转为无符号整型(4-8位)
+inet_ntoa 把整型的ip转为地址
+</code></pre></div>    </div>
+    <p>插入数据前，先用 inet_aton 把 IP 地址转为整型，可以节省空间。显示数据时，使用 inet_ntoa 把整型的 IP 地址转为地址显示即可。
+<strong>b.对于非负型的数据（如自增 ID、整型 IP）来说，要优先使用无符号整型来存储,因为无符号相对于有符号可以多出一倍的存储空间。</strong></p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SIGNED INT -2147483648~2147483647
+UNSIGNED INT 0~4294967295
+</code></pre></div>    </div>
+    <p><strong>c.VARCHAR(N) 中的 N 代表的是字符数，而不是字节数。</strong>
+使用 UTF8 存储 255 个汉字 Varchar(255)=765 个字节。过大的长度会消耗更多的内存</p>
+  </li>
+  <li>
+    <p>避免使用 TEXT、BLOB 数据类型，最常见的TEXT类型可以存储64k的数据
+建议把<code class="highlighter-rouge">BLOB</code>或是<code class="highlighter-rouge">TEXT</code>列分离到单独的扩展表中
+MySQL 内存临时表不支持 TEXT、BLOB 这样的大数据类型，如果查询中包含这样的数据，在排序等操作时，就不能使用内存临时表，必须使用磁盘临时表进行。而且对于这种数据，MySQL 还是要进行二次查询，会使 SQL 性能变得很差，但是不是说一定不能使用这样的数据类型。
+如果一定要使用，建议把 BLOB 或是 TEXT 列分离到单独的扩展表中，查询时一定不要使用 select * 而只需要取出必要的列，不需要 TEXT 列的数据时不要对该列进行查询。
+<strong>TEXT 或 BLOB 类型只能使用前缀索引</strong>
+因为 MySQL 对索引字段长度是有限制的，所以 TEXT 类型只能使用前缀索引，并且 TEXT 列上是不能有默认值的。</p>
+  </li>
+  <li>
+    <p>避免使用 ENUM 类型
+修改 ENUM 值需要使用 ALTER 语句；
+ENUM 类型的 ORDER BY 操作效率低，需要额外操作；
+禁止使用数值作为 ENUM 的枚举值</p>
+  </li>
+  <li>
+    <p>尽可能把所有列定义为 NOT NULL
+原因：索引 NULL 列需要额外的空间来保存，所以要占用更多的空间。进行比较和计算时要对 NULL 值做特别的处理。</p>
+  </li>
+  <li>
+    <p>使用 TIMESTAMP（4 个字节）或 DATETIME 类型（8 个字节）存储时间
+<code class="highlighter-rouge">TIMESTAMP</code>存储的时间范围 1970-01-01 00:00:01 ~ 2038-01-19-03:14:07。
+<code class="highlighter-rouge">TIMESTAMP</code>占用 4 字节和 INT 相同，但比 INT 可读性高，超出 TIMESTAMP 取值范围的使用 DATETIME 类型存储。
+<strong>经常会有人用字符串存储日期型的数据（不正确的做法）：</strong>
+缺点 1：无法用日期函数进行计算和比较。
+缺点 2：用字符串存储日期要占用更多的空间。</p>
+  </li>
+  <li>同财务相关的金额类数据必须使用 decimal 类型
+非精准浮点：float，double
+精准浮点：decimal
+Decimal 类型为精准浮点数，在计算时不会丢失精度。占用空间由定义的宽度决定，每 4 个字节可以存储 9 位数字，并且小数点要占用一个字节。可用于存储比 bigint 更大的整型数据。</li>
+</ol>
+
+<h3 id="索引设计规范">索引设计规范</h3>
+
+<ol>
+  <li>
+    <p>限制每张表上的索引数量，建议单张表索引不超过 5 个
+索引并不是越多越好！索引可以提高效率同样也可以降低效率；索引可以增加查询效率，但同样也会降低插入和更新的效率，甚至有些情况下会降低查询效率。
+因为 MySQL 优化器在选择如何优化查询时，会根据统一信息，对每一个可以用到的索引来进行评估，以生成出一个最好的执行计划，如果同时有很多个索引都可以用于查询，就会增加 MySQL 优化器生成执行计划的时间，同样会降低查询性能。</p>
+  </li>
+  <li>
+    <p>禁止给表中的每一列都建立单独的索引
+5.6 版本之前，一个 SQL 只能使用到一个表中的一个索引，5.6 以后，虽然有了合并索引的优化方式，但是还是远远没有使用一个联合索引的查询方式好</p>
+  </li>
+  <li>
+    <p>每个 InnoDB 表必须有个主键
+InnoDB 是一种索引组织表：数据的存储的逻辑顺序和索引的顺序是相同的。每个表都可以有多个索引，但是表的存储顺序只能有一种 InnoDB是按照主键索引的顺序来组织表的。
+不要使用更新频繁的列作为主键，不适用多列主键（相当于联合索引） 不要使用 UUID、MD5、HASH、字符串列作为主键（无法保证数据的顺序增长）。主键建议使用自增 ID 值。</p>
+  </li>
+</ol>
+
+<h3 id="常见索引列建议">常见索引列建议</h3>
+
+<ol>
+  <li>出现在 SELECT、UPDATE、DELETE 语句的 WHERE 从句中的列。</li>
+  <li>包含在 ORDER BY、GROUP BY、DISTINCT 中的字段。</li>
+  <li>并不要将符合 1 和 2 中的字段的列都建立一个索引，通常将 1、2 中的字段建立联合索引效果更好。</li>
+  <li>多表 JOIN 的关联列。</li>
+</ol>
+
+<h3 id="如何选择索引列的顺序">如何选择索引列的顺序</h3>
+
+<p>建立索引的目的是：希望通过索引进行数据查找，减少随机 IO，增加查询性能 ，索引能过滤出越少的数据，则从磁盘中读入的数据也就越少。</p>
+<ol>
+  <li>区分度最高的放在联合索引的最左侧（区分度 = 列中不同值的数量 / 列的总行数）。</li>
+  <li>尽量把字段长度小的列放在联合索引的最左侧（因为字段长度越小，一页能存储的数据量越大，IO 性能也就越好）。</li>
+  <li>使用最频繁的列放到联合索引的左侧（这样可以比较少的建立一些索引）。</li>
+</ol>
+
+<h3 id="避免建立冗余索引和重复索引">避免建立冗余索引和重复索引</h3>
+
+<p>因为这样会增加查询优化器生成执行计划的时间。</p>
+<blockquote>
+  <p>重复索引示例：primary key(id)、index(id)、unique index(id)
+冗余索引示例：index(a,b,c)、index(a,b)、index(a)</p>
+</blockquote>
+
+<h3 id="优先考虑覆盖索引">优先考虑覆盖索引</h3>
+
+<p><strong>对于频繁的查询优先考虑使用覆盖索引。</strong>
+覆盖索引：就是包含了所有查询字段(where,select,ordery by,group by包含的字段)的索引
+覆盖索引的好处：
+<strong>a.避免 InnoDB 表进行索引的二次查询</strong>
+InnoDB 是以聚集索引的顺序来存储的，对于 InnoDB 来说，二级索引在叶子节点中所保存的是行的主键信息，如果是用二级索引查询数据的话，在查找到相应的键值后，还要通过主键进行二次查询才能获取我们真实所需要的数据。而在覆盖索引中，二级索引的键值中可以获取所有的数据，避免了对主键的二次查询 ，减少了 IO 操作，提升了查询效率。
+<strong>b.可以把随机 IO 变成顺序 IO 加快查询效率</strong>
+由于覆盖索引是按键值的顺序存储的，对于 IO 密集型的范围查找来说，对比随机从磁盘读取每一行的数据 IO 要少的多，因此利用覆盖索引在访问时也可以把磁盘的随机读取的 IO 转变成索引查找的顺序 IO。</p>
+
+<h3 id="索引-set-规范">索引 SET 规范</h3>
+
+<ol>
+  <li>尽量避免使用外键约束。</li>
+  <li>不建议使用外键约束（foreign key），但一定要在表与表之间的关联键上建立索引。</li>
+  <li>外键可用于保证数据的参照完整性，但建议在业务端实现。</li>
+  <li>外键会影响父表和子表的写操作从而降低性能。</li>
+</ol>
+
+<h3 id="数据库-sql-开发规范">数据库 SQL 开发规范</h3>
+
+<ol>
+  <li>
+    <p>建议使用预编译语句进行数据库操作
+预编译语句可以重复使用这些计划，减少 SQL 编译所需要的时间，还可以解决动态 SQL 所带来的 SQL 注入的问题 只传参数，比传递 SQL 语句更高效 相同语句可以一次解析，多次使用，提高处理效率。</p>
+  </li>
+  <li>避免数据类型的隐式转换
+隐式转换会导致索引失效。如：
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="n">name</span><span class="p">,</span><span class="n">phone</span> <span class="k">from</span> <span class="n">customer</span> <span class="k">where</span> <span class="n">id</span> <span class="o">=</span> <span class="s1">'111'</span><span class="p">;</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>充分利用表上已经存在的索引
+<strong>a.避免使用双 % 号的查询条件。</strong>
+如a like ‘%123%’，（如果无前置 %，只有后置 %，是可以用到列上的索引的）
+<strong>b.一个 SQL 只能利用到复合索引中的一列进行范围查询</strong>
+如：有 a,b,c 列的联合索引，在查询条件中有 a 列的范围查询，则在 b,c 列上的索引将不会被用到，在定义联合索引时，如果a列要用到范围查找的话，就要把 a 列放到联合索引的右侧。
+<strong>c.使用 left join 或 not exists 来优化 not in 操作</strong>
+因为 not in 也通常会使用索引失效。</p>
+  </li>
+  <li>
+    <p>数据库设计时，应该要对以后扩展进行考虑</p>
+  </li>
+  <li>程序连接不同的数据库使用不同的账号，进制跨库查询
+    <ul>
+      <li>为数据库迁移和分库分表留出余地</li>
+      <li>降低业务耦合度</li>
+      <li>避免权限过大而产生的安全风险</li>
+    </ul>
+  </li>
+  <li>禁止使用 SELECT * 必须使用 SELECT <字段列表> 查询
+原因：
+</字段列表>    <ul>
+      <li>消耗更多的 CPU 和 IO 以网络带宽资源</li>
+      <li>无法使用覆盖索引</li>
+      <li>可减少表结构变更带来的影响</li>
+    </ul>
+  </li>
+  <li>禁止使用不含字段列表的 INSERT 语句
+如：
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">insert</span> <span class="k">into</span> <span class="k">values</span> <span class="p">(</span><span class="s1">'a'</span><span class="p">,</span><span class="s1">'b'</span><span class="p">,</span><span class="s1">'c'</span><span class="p">);</span> 
+</code></pre></div>    </div>
+    <p>应使用：</p>
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">insert</span> <span class="k">into</span> <span class="n">t</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span><span class="n">c2</span><span class="p">,</span><span class="n">c3</span><span class="p">)</span> <span class="k">values</span> <span class="p">(</span><span class="s1">'a'</span><span class="p">,</span><span class="s1">'b'</span><span class="p">,</span><span class="s1">'c'</span><span class="p">);</span>
+</code></pre></div>    </div>
+  </li>
+  <li>避免使用子查询，可以把子查询优化为 JOIN 操作
+通常子查询在 in 子句中，且子查询中为简单 SQL ( 不包含 union、group by、order by、limit 从句 ) 时，才可以把子查询转化为关联查询进行优化。
+子查询性能差的原因：
+    <ul>
+      <li>子查询的结果集无法使用索引，通常子查询的结果集会被存储到临时表中，不论是内存临时表还是磁盘临时表都不会存在索引，所以查询性能会受到一定的影响。</li>
+      <li>特别是对于返回结果集比较大的子查询，其对查询性能的影响也就越大。</li>
+      <li>由于子查询会产生大量的临时表也没有索引，所以会消耗过多的 CPU 和 IO 资源，产生大量的慢查询。</li>
+    </ul>
+  </li>
+  <li>
+    <p>避免使用 JOIN 关联太多的表
+对于 MySQL 来说，是存在关联缓存的，缓存的大小可以由 join_buffer_size 参数进行设置。
+在 MySQL 中，对于同一个 SQL 多关联（join）一个表，就会多分配一个关联缓存，如果在一个 SQL 中关联的表越多，所占用的内存也就越大。
+如果程序中大量的使用了多表关联的操作，同时 join_buffer_size 设置的也不合理的情况下，就容易造成服务器内存溢出的情况，就会影响到服务器数据库性能的稳定性。
+同时对于关联操作来说，会产生临时表操作，影响查询效率 MySQL 最多允许关联 61 个表，建议不超过 5 个。</p>
+  </li>
+  <li>
+    <p>减少同数据库的交互次数
+数据库更适合处理批量操作 合并多个相同的操作到一起，可以提高处理效率</p>
+  </li>
+  <li>
+    <p>对应同一列进行 or 判断时，使用 in 代替 or
+In 的值不要超过 500 个， in 操作可以更有效的利用索引，or 大多数情况下很少能利用到索引。</p>
+  </li>
+  <li>
+    <p>禁止使用 order by rand() 进行随机排序
+会把表中所有符合条件的数据装载到内存中，然后在内存中对所有数据根据随机生成的值进行排序，并且可能会对每一行都生成一个随机值，如果满足条件的数据集非常大，就会消耗大量的 CPU 和 IO 及内存资源。
+<strong>推荐在程序中获取一个随机值，然后从数据库中获取数据的方式。</strong></p>
+  </li>
+  <li>WHERE从句中禁止对列进行函数转换和计算
+对列进行函数转换或计算时会导致无法使用索引。
+不推荐：
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">where</span> <span class="n">date</span><span class="p">(</span><span class="n">create_time</span><span class="p">)</span><span class="o">=</span><span class="s1">'20190101'</span>
+</code></pre></div>    </div>
+    <p>推荐：</p>
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">where</span> <span class="n">create_time</span> <span class="o">&gt;=</span> <span class="s1">'20190101'</span> <span class="k">and</span> <span class="n">create_time</span> <span class="o">&lt;</span> <span class="s1">'20190102'</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>在明显不会有重复值时使用 UNION ALL 而不是 UNION
+UNION 会把两个结果集的所有数据放到临时表中后再进行去重操作。
+UNION ALL 不会再对结果集进行去重操作。</p>
+  </li>
+  <li>拆分复杂的大 SQL 为多个小 SQL
+大 SQL：逻辑上比较复杂，需要占用大量 CPU 进行计算的SQL 。
+MySQL：一个 SQL 只能使用一个 CPU 进行计算。
+SQL 拆分后可以通过并行执行来提高处理效率。</li>
+</ol>
+
+<h3 id="数据库操作行为规范">数据库操作行为规范</h3>
+
+<ol>
+  <li>
+    <p>超 100 万行的批量写（UPDATE、DELETE、INSERT）操作，要分批多次进行操作
+<strong>a.大批量操作可能会造成严重的主从延迟</strong>
+主从环境中，大批量操作可能会造成严重的主从延迟，大批量的写操作一般都需要执行一定长的时间，而只有当主库上执行完成后，才会在其他从库上执行，所以会造成主库与从库长时间的延迟情况
+<strong>b.Binlog 日志为 row 格式时会产生大量的日志</strong>
+大批量写操作会产生大量日志，特别是对于 row 格式二进制数据而言，由于在 row 格式中会记录每一行数据的修改，我们一次修改的数据越多，产生的日志量也就会越多，日志的传输和恢复所需要的时间也就越长，这也是造成主从延迟的一个原因。
+<strong>c.避免产生大事务操作</strong>
+大批量修改数据，一定是在一个事务中进行的，这就会造成表中大批量数据进行锁定，从而导致大量的阻塞，阻塞会对 MySQL 的性能产生非常大的影响。
+特别是长时间的阻塞会占满所有数据库的可用连接，这会使生产环境中的其他应用无法连接到数据库，因此一定要注意大批量写操作要进行分批。</p>
+  </li>
+  <li>
+    <p>对于大表使用 pt-online-schema-change 修改表结构
+<strong>避免大表修改产生的主从延迟</strong>
+<strong>避免在对表字段进行修改时进行锁表</strong>
+对大表数据结构的修改一定要谨慎，会造成严重的锁表操作，尤其是生产环境，是不能容忍的。
+pt-online-schema-change 它会首先建立一个与原表结构相同的新表，并且在新表上进行表结构的修改，然后再把原表中的数据复制到新表中，并在原表中增加一些触发器。
+把原表中新增的数据也复制到新表中，在行所有数据复制完成之后，把新表命名成原表，并把原来的表删除掉,把原来一个 DDL 操作，分解成多个小的批次进行。</p>
+  </li>
+  <li>
+    <p>禁止为程序使用的账号赋予 super 权限
+当达到最大连接数限制时，还运行 1个 有 super 权限的用户连接 super 权限只能留给 DBA 处理问题的账号使用。</p>
+  </li>
+  <li>
+    <p>对于程序连接数据库账号，遵循权限最小原则
+程序使用数据库账号只能在一个 DB 下使用，不准跨库 程序使用的账号原则上不准有 drop 权限。</p>
+  </li>
+</ol>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/02/18/%E8%BF%91%E6%9C%9F%E5%8C%96%E5%AD%A6%E5%89%8D%E6%B2%BF(2.18)/" data-toggle="tooltip" data-placement="top" title="近期化学前沿(2.18)">
+                        Previous<br>
+                        <span>近期化学前沿(2.18)</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/02/20/Git%E6%93%8D%E4%BD%9C/" data-toggle="tooltip" data-placement="top" title="Git操作">
+                        Next<br>
+                        <span>Git操作</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="/js/md5.min.js"></script>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: '7194056b4e3867bdf12c',
+                    clientSecret: '0ee17ceedb52c45e6a8553399a0fbeaab0e9f43f',
+                    repo: 'lizhizhi7.github.io',
+                    owner: 'lizhizhi7',
+                    admin: ['lizhizhi7'],
+                    distractionFreeMode: true,
+                    id: md5(location.pathname),
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Git" title="Git" rel="4">
+                                    Git
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Android" title="Android" rel="10">
+                                    Android
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#YAML" title="YAML" rel="2">
+                                    YAML
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python" title="Python" rel="5">
+                                    Python
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Jupyter" title="Jupyter" rel="2">
+                                    Jupyter
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Android View" title="Android View" rel="4">
+                                    Android View
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MATLAB" title="MATLAB" rel="8">
+                                    MATLAB
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Java" title="Java" rel="13">
+                                    Java
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#NETWORK" title="NETWORK" rel="2">
+                                    NETWORK
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#HTTP" title="HTTP" rel="2">
+                                    HTTP
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MySQL" title="MySQL" rel="3">
+                                    MySQL
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#DataBase" title="DataBase" rel="4">
+                                    DataBase
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#化学前沿" title="化学前沿" rel="3">
+                                    化学前沿
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#DATA" title="DATA" rel="2">
+                                    DATA
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python3" title="Python3" rel="3">
+                                    Python3
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="https://apple.com">Apple</a></li>
+                    
+                        <li><a href="https://developer.apple.com/">Apple Developer</a></li>
+                    
+                        <li><a href="https://www.android.com/">Android</a></li>
+                    
+                        <li><a href="https://developer.android.com/">Android Developer</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!--MathJax-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    showProcessingMessages: false,
+    messageStyle: "none",
+    tex2jax: {
+        inlineMath: [["$","$"],["\\(","\\)"]],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+    },
+  });
+</script>
+<script type="text/javascript" src="/js/MathJax/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+ <!--Sequence css font js-->
+<link rel="stylesheet" href="/js/Sequence/css/sequence-diagram-min.css">
+<script src="/js/Sequence/js/underscore-min.js"></script>
+<!-- Snap.svg -->
+<script src="/js/Sequence/js/snap.svg-min.js"></script>
+<!-- or Raphael -->
+<!--<script src="../js/raphael.min.js"></script>-->
+<script src="/js/Sequence/fonts/daniel/daniel_700.font.js"></script>
+<script src="/js/Sequence/js/webfont.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-min.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-snap-min.js"></script>
+
+<!--Sequence JS-->
+<script>
+  $(".language-sequence").sequenceDiagram({theme: 'hand'});
+</script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a5f544474e9c">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/li-zhi-93-94">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/lee.minizhi">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/lizhizhi7">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; XiaoZhi Blog 2019
+                    <br>
+                    Theme on <a href="https://github.com/lizhizhi7/lizhizhi7.github.io">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=lizhizhi7&repo=lizhizhi7.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

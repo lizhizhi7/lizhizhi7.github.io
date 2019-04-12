@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Right here waiting for you.">
+    <meta name="keywords"  content="LZ Blog, MATLAB, R, ML, Python, Machine Learning">
+    <meta name="theme-color" content="#000000">
+    
+    <title>代理的建立(二) - 尖耳熊的博客 | XZ Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2019/01/11/%E4%BB%A3%E7%90%86%E7%9A%84%E5%BB%BA%E7%AB%8B-%E4%BA%8C/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">XiaoZhi Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/background-http.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/background-http.jpg')
+    }
+
+    .table tbody tr td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table thead tr th {
+        vertical-align: middle;
+    }
+
+    .language-sequence {
+        text-align: center;
+    }
+
+    
+</style>
+
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#NETWORK" title="NETWORK">NETWORK</a>
+                        
+                        <a class="tag" href="/tags/#HTTP" title="HTTP">HTTP</a>
+                        
+                    </div>
+                    <h1>代理的建立(二)</h1>
+                    
+                    
+                    <h2 class="subheading">网络系列</h2>
+                    
+                    <span class="meta">Posted by Lee on January 11, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h1 id="http-代理原理及实现二">HTTP 代理原理及实现（二）</h1>
+
+<p>在上篇《<a href="https://imququ.com/post/web-proxy.html">HTTP 代理原理及实现（一）</a>》里，我介绍了 HTTP 代理的两种形式，并用 Node.js 实现了一个可用的普通 / 隧道代理。普通代理可以用来承载 HTTP 流量；隧道代理可以用来承载任何 TCP 流量，包括 HTTP 和 HTTPS。今天这篇文章介绍剩余部分：如何将浏览器与代理之间的流量传输升级为 HTTPS。<!--more--></p>
+
+<p>上篇文章中实现的代理，是一个标准的 HTTP 服务，针对浏览器的普通请求和 <code class="highlighter-rouge">CONNECT</code> 请求，进行不同的处理。Node.js 为创建 HTTP 或 HTTPS Server 提供了高度一致的接口，要将 HTTP 服务升级为 HTTPS 特别方便，只有一点点准备工作要做。</p>
+
+<p>我们知道 TLS 有三大功能：内容加密、身份认证和数据完整性。其中内容加密依赖于密钥协商机制；数据完整性依赖于 MAC（Message authentication code）校验机制；而身份认证则依赖于证书认证机制。一般操作系统或浏览器会维护一个受信任根证书列表，包含在列表之中的证书，或者由列表中的证书签发的证书都会被客户端信任。</p>
+
+<p>提供 HTTPS 服务的证书可以自己生成，然后手动加入到系统根证书列表中。但是对外提供服务的 HTTPS 网站，不可能要求每个用户都手动导入你的证书，所以更常见的做法是向 CA（Certificate Authority，证书颁发机构）申请。根据证书的不同级别，CA 会进行不同级别的验证，验证通过后 CA 会用他们的证书签发网站证书，这个过程通常是收费的（有免费的证书，最近免费的 <a href="https://letsencrypt.org">Let’s Encrypt</a> 也很火，这里不多介绍）。由于 CA 使用的证书都是由广泛内置在各系统中的根证书签发，所以从 CA 获得的网站证书会被绝大部分客户端信任。</p>
+
+<p>通过 CA 申请证书很简单，本文为了方便演示，采用自己签发证书的偷懒办法。现在广泛使用的证书是 x509.v3 格式，使用以下命令可以创建：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl genrsa <span class="nt">-out</span> private.pem 2048
+openssl req <span class="nt">-new</span> <span class="nt">-x509</span> <span class="nt">-key</span> private.pem <span class="nt">-out</span> public.crt <span class="nt">-days</span> 99999
+</code></pre></div></div>
+
+<p>第二行命令运行后，需要填写一些证书信息。需要注意的是 <code class="highlighter-rouge">Common Name</code> 一定要填写后续提供 HTTPS 服务的域名或 IP。例如你打算在本地测试，<code class="highlighter-rouge">Common Name</code> 可以填写 <code class="highlighter-rouge">127.0.0.1</code>。证书创建好之后，再将 <code class="highlighter-rouge">public.crt</code> 添加到系统受信任根证书列表中。为了确保添加成功，可以用浏览器验证一下：</p>
+
+<p><img alt="fake_certificate" src="https://st.imququ.com/static/uploads/2015/11/fake_certificate.png" itemprop="image" width="484" /></p>
+
+<p>接着，可以改造之前的 Node.js 代码了，需要改动的地方不多：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'http'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">https</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'https'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">net</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'net'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'url'</span><span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">request</span><span class="p">(</span><span class="nx">cReq</span><span class="p">,</span> <span class="nx">cRes</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">u</span> <span class="o">=</span> <span class="nx">url</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">cReq</span><span class="p">.</span><span class="nx">url</span><span class="p">);</span>
+
+	<span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+		<span class="na">hostname</span> <span class="p">:</span> <span class="nx">u</span><span class="p">.</span><span class="nx">hostname</span><span class="p">,</span> 
+		<span class="na">port</span>	 <span class="p">:</span> <span class="nx">u</span><span class="p">.</span><span class="nx">port</span> <span class="o">||</span> <span class="mi">80</span><span class="p">,</span>
+		<span class="na">path</span>	 <span class="p">:</span> <span class="nx">u</span><span class="p">.</span><span class="nx">path</span><span class="p">,</span>       
+		<span class="na">method</span>	 <span class="p">:</span> <span class="nx">cReq</span><span class="p">.</span><span class="nx">method</span><span class="p">,</span>
+		<span class="na">headers</span>	 <span class="p">:</span> <span class="nx">cReq</span><span class="p">.</span><span class="nx">headers</span>
+	<span class="p">};</span>
+
+	<span class="kd">var</span> <span class="nx">pReq</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="nx">options</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">pRes</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">cRes</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="nx">pRes</span><span class="p">.</span><span class="nx">statusCode</span><span class="p">,</span> <span class="nx">pRes</span><span class="p">.</span><span class="nx">headers</span><span class="p">);</span>
+		<span class="nx">pRes</span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">cRes</span><span class="p">);</span>
+	<span class="p">}).</span><span class="nx">on</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">cRes</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
+	<span class="p">});</span>
+
+	<span class="nx">cReq</span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">pReq</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">connect</span><span class="p">(</span><span class="nx">cReq</span><span class="p">,</span> <span class="nx">cSock</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">u</span> <span class="o">=</span> <span class="nx">url</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="s1">'http://'</span> <span class="o">+</span> <span class="nx">cReq</span><span class="p">.</span><span class="nx">url</span><span class="p">);</span>
+
+	<span class="kd">var</span> <span class="nx">pSock</span> <span class="o">=</span> <span class="nx">net</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nx">port</span><span class="p">,</span> <span class="nx">u</span><span class="p">.</span><span class="nx">hostname</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">cSock</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">'HTTP/1.1 200 Connection Established</span><span class="err">\</span><span class="s1">r</span><span class="err">\</span><span class="s1">n</span><span class="err">\</span><span class="s1">r</span><span class="err">\</span><span class="s1">n'</span><span class="p">);</span>
+		<span class="nx">pSock</span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">cSock</span><span class="p">);</span>
+	<span class="p">}).</span><span class="nx">on</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">cSock</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
+	<span class="p">});</span>
+
+	<span class="nx">cSock</span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">pSock</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="na">key</span><span class="p">:</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="s1">'./private.pem'</span><span class="p">),</span>
+	<span class="na">cert</span><span class="p">:</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="s1">'./public.crt'</span><span class="p">)</span>
+<span class="p">};</span>
+
+<span class="nx">https</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
+	<span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'request'</span><span class="p">,</span> <span class="nx">request</span><span class="p">)</span>
+	<span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'connect'</span><span class="p">,</span> <span class="nx">connect</span><span class="p">)</span>
+	<span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">8888</span><span class="p">,</span> <span class="s1">'0.0.0.0'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>可以看到，除了将 <code class="highlighter-rouge">http.createServer</code> 换成 <code class="highlighter-rouge">https.createServer</code>，增加证书相关配置之外，这段代码没有任何改变。这也是引入 TLS 层的妙处，应用层不需要任何改动，就能获得诸多安全特性。</p>
+
+<p>运行服务后，只需要将浏览器的代理设置为 <code class="highlighter-rouge">HTTPS 127.0.0.1:8888</code> 即可，功能照旧。这样改造，只是将浏览器到代理之间的流量升级为了 HTTPS，代理自身逻辑、与服务端的通讯方式，都没有任何变化。</p>
+
+<p>最后，还是写段 Node.js 代码验证下这个 HTTPS 代理服务：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">https</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'https'</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="na">hostname</span> <span class="p">:</span> <span class="s1">'127.0.0.1'</span><span class="p">,</span>
+	<span class="na">port</span>	 <span class="p">:</span> <span class="mi">8888</span><span class="p">,</span>
+	<span class="na">path</span>	 <span class="p">:</span> <span class="s1">'imququ.com:80'</span><span class="p">,</span>
+	<span class="na">method</span>	 <span class="p">:</span> <span class="s1">'CONNECT'</span>
+<span class="p">};</span>
+
+<span class="c1">//禁用证书验证，不然自签名的证书无法建立 TLS 连接</span>
+<span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_TLS_REJECT_UNAUTHORIZED</span> <span class="o">=</span> <span class="s2">"0"</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">req</span> <span class="o">=</span> <span class="nx">https</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+
+<span class="nx">req</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'connect'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">res</span><span class="p">,</span> <span class="nx">socket</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">socket</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">'GET / HTTP/1.1</span><span class="err">\</span><span class="s1">r</span><span class="err">\</span><span class="s1">n'</span> <span class="o">+</span>
+				 <span class="s1">'Host: imququ.com</span><span class="err">\</span><span class="s1">r</span><span class="err">\</span><span class="s1">n'</span> <span class="o">+</span>
+				 <span class="s1">'Connection: Close</span><span class="err">\</span><span class="s1">r</span><span class="err">\</span><span class="s1">n'</span> <span class="o">+</span>
+				 <span class="s1">'</span><span class="err">\</span><span class="s1">r</span><span class="err">\</span><span class="s1">n'</span><span class="p">);</span>
+
+	<span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'data'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">chunk</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">chunk</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+	<span class="p">});</span>
+	
+	<span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'socket end.'</span><span class="p">);</span>
+	<span class="p">});</span>
+<span class="p">});</span>
+
+<span class="nx">req</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p>这段代码和上篇文章最后那段的区别只是 <code class="highlighter-rouge">http.request</code> 换成了 <code class="highlighter-rouge">https.request</code>，运行结果完全一样，这里就不贴了。本文所有代码可以从这个仓库获得：<a href="https://github.com/qgy18/proxy-demo">proxy-demo</a>。</p>
+
+<p>本文就写到这里，大家有什么问题欢迎给我评论留言。</p>
+
+<p>原文链接：<a href="https://imququ.com/post/web-proxy-2.html">https://imququ.com/post/web-proxy-2.html</a>，<a href="https://imququ.com/post/web-proxy-2.html#comments">前往原文评论 »</a></p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/01/11/%E4%BB%A3%E7%90%86%E7%9A%84%E5%BB%BA%E7%AB%8B-%E4%B8%80/" data-toggle="tooltip" data-placement="top" title="代理的建立(一)">
+                        Previous<br>
+                        <span>代理的建立(一)</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/01/12/Maven%E9%A1%B9%E7%9B%AE%E6%9C%89%E5%85%B3%E9%85%8D%E7%BD%AE/" data-toggle="tooltip" data-placement="top" title="Maven项目有关配置">
+                        Next<br>
+                        <span>Maven项目有关配置</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="/js/md5.min.js"></script>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: '7194056b4e3867bdf12c',
+                    clientSecret: '0ee17ceedb52c45e6a8553399a0fbeaab0e9f43f',
+                    repo: 'lizhizhi7.github.io',
+                    owner: 'lizhizhi7',
+                    admin: ['lizhizhi7'],
+                    distractionFreeMode: true,
+                    id: md5(location.pathname),
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Git" title="Git" rel="4">
+                                    Git
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Android" title="Android" rel="10">
+                                    Android
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#YAML" title="YAML" rel="2">
+                                    YAML
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python" title="Python" rel="5">
+                                    Python
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Jupyter" title="Jupyter" rel="2">
+                                    Jupyter
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Android View" title="Android View" rel="4">
+                                    Android View
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MATLAB" title="MATLAB" rel="8">
+                                    MATLAB
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Java" title="Java" rel="13">
+                                    Java
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#NETWORK" title="NETWORK" rel="2">
+                                    NETWORK
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#HTTP" title="HTTP" rel="2">
+                                    HTTP
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MySQL" title="MySQL" rel="3">
+                                    MySQL
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#DataBase" title="DataBase" rel="4">
+                                    DataBase
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#化学前沿" title="化学前沿" rel="3">
+                                    化学前沿
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#DATA" title="DATA" rel="2">
+                                    DATA
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python3" title="Python3" rel="3">
+                                    Python3
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="https://apple.com">Apple</a></li>
+                    
+                        <li><a href="https://developer.apple.com/">Apple Developer</a></li>
+                    
+                        <li><a href="https://www.android.com/">Android</a></li>
+                    
+                        <li><a href="https://developer.android.com/">Android Developer</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!--MathJax-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    showProcessingMessages: false,
+    messageStyle: "none",
+    tex2jax: {
+        inlineMath: [["$","$"],["\\(","\\)"]],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+    },
+  });
+</script>
+<script type="text/javascript" src="/js/MathJax/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+ <!--Sequence css font js-->
+<link rel="stylesheet" href="/js/Sequence/css/sequence-diagram-min.css">
+<script src="/js/Sequence/js/underscore-min.js"></script>
+<!-- Snap.svg -->
+<script src="/js/Sequence/js/snap.svg-min.js"></script>
+<!-- or Raphael -->
+<!--<script src="../js/raphael.min.js"></script>-->
+<script src="/js/Sequence/fonts/daniel/daniel_700.font.js"></script>
+<script src="/js/Sequence/js/webfont.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-min.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-snap-min.js"></script>
+
+<!--Sequence JS-->
+<script>
+  $(".language-sequence").sequenceDiagram({theme: 'hand'});
+</script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a5f544474e9c">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/li-zhi-93-94">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/lee.minizhi">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/lizhizhi7">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; XiaoZhi Blog 2019
+                    <br>
+                    Theme on <a href="https://github.com/lizhizhi7/lizhizhi7.github.io">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=lizhizhi7&repo=lizhizhi7.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Right here waiting for you.">
+    <meta name="keywords"  content="LZ Blog, MATLAB, R, ML, Python, Machine Learning">
+    <meta name="theme-color" content="#000000">
+    
+    <title>Python好用的代码 - 尖耳熊的博客 | XZ Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2019/02/27/Python%E5%A5%BD%E7%94%A8%E7%9A%84%E4%BB%A3%E7%A0%81/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">XiaoZhi Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/background-python.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/background-python.jpg')
+    }
+
+    .table tbody tr td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table thead tr th {
+        vertical-align: middle;
+    }
+
+    .language-sequence {
+        text-align: center;
+    }
+
+    
+</style>
+
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Python" title="Python">Python</a>
+                        
+                        <a class="tag" href="/tags/#Python3" title="Python3">Python3</a>
+                        
+                        <a class="tag" href="/tags/#Jupyter" title="Jupyter">Jupyter</a>
+                        
+                    </div>
+                    <h1>Python好用的代码</h1>
+                    
+                    
+                    <h2 class="subheading">Python 3</h2>
+                    
+                    <span class="meta">Posted by Lee on February 27, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h3 id="python好用的代码技巧">Python好用的代码技巧</h3>
+
+<h4 id="用列表作函数的默认参数">用列表作函数的默认参数</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span>  <span class="n">b</span> <span class="o">=</span><span class="p">[]):</span>
+      <span class="n">b</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+      <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'a: {a}'</span><span class="p">)</span>
+      <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'b: {b}'</span><span class="p">)</span>
+<span class="n">func</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">func</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div></div>
+<p>正常我们期望的结果应该是这样的</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a</span><span class="p">:</span> <span class="mi">1</span>
+   <span class="n">b</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">a</span><span class="p">:</span> <span class="mi">2</span>
+   <span class="n">b</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</code></pre></div></div>
+<p>但当我们执行代码后，只会得到这样的结果</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a</span><span class="p">:</span> <span class="mi">1</span>
+   <span class="n">b</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">a</span><span class="p">:</span> <span class="mi">2</span>
+   <span class="n">b</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>与预期不一致。为什么呢？因为 Python 列表是可变对象，而且函数传参又是传的引用，所以当第二次调用 func 方法前，b 中已经有了元素 1，调用后 b 最终有两个元素 1 和 2。<br />
+所以，当我们要为函数设置默认参数的时候，不要使用可变对象。</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span>  <span class="n">b</span> <span class="o">=</span> <span class="bp">None</span> <span class="p">):</span>
+     <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+          <span class="n">b</span>  <span class="o">=</span> <span class="p">[]</span>
+     <span class="n">b</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+     <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'a: {a}'</span><span class="p">)</span>
+     <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'b: {b}'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="文件操作">文件操作</h4>
+
+<p>很多刚接触 Python 的伙伴做文件操作的时候很容易写类似的代码</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">'file_name'</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">file</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="k">pass</span>
+<span class="k">finally</span><span class="p">:</span>
+    <span class="nb">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></div>
+<p>这没有问题，不过文件资源我们没有必要手动去维护，像关闭这样的操作交给上下文管理器做就好。</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'file_name'</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">file</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</code></pre></div></div>
+<p>这样看起来不是清爽很多。</p>
+
+<h4 id="捕获所有异常">捕获所有异常</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span><span class="p">:</span>
+    <span class="k">pass</span>  <span class="c1"># 做一些操作
+</span><span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Exception {e}'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>就像上面一样，有时我们为了能够快速的完成功能，很容易不管三七二十一，就捕获 Exception 异常。这可能会捕捉到键盘中断（KeyboardInterrupt）（CTRL + C）或断言错误（AsstionError）等异常。捕获不确定的异常，有时也会让我们的程序出现莫名其妙的问题，我们应该避免这样做。
+准确的做法是根据上下文捕获 ValueError 、AttributeError 、TypeError 等比较具体的异常，然后做适当的错误处理，比如打印日志等。</p>
+
+<h4 id="忽略-python-的-forelse-语法">忽略 Python 的 for…else 语法</h4>
+
+<p>开发中我们很容易碰到类似的需求，在一个列表中，确定某个特定的元素是否存在。比如，下面的代码便是确定列表中有没有奇数存在</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="n">is_odd_exist</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">is_odd_exist</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">break</span>
+<span class="k">if</span> <span class="n">is_odd_exist</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Odd exist'</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Odd not exist'</span><span class="p">)</span>
+</code></pre></div></div>
+<p>这里，我们使用了一个标识 is_odd_exist，默认为 False。当找到奇数时，将其置为 True，然后跳出循环。这样写并没有问题，但是我们可以换种方式</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'Odd exist'</span><span class="p">)</span>
+        <span class="k">break</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Odd not exist'</span><span class="p">)</span>
+</code></pre></div></div>
+<p>先介绍下 Python 的 for…else 语法，当 for 循环是正常结束时（即不是通过 break 跳出结束的），会执行 else 中的语句。<br />
+这里，我们使用了相对于其他语言如 C、PHP 等不同的一种方式，完成了相同的功能，看起来代码也简洁了不少。</p>
+
+<h4 id="使用键遍历字典">使用键遍历字典</h4>
+
+<p>初学 Python 的伙伴，可能容易写出这样的代码</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">member</span> <span class="o">=</span> <span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'xiaoming'</span><span class="p">,</span>
+          <span class="s">'age'</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
+          <span class="s">'mobile'</span><span class="p">:</span> <span class="s">'8312341234'</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">member</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'{key}: {member[key]}'</span><span class="p">)</span>
+</code></pre></div></div>
+<p>同样，这也是没有问题的，但看起来并不直观。字典遍历的时候，其实可以直接取出键值信息，像这样</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">member</span> <span class="o">=</span> <span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'xiaoming'</span><span class="p">,</span>
+          <span class="s">'age'</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
+          <span class="s">'mobile'</span><span class="p">:</span> <span class="s">'8312341234'</span><span class="p">}</span>
+
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">member</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'{key}: {val}'</span><span class="p">)</span>
+</code></pre></div></div>
+<p>这样的话，看起来要明了一些。</p>
+
+<h4 id="字典推导dictionary-comprehensions和集合推导set-comprehensions">字典推导(Dictionary comprehensions)和集合推导(Set comprehensions)</h4>
+
+<p>大多数的Python程序员都知道且使用过列表推导(list comprehensions)。</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">some_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">another_list</span> <span class="o">=</span> <span class="p">[</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">some_list</span> <span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">another_list</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+</code></pre></div></div>
+<p>自从python 3.1 (甚至是Python 2.7)起，我们可以用同样的语法来创建集合和字典表：</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="c1"># Set Comprehensions
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">some_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">even_set</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">some_list</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">even_set</span>
+<span class="nb">set</span><span class="p">([</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Dict Comprehensions
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">d</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span> <span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">d</span>
+<span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="mi">7</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="mi">8</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="mi">9</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="mi">10</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+</code></pre></div></div>
+<p>在第一个例子里，我们以some_list为基础，创建了一个具有不重复元素的集合，而且集合里只包含偶数。而在字典表的例子里，我们创建了一个key是不重复的1到10之间的整数，value是布尔型，用来指示key是否是偶数。<br />
+这里另外一个值得注意的事情是集合的字面量表示法。我们可以简单的用这种方法创建一个集合：</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">my_set</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">my_set</span>
+<span class="nb">set</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+</code></pre></div></div>
+<p>而不需要使用内置函数set()。</p>
+
+<h4 id="false--true">False == True</h4>
+
+<p>比起实用技术来说这是一个很有趣的事，在python中，True和False是全局变量，因此：</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="bp">False</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="k">if</span> <span class="bp">False</span><span class="p">:</span>
+   <span class="k">print</span> <span class="s">"Hello"</span>
+<span class="k">else</span><span class="p">:</span>
+   <span class="k">print</span> <span class="s">"World"</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Hello</span>
+</code></pre></div></div>
+
+<h4 id="交换变量">交换变量</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span><span class="n">a</span><span class="o">=</span><span class="mi">3</span>
+<span class="o">&gt;&gt;&gt;</span><span class="n">b</span><span class="o">=</span><span class="mi">6</span>
+<span class="o">&gt;&gt;&gt;</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span><span class="n">a</span>
+<span class="o">&gt;&gt;&gt;</span><span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span><span class="mi">6</span>
+<span class="o">&gt;&gt;&gt;</span><span class="n">ptint</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span><span class="mi">5</span>
+</code></pre></div></div>
+<h4 id="解决fizzbuzz">解决FizzBuzz</h4>
+
+<p>前段时间Jeff Atwood 推广了一个简单的编程练习叫FizzBuzz，问题引用如下：<br />
+<em>写一个程序，打印数字1到100，3的倍数打印“Fizz”来替换这个数，5的倍数打印“Buzz”，对于既是3的倍数又是5的倍数的数字打印“FizzBuzz”。</em><br />
+这里就是一个简短的，有意思的方法解决这个问题：</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">101</span><span class="p">):</span>
+    <span class="k">print</span><span class="s">"fizz"</span><span class="p">[</span><span class="n">x</span><span class="o">%</span><span class="mi">3</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="s">'fizz'</span><span class="p">)::]</span><span class="o">+</span><span class="s">"buzz"</span><span class="p">[</span><span class="n">x</span><span class="o">%</span><span class="mi">5</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="s">'buzz'</span><span class="p">)::]</span> <span class="ow">or</span> <span class="n">x</span>
+</code></pre></div></div>
+
+<h4 id="if-语句在行内">if 语句在行内</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span> <span class="s">"Hello"</span> <span class="k">if</span> <span class="bp">True</span> <span class="k">else</span> <span class="s">"World"</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Hello</span>
+</code></pre></div></div>
+
+<h4 id="连接">连接</h4>
+
+<p>下面的最后一种方式在绑定两个不同类型的对象时显得很cool。</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nfc</span> <span class="o">=</span> <span class="p">[</span><span class="s">"Packers"</span><span class="p">,</span> <span class="s">"49ers"</span><span class="p">]</span>
+<span class="n">afc</span> <span class="o">=</span> <span class="p">[</span><span class="s">"Ravens"</span><span class="p">,</span> <span class="s">"Patriots"</span><span class="p">]</span>
+<span class="k">print</span> <span class="n">nfc</span> <span class="o">+</span> <span class="n">afc</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="s">'Packers'</span><span class="p">,</span> <span class="s">'49ers'</span><span class="p">,</span> <span class="s">'Ravens'</span><span class="p">,</span> <span class="s">'Patriots'</span><span class="p">]</span>
+<span class="k">print</span> <span class="nb">str</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s">" world"</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span> <span class="n">world</span>
+<span class="k">print</span> <span class="sb">`1`</span> <span class="o">+</span> <span class="s">" world"</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span> <span class="n">world</span>
+<span class="k">print</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"world"</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span> <span class="n">world</span>
+<span class="k">print</span> <span class="n">nfc</span><span class="p">,</span> <span class="mi">1</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="s">'Packers'</span><span class="p">,</span> <span class="s">'49ers'</span><span class="p">]</span> <span class="mi">1</span>
+</code></pre></div></div>
+
+<h4 id="数值比较">数值比较</h4>
+
+<p>这是我见过诸多语言中很少有的如此棒的简便法</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="k">if</span> <span class="mi">3</span> <span class="o">&gt;</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+   <span class="k">print</span> <span class="n">x</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">2</span>
+<span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+   <span class="k">print</span> <span class="n">x</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">2</span>
+</code></pre></div></div>
+
+<h4 id="同时迭代两个列表">同时迭代两个列表</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nfc</span> <span class="o">=</span> <span class="p">[</span><span class="s">"Packers"</span><span class="p">,</span> <span class="s">"49ers"</span><span class="p">]</span>
+<span class="n">afc</span> <span class="o">=</span> <span class="p">[</span><span class="s">"Ravens"</span><span class="p">,</span> <span class="s">"Patriots"</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">teama</span><span class="p">,</span> <span class="n">teamb</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">nfc</span><span class="p">,</span> <span class="n">afc</span><span class="p">):</span>
+     <span class="k">print</span> <span class="n">teama</span> <span class="o">+</span> <span class="s">" vs. "</span> <span class="o">+</span> <span class="n">teamb</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Packers</span> <span class="n">vs</span><span class="o">.</span> <span class="n">Ravens</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">49</span><span class="n">ers</span> <span class="n">vs</span><span class="o">.</span> <span class="n">Patriots</span>
+</code></pre></div></div>
+
+<h4 id="带索引的列表迭代">带索引的列表迭代</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">teams</span> <span class="o">=</span> <span class="p">[</span><span class="s">"Packers"</span><span class="p">,</span> <span class="s">"49ers"</span><span class="p">,</span> <span class="s">"Ravens"</span><span class="p">,</span> <span class="s">"Patriots"</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">team</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">teams</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">index</span><span class="p">,</span> <span class="n">team</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">0</span> <span class="n">Packers</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span> <span class="mi">49</span><span class="n">ers</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">2</span> <span class="n">Ravens</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">3</span> <span class="n">Patriots</span>
+</code></pre></div></div>
+
+<h3 id="初始化列表的值">初始化列表的值</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span>
+<span class="k">print</span> <span class="n">items</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h4 id="列表转换为字符串">列表转换为字符串</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">teams</span> <span class="o">=</span> <span class="p">[</span><span class="s">"Packers"</span><span class="p">,</span> <span class="s">"49ers"</span><span class="p">,</span> <span class="s">"Ravens"</span><span class="p">,</span> <span class="s">"Patriots"</span><span class="p">]</span>
+<span class="k">print</span> <span class="s">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">teams</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s">'Packers, 49ers, Ravens, Patriots'</span>
+</code></pre></div></div>
+
+<h4 id="从字典中获取元素">从字典中获取元素</h4>
+
+<p>我承认try/except代码并不雅致，不过这里有一种简单方法，尝试在字典中查找key，如果没有找到对应的alue将用第二个参数设为其变量值。</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s">'user'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">'name'</span><span class="p">:</span> <span class="s">'Max'</span><span class="p">,</span> <span class="s">'three'</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+<span class="k">try</span><span class="p">:</span>
+   <span class="n">is_admin</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">'admin'</span><span class="p">]</span>
+<span class="k">except</span> <span class="nb">KeyError</span><span class="p">:</span>
+   <span class="n">is_admin</span> <span class="o">=</span> <span class="bp">False</span>
+</code></pre></div></div>
+<p>替换成这样</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s">'user'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">'name'</span><span class="p">:</span> <span class="s">'Max'</span><span class="p">,</span> <span class="s">'three'</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+<span class="n">is_admin</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'admin'</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="获取列表的子集">获取列表的子集</h4>
+
+<p>有时，你只需要列表中的部分元素，这里是一些获取列表子集的方法。</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+<span class="c1">#前3个
+</span><span class="k">print</span> <span class="n">x</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="c1">#中间4个
+</span><span class="k">print</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+<span class="c1">#最后3个
+</span><span class="k">print</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+<span class="c1">#奇数项
+</span><span class="k">print</span> <span class="n">x</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+<span class="c1">#偶数项
+</span><span class="k">print</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="位运算的妙用">位运算的妙用</h3>
+
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td>位运算常用的运算符包括&amp;（按位与），</td>
+        <td>（按位或），~（按位非），^（按位异或），« (有符号左移位) ，»（有符号右移位）。</td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
+
+<h4 id="判断奇数还是偶数">判断奇数还是偶数</h4>
+
+<p>我们只需要使用&amp;运算，与1进行&amp;，如果为1，那么该数为奇数；如果为0，那么该数是偶数，Python代码如下：</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">isodd</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">True</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="k">else</span> <span class="bp">False</span>
+</code></pre></div></div>
+
+<h4 id="左移一位相当于乘以2右移一位相当于除以2">左移一位相当于乘以2，右移一位相当于除以2</h4>
+
+<h4 id="二分查找">二分查找</h4>
+
+<p>二分查找的代码如下：</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">binary_search</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+    <span class="s">'''
+    :param list: 有序列表
+    :param item: 要查找的元素
+    :return: item在list中的索引，若不在list中返回None
+    '''</span>
+    <span class="n">low</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">high</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">low</span> <span class="o">&lt;=</span> <span class="n">high</span><span class="p">:</span>
+        <span class="n">midpoint</span> <span class="o">=</span> <span class="p">(</span><span class="n">low</span> <span class="o">+</span> <span class="n">high</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="k">if</span> <span class="nb">list</span><span class="p">[</span><span class="n">midpoint</span><span class="p">]</span> <span class="o">==</span> <span class="n">item</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">midpoint</span>
+        <span class="k">elif</span> <span class="nb">list</span><span class="p">[</span><span class="n">midpoint</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">item</span><span class="p">:</span>
+            <span class="n">low</span> <span class="o">=</span> <span class="n">midpoint</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="nb">list</span><span class="p">[</span><span class="n">midpoint</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">item</span><span class="p">:</span>
+            <span class="n">high</span> <span class="o">=</span> <span class="n">midpoint</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="bp">None</span>
+</code></pre></div></div>
+<p>其中有一步是需要取最小小标和最大下标的中间值，若使用位运算符，<code class="highlighter-rouge">midpoint = (low + high) &gt;&gt; 1</code>，面试官肯定会对你刮目相看。</p>
+
+<h4 id="交换两个数值">交换两个数值</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a</span> <span class="o">^=</span> <span class="n">b</span>
+<span class="n">b</span> <span class="o">^=</span> <span class="n">a</span>
+<span class="n">a</span> <span class="o">^=</span> <span class="n">b</span>
+</code></pre></div></div>
+<p>确实比较难理解，原理是什么呢？<br />
+第一行，a = a ^ b，很容易理解；<br />
+第二行， b = b ^ a = b ^ a ^ b，由于 b ^ b = 0，所以 b = a ^ 0，即 b = a;<br />
+第三行， a = a ^ b ,由于a在第一步重新赋值，所以，a =  a ^ b ^ a = b，完成了数值交换。<br />
+这里，总结下异或运算的特性：任意数和自身异或结果为0；0和任意数异或结果还是其本身。</p>
+
+<h4 id="寻找数据列表中的独一无二">寻找数据列表中的独一无二</h4>
+
+<p>有一个数据列表（2N+1个整数），只有一个数出现了1次，其余N个数都出现了2次。如何找到这个独一无二的数据？<br />
+看到这个题目，相信大家第一次想到的算法肯定是计数，建立列表，循环整个数据并计数，然后遍历这个列表找到出现次数为1的数据。<br />
+这样，空间复杂度为O（N）。<br />
+如何降低空间复杂度呢？<br />
+注意看一下刚刚讲过的异或的特性：任意数和自身异或结果为0；0和任意数异或结果还是其本身。 <br />
+那么，出现了2次的N个数异或的结果是0，再与出现次数为1次的数异或的结果即为该数。即：找到这个独一无二数据的办法是通过对全部的数据进行异或操作，空间复杂度降低为O（1）。</p>
+
+<h4 id="计算一个数值的二进制数中有多少个1">计算一个数值的二进制数中有多少个1</h4>
+
+<p>相信有了之前的基础，大家很容易实现这个算法。单纯的通过位运算，与1进行与运算，看是否结果为1，然后右移1位，继续判断。Python代码实现如下：</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">number1Bit</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">x</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span><span class="o">&amp;</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">count</span>
+</code></pre></div></div>
+<p>这样存在一个问题，就是如果有连续多个0，那么需要做多次移位操作。有没有简单的方式跳过连续多个0的情况？</p>
+
+<p>那就是通过与（x-1）进行&amp;运算。这里可能不太好理解，举例说明一下
+x         1110 0000
+x - 1     1101 1111
+x&amp;(x-1)   1100 0000
+通过这种方式，会把最后的那个1检测出来。<br />
+Python代码实现如下：</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">number1Bit</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">x</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">count</span>
+</code></pre></div></div>
+
+<h4 id="总结">总结：</h4>
+<ol>
+  <li>与运算通常应用的场景是获取某一位的值为1还是0（如判断奇数偶数，统计数值中1的个数）；</li>
+  <li>左移右移特性：左移一位相当于乘以2，右移一位相当于除以2；</li>
+  <li>异或特性：任意数和自身异或结果为0；0和任意数异或结果还是其本身。</li>
+</ol>
+
+<h3 id="python-好用的库">Python 好用的库</h3>
+
+<h4 id="漂亮的打印出json">漂亮的打印出JSON</h4>
+
+<p>JSON是一种非常好的数据序列化的形式，被如今的各种API和web service大量的使用。使用python内置的json处理，可以使JSON串具有一定的可读性，但当遇到大型数据时，它表现成一个很长的、连续的一行时，人的肉眼就很难观看了。<br />
+为了能让JSON数据表现的更友好，我们可以使用indent参数来输出漂亮的JSON。当在控制台交互式编程或做日志时，这尤其有用：</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">json</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>  <span class="c1"># No indention
+</span><span class="p">{</span><span class="s">"status"</span><span class="p">:</span> <span class="s">"OK"</span><span class="p">,</span> <span class="s">"count"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">"results"</span><span class="p">:</span> <span class="p">[{</span><span class="s">"age"</span><span class="p">:</span> <span class="mi">27</span><span class="p">,</span> <span class="s">"name"</span><span class="p">:</span> <span class="s">"Oz"</span><span class="p">,</span> <span class="s">"lactose_intolerant"</span><span class="p">:</span> <span class="n">true</span><span class="p">},</span> <span class="p">{</span><span class="s">"age"</span><span class="p">:</span> <span class="mi">29</span><span class="p">,</span> <span class="s">"name"</span><span class="p">:</span> <span class="s">"Joe"</span><span class="p">,</span> <span class="s">"lactose_intolerant"</span><span class="p">:</span> <span class="n">false</span><span class="p">}]}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>  <span class="c1"># With indention
+</span><span class="p">{</span>
+  <span class="s">"status"</span><span class="p">:</span> <span class="s">"OK"</span><span class="p">,</span>
+  <span class="s">"count"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="s">"results"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s">"age"</span><span class="p">:</span> <span class="mi">27</span><span class="p">,</span>
+      <span class="s">"name"</span><span class="p">:</span> <span class="s">"Oz"</span><span class="p">,</span>
+      <span class="s">"lactose_intolerant"</span><span class="p">:</span> <span class="n">true</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="s">"age"</span><span class="p">:</span> <span class="mi">29</span><span class="p">,</span>
+      <span class="s">"name"</span><span class="p">:</span> <span class="s">"Joe"</span><span class="p">,</span>
+      <span class="s">"lactose_intolerant"</span><span class="p">:</span> <span class="n">false</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>同样，使用内置的pprint模块，也可以让其它任何东西打印输出的更漂亮。</p>
+
+<h4 id="创建一次性的快速的小型web服务">创建一次性的、快速的小型web服务</h4>
+
+<p>有时候，我们需要在两台机器或服务之间做一些简便的、很基础的RPC之类的交互。我们希望用一种简单的方式使用B程序调用A程序里的一个方法——有时是在另一台机器上。仅内部使用。<br />
+我并不鼓励将这里介绍的方法用在非内部的、一次性的编程中。我们可以使用一种叫做XML-RPC的协议 (相对应的是这个Python库)，来做这种事情。<br />
+下面是一个使用SimpleXMLRPCServer模块建立一个快速的小的文件读取服务器的例子：</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">SimpleXMLRPCServer</span> <span class="kn">import</span> <span class="n">SimpleXMLRPCServer</span>
+<span class="k">def</span> <span class="nf">file_reader</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span>  <span class="n">r</span> <span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">server</span> <span class="o">=</span> <span class="n">SimpleXMLRPCServer</span><span class="p">((</span> <span class="n">localhost</span> <span class="p">,</span> <span class="mi">8000</span><span class="p">))</span>
+<span class="n">server</span><span class="o">.</span><span class="n">register_introspection_functions</span><span class="p">()</span>
+<span class="n">server</span><span class="o">.</span><span class="n">register_function</span><span class="p">(</span><span class="n">file_reader</span><span class="p">)</span>
+<span class="n">server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+</code></pre></div></div>
+<p>客户端：</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">xmlrpclib</span>
+<span class="n">proxy</span> <span class="o">=</span> <span class="n">xmlrpclib</span><span class="o">.</span><span class="n">ServerProxy</span><span class="p">(</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8000</span><span class="o">/</span> <span class="p">)</span>
+<span class="n">proxy</span><span class="o">.</span><span class="n">file_reader</span><span class="p">(</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">secret</span><span class="o">.</span><span class="n">txt</span> <span class="p">)</span>
+</code></pre></div></div>
+<p>我们这样就得到了一个远程文件读取工具，没有外部的依赖，只有几句代码(当然，没有任何安全措施，所以只可以在家里这样做)。</p>
+
+<h4 id="迭代工具">迭代工具</h4>
+
+<p>和collections库一样，还有一个库叫itertools，对某些问题真能高效地解决。其中一个用例是查找所有组合，他能告诉你在一个组中元素的所有不能的组合方式</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
+<span class="n">teams</span> <span class="o">=</span> <span class="p">[</span><span class="s">"Packers"</span><span class="p">,</span> <span class="s">"49ers"</span><span class="p">,</span> <span class="s">"Ravens"</span><span class="p">,</span> <span class="s">"Patriots"</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">game</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">teams</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">game</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="s">'Packers'</span><span class="p">,</span> <span class="s">'49ers'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="s">'Packers'</span><span class="p">,</span> <span class="s">'Ravens'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="s">'Packers'</span><span class="p">,</span> <span class="s">'Patriots'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="s">'49ers'</span><span class="p">,</span> <span class="s">'Ravens'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="s">'49ers'</span><span class="p">,</span> <span class="s">'Patriots'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="s">'Ravens'</span><span class="p">,</span> <span class="s">'Patriots'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="计数时使用counter计数对象">计数时使用Counter计数对象</h4>
+
+<p>这听起来显而易见，但经常被人忘记。对于大多数程序员来说，数一个东西是一项很常见的任务，而且在大多数情况下并不是很有挑战性的事情——这里有几种方法能更简单的完成这种任务。<br />
+Python的collections类库里有个内置的dict类的子类，是专门来干这种事情的：</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span> <span class="n">hello</span> <span class="n">world</span> <span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span>
+<span class="n">Counter</span><span class="p">({</span> <span class="n">l</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>  <span class="n">o</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span>    <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="n">e</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="n">d</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="n">h</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="n">r</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="n">w</span> <span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="p">[(</span> <span class="n">l</span> <span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span> <span class="n">o</span> <span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+</code></pre></div></div>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/02/26/%E6%9C%89%E5%85%B3%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9B%86/" data-toggle="tooltip" data-placement="top" title="有关自动驾驶的数据集">
+                        Previous<br>
+                        <span>有关自动驾驶的数据集</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/02/27/Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" data-toggle="tooltip" data-placement="top" title="Redis数据结构">
+                        Next<br>
+                        <span>Redis数据结构</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="/js/md5.min.js"></script>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: '7194056b4e3867bdf12c',
+                    clientSecret: '0ee17ceedb52c45e6a8553399a0fbeaab0e9f43f',
+                    repo: 'lizhizhi7.github.io',
+                    owner: 'lizhizhi7',
+                    admin: ['lizhizhi7'],
+                    distractionFreeMode: true,
+                    id: md5(location.pathname),
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Git" title="Git" rel="4">
+                                    Git
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Android" title="Android" rel="10">
+                                    Android
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#YAML" title="YAML" rel="2">
+                                    YAML
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python" title="Python" rel="5">
+                                    Python
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Jupyter" title="Jupyter" rel="2">
+                                    Jupyter
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Android View" title="Android View" rel="4">
+                                    Android View
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MATLAB" title="MATLAB" rel="8">
+                                    MATLAB
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Java" title="Java" rel="13">
+                                    Java
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#NETWORK" title="NETWORK" rel="2">
+                                    NETWORK
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#HTTP" title="HTTP" rel="2">
+                                    HTTP
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MySQL" title="MySQL" rel="3">
+                                    MySQL
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#DataBase" title="DataBase" rel="4">
+                                    DataBase
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#化学前沿" title="化学前沿" rel="3">
+                                    化学前沿
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#DATA" title="DATA" rel="2">
+                                    DATA
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python3" title="Python3" rel="3">
+                                    Python3
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="https://apple.com">Apple</a></li>
+                    
+                        <li><a href="https://developer.apple.com/">Apple Developer</a></li>
+                    
+                        <li><a href="https://www.android.com/">Android</a></li>
+                    
+                        <li><a href="https://developer.android.com/">Android Developer</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!--MathJax-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    showProcessingMessages: false,
+    messageStyle: "none",
+    tex2jax: {
+        inlineMath: [["$","$"],["\\(","\\)"]],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+    },
+  });
+</script>
+<script type="text/javascript" src="/js/MathJax/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+ <!--Sequence css font js-->
+<link rel="stylesheet" href="/js/Sequence/css/sequence-diagram-min.css">
+<script src="/js/Sequence/js/underscore-min.js"></script>
+<!-- Snap.svg -->
+<script src="/js/Sequence/js/snap.svg-min.js"></script>
+<!-- or Raphael -->
+<!--<script src="../js/raphael.min.js"></script>-->
+<script src="/js/Sequence/fonts/daniel/daniel_700.font.js"></script>
+<script src="/js/Sequence/js/webfont.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-min.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-snap-min.js"></script>
+
+<!--Sequence JS-->
+<script>
+  $(".language-sequence").sequenceDiagram({theme: 'hand'});
+</script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a5f544474e9c">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/li-zhi-93-94">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/lee.minizhi">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/lizhizhi7">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; XiaoZhi Blog 2019
+                    <br>
+                    Theme on <a href="https://github.com/lizhizhi7/lizhizhi7.github.io">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=lizhizhi7&repo=lizhizhi7.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

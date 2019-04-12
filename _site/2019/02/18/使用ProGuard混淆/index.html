@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Right here waiting for you.">
+    <meta name="keywords"  content="LZ Blog, MATLAB, R, ML, Python, Machine Learning">
+    <meta name="theme-color" content="#000000">
+    
+    <title>使用ProGuard混淆 - 尖耳熊的博客 | XZ Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2019/02/18/%E4%BD%BF%E7%94%A8ProGuard%E6%B7%B7%E6%B7%86/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">XiaoZhi Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/background-java.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/background-java.jpg')
+    }
+
+    .table tbody tr td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table thead tr th {
+        vertical-align: middle;
+    }
+
+    .language-sequence {
+        text-align: center;
+    }
+
+    
+</style>
+
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                        
+                    </div>
+                    <h1>使用ProGuard混淆</h1>
+                    
+                    
+                    <h2 class="subheading">Java工具</h2>
+                    
+                    <span class="meta">Posted by Lee on February 18, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h3 id="proguard作用">ProGuard作用</h3>
+
+<p><strong>压缩（Shrinking）</strong>：默认开启，用以减小应用体积，移除未被使用的类和成员，并且会在优化动作执行之后再次执行（因为优化后可能会再次暴露一些未被使用的类和成员）。如果想要关闭压缩，在proguard-rules.pro文件中加入：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 关闭压缩
+-dontshrink 
+</code></pre></div></div>
+
+<p><strong>优化（Optimization）</strong>：默认开启，在字节码级别执行优化，让应用运行的更快。同上，如果想要关闭优化，在proguard-rules.pro文件中加入：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 关闭优化
+-dontoptimize
+-optimizationpasses n 表示proguard对代码进行迭代优化的次数，Android一般为5
+</code></pre></div></div>
+
+<p><strong>混淆（Obfuscation）</strong>：默认开启，增大反编译难度，类和类成员会被随机命名，除非用keep保护。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 关闭混淆
+-dontobfuscate
+</code></pre></div></div>
+<p>混淆后默认会在工程目录app/build/outputs/mapping/release下生成一个mapping.txt文件，这就是混淆规则，我们可以根据这个文件把混淆后的代码反推回源本的代码，所以这个文件很重要，注意保护好。原则上，代码混淆后越乱越无规律越好，但有些地方我们是要避免混淆的，否则程序运行就会出错。</p>
+
+<h3 id="实现代码混淆">实现代码混淆</h3>
+
+<p>使用Android Studio正式打包时默认是不开启代码混淆的，如果需要开启代码混淆，可以在 app 模块下的build.gradle 文件中修改 minifyEnabled false 为 true。代码结构如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "******"
+        minSdkVersion 19
+        targetSdkVersion 25
+        versionCode 6
+        versionName "2.0.1"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            // 是否进行混淆
+            minifyEnabled true
+            // 混淆文件的位置
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            ···
+        }
+    }
+</code></pre></div></div>
+
+<h3 id="混淆配置规则">混淆配置规则</h3>
+
+<p>先看如下两个比较常用的命令，很多童鞋可能会比较迷惑以下两者的区别。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-keep class cn.hadcn.test.*
+-keep class cn.hadcn.test.**
+</code></pre></div></div>
+
+<ul>
+  <li>一颗星 
+　　表示只是保持该包下的类名，而子包下的类名还是会被混淆；</li>
+  <li>两颗星 
+　　表示把本包和所含子包下的类名都保持；用以上方法保持类后，你会发现类名虽然未混淆，但里面的具体方法和变量命名还是变了。 
+　　 
+这时如果既想保持类名，又想保持里面的内容不被混淆，我们就需要以下方法了:</li>
+</ul>
+
+<p><code class="highlighter-rouge">-keep class cn.hadcn.test.* {*;}</code></p>
+
+<p>在此基础上，我们也可以使用Java的基本规则来保护特定类不被混淆，比如我们可以用extends，implements等这些Java规则。如下例子就避免所有继承Activity的类被混淆</p>
+
+<p><code class="highlighter-rouge">-keep public class * extends android.app.Activity</code></p>
+
+<p>如果我们要保留一个类中的内部类不被混淆则需要用$符号，如下例子表示保持ScriptFragment内部类JavaScriptInterface中的所有public内容不被混淆。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-keepclassmembers class cc.ninty.chat.ui.fragment.ScriptFragment$JavaScriptInterface {
+   public *;
+}
+</code></pre></div></div>
+
+<p>再者，如果一个类中你不希望保持全部内容不被混淆，而只是希望保护类下的特定内容，就可以使用</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;init&gt;;     //匹配所有构造器
+&lt;fields&gt;;   //匹配所有域
+&lt;methods&gt;;  //匹配所有方法方法
+</code></pre></div></div>
+
+<p>你还可以在<code class="highlighter-rouge">&lt;fields&gt;</code>或<code class="highlighter-rouge">&lt;methods&gt;</code>前面加上private 、public、native等来进一步指定不被混淆的内容，如</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-keep class cn.hadcn.test.One {
+    public &lt;methods&gt;;
+}
+</code></pre></div></div>
+
+<p>表示One类下的所有public方法都不会被混淆，当然你还可以加入参数，比如以下表示用JSONObject作为入参的构造函数不会被混淆</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-keep class cn.hadcn.test.One {
+   public &lt;init&gt;(org.json.JSONObject);
+}
+</code></pre></div></div>
+
+<p>有时候你是不是还想着，我不需要保持类名，我只需要把该类下的特定方法保持不被混淆就好，那你就不能用keep方法了，keep方法会保持类名，而需要用keepclassmembers ，如此类名就不会被保持，为了便于对这些规则进行理解，官网给出了以下表格:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">保留</th>
+      <th style="text-align: center">防止被移除或者被重命名</th>
+      <th style="text-align: center">防止被重命名</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">类和类成员</td>
+      <td style="text-align: center">-keep</td>
+      <td style="text-align: center">-keepnames</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">仅类成员</td>
+      <td style="text-align: center">-keepclassmembers</td>
+      <td style="text-align: center">-keepclassmembernames</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">如果拥有某成员，保留类和类成员</td>
+      <td style="text-align: center">-keepclasseswithmembers</td>
+      <td style="text-align: center">-keepclasseswithmembernames</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>总结</p>
+
+<p><strong>keep</strong> 包留类和类中的成员，防止他们被混淆
+<strong>keepnames</strong> 保留类和类中的成员防止被混淆，但成员如果没有被引用将被删除
+<strong>keepclassmembers</strong> 只保留类中的成员，防止被混淆和移除。
+<strong>keepclassmembernames</strong> 只保留类中的成员，但如果成员没有被引用将被删除。
+<strong>keepclasseswithmembers</strong> 如果当前类中包含指定的方法，则保留类和类成员，否则将被混淆。
+<strong>keepclasseswithmembernames</strong> 如果当前类中包含指定的方法，则保留类和类成员，如果类成员没有被引用，则会被移除。</p>
+
+<h3 id="混淆配置说明">混淆配置说明</h3>
+
+<ol>
+  <li>在混淆打包时，每次构建时 ProGuard 都会输出下列文件(<code class="highlighter-rouge">/build/outputs/mapping/release/</code>)</li>
+</ol>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">文件</th>
+      <th style="text-align: left">作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">mapping.txt</td>
+      <td style="text-align: left">提供原始与混淆过的类、方法和字段名称之间的转换。</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">seeds.txt</td>
+      <td style="text-align: left">列出未进行混淆的类和成员。</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">usage.txt</td>
+      <td style="text-align: left">列出从 APK 移除的代码。</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>这些文件保存在中。（所以笔者认为上边的混淆模板中的记录生成的日志数据没有添加的必要，因为IDE在编译时自动已经输出了）</p>
+
+<ol>
+  <li>jni方法不可混淆，因为这个方法需要和native方法保持一致；
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 保持native方法不被混淆 
+-keepclasseswithmembernames class * {    
+ native &lt;methods&gt;;
+}
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>反射用到的类不混淆(否则反射可能出现问题)；</p>
+  </li>
+  <li>
+    <p>AndroidMainfest中的类不混淆，所以四大组件和Application的子类和Framework层下所有的类默认不会进行混淆，自定义的View默认也不会被混淆。所以像网上贴的很多排除自定义View，或四大组件被混淆的规则在Android Studio中是无需加入的。</p>
+  </li>
+  <li>
+    <p>与服务端交互时，使用GSON、fastjson等框架解析服务端数据时，所写的JSON对象类不混淆，否则无法将JSON解析成对应的对象；</p>
+  </li>
+  <li>
+    <p>使用第三方开源库或者引用其他第三方的SDK包时，如果有特别要求，也需要在混淆文件中加入对应的混淆规则；</p>
+  </li>
+  <li>
+    <p>有用到WebView的JS调用也需要保证写的接口方法不混淆，原因和第一条一样；</p>
+  </li>
+  <li>Parcelable的子类和Creator静态成员变量不混淆，否则会产生Android.os.BadParcelableException异常；
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 保持Parcelable不被混淆    
+-keep class * implements Android.os.Parcelable {         
+ public static final Android.os.Parcelable$Creator *;
+}
+</code></pre></div>    </div>
+  </li>
+  <li>使用enum类型时需要注意避免以下两个方法混淆，因为enum类的特殊性，以下两个方法会被反射调用，见第二条规则。
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-keepclassmembers enum * {  
+ public static **[] values();  
+ public static ** valueOf(java.lang.String);  
+}
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="混淆配置示例">混淆配置示例</h3>
+
+<p><code class="highlighter-rouge">proguard-rules.pro</code>文件</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#--------------------------1.实体类---------------------------------
+# 如果使用了Gson之类的工具要使被它解析的JavaBean类即实体类不被混淆。（这里填写自己项目中存放bean对象的具体路径）
+-keep class com.*.*.bean.**{*;}
+ 
+#--------------------------2.第三方包-------------------------------
+ 
+#Gson
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class sun.misc.Unsafe { *; }
+-keep class com.google.gson.stream.** { *; }
+-keep class com.google.gson.examples.android.model.** { *; }
+-keep class com.google.gson.* { *;}
+-dontwarn com.google.gson.**
+ 
+#butterknife
+-keep class butterknife.** { *; }
+-dontwarn butterknife.internal.**
+-keep class **$$ViewBinder { *; }
+ 
+#-------------------------3.与js互相调用的类------------------------
+ 
+ 
+#-------------------------4.反射相关的类和方法----------------------
+ 
+ 
+#-------------------------5.基本不用动区域--------------------------
+#指定代码的压缩级别（0~7）
+-optimizationpasses 5
+ 
+#包明不混合大小写
+-dontusemixedcaseclassnames
+ 
+#不去忽略非公共的库类
+-dontskipnonpubliclibraryclasses
+-dontskipnonpubliclibraryclassmembers
+ 
+#混淆时是否记录日志
+-verbose
+ 
+#不优化输入的类文件
+-dontoptimize
+ 
+#不做预校验，可加快混淆速度
+#preverify是proguard的4个步骤之一
+#Android不需要preverify，去掉这一步可以加快混淆速度
+-dontpreverify
+ 
+# 保留sdk系统自带的一些内容 【例如：-keepattributes *Annotation* 会保留Activity的被@override注释的onCreate、onDestroy方法等】
+-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
+ 
+# 记录生成的日志数据,gradle build时在本项根目录输出
+# apk 包内所有 class 的内部结构
+-dump proguard/class_files.txt
+# 未混淆的类和成员
+-printseeds proguard/seeds.txt
+# 列出从 apk 中删除的代码
+-printusage proguard/unused.txt
+# 混淆前后的映射
+-printmapping proguard/mapping.txt
+ 
+ 
+# 避免混淆泛型
+-keepattributes Signature
+# 抛出异常时保留代码行号,保持源文件以及行号
+-keepattributes SourceFile,LineNumberTable
+ 
+#-----------------------------6.默认保留区-----------------------
+# 保持 native 方法不被混淆
+-keepclasseswithmembernames class * {
+    native &lt;methods&gt;;
+}
+ 
+-keepclassmembers public class * extends android.view.View {
+ public &lt;init&gt;(android.content.Context);
+ public &lt;init&gt;(android.content.Context, android.util.AttributeSet);
+ public &lt;init&gt;(android.content.Context, android.util.AttributeSet, int);
+ public void set*(***);
+}
+ 
+#保持 Serializable 不被混淆
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    !static !transient &lt;fields&gt;;
+    !private &lt;fields&gt;;
+    !private &lt;methods&gt;;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+ 
+# 保持自定义控件类不被混淆
+-keepclasseswithmembers class * {
+    public &lt;init&gt;(android.content.Context,android.util.AttributeSet);
+}
+# 保持自定义控件类不被混淆
+-keepclasseswithmembers class * {
+    public &lt;init&gt;(android.content.Context,android.util.AttributeSet,int);
+}
+# 保持自定义控件类不被混淆
+-keepclassmembers class * extends android.app.Activity {
+    public void *(android.view.View);
+}
+ 
+# 保持枚举 enum 类不被混淆
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+ 
+# 保持 Parcelable 不被混淆
+-keep class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator *;
+}
+ 
+# 不混淆R文件中的所有静态字段，我们都知道R文件是通过字段来记录每个资源的id的，字段名要是被混淆了，id也就找不着了。
+-keepclassmembers class **.R$* {
+    public static &lt;fields&gt;;
+}
+ 
+#如果引用了v4或者v7包
+-dontwarn android.support.**
+ 
+# 保持哪些类不被混淆
+-keep public class * extends android.app.Appliction
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Fragment
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep public class * extends android.preference.Preference
+ 
+# 不混淆资源类
+-keepclassmembers class **.R$* { *; }
+
+# 对于带有回调函数onXXEvent()的，不能被混淆
+-keepclassmembers class * {
+    void *(**On*Event);
+}
+# WebView
+-keepclassmembers class fqcn.of.javascript.interface.for.Webview {
+   public *;
+}
+-keepclassmembers class * extends android.webkit.WebViewClient {
+    public void *(android.webkit.WebView, java.lang.String, android.graphics.Bitmap);
+    public boolean *(android.webkit.WebView, java.lang.String);
+}
+-keepclassmembers class * extends android.webkit.WebViewClient {
+    public void *(android.webkit.WebView, jav.lang.String);
+}
+
+
+
+-keep class com.zhy.http.okhttp.**{*;}
+# -keep class com.*.*.util.** {*;}
+ 
+# ============忽略警告，否则打包可能会不成功=============
+-ignorewarnings
+</code></pre></div></div>
+
+<h3 id="写在最后">写在最后</h3>
+<p>发布一款应用除了设minifyEnabled为ture，你也应该设置zipAlignEnabled为true，像Google Play强制要求开发者上传的应用必须是经过zipAlign的，zipAlign可以让安装包中的资源按4字节对齐，这样可以减少应用在运行时的内存消耗。</p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/02/18/MySQL%E5%9F%BA%E7%A1%80%E7%BB%93%E6%9E%84/" data-toggle="tooltip" data-placement="top" title="MySQL基础结构">
+                        Previous<br>
+                        <span>MySQL基础结构</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/02/18/%E8%BF%91%E6%9C%9F%E5%8C%96%E5%AD%A6%E5%89%8D%E6%B2%BF(2.18)/" data-toggle="tooltip" data-placement="top" title="近期化学前沿(2.18)">
+                        Next<br>
+                        <span>近期化学前沿(2.18)</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="/js/md5.min.js"></script>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: '7194056b4e3867bdf12c',
+                    clientSecret: '0ee17ceedb52c45e6a8553399a0fbeaab0e9f43f',
+                    repo: 'lizhizhi7.github.io',
+                    owner: 'lizhizhi7',
+                    admin: ['lizhizhi7'],
+                    distractionFreeMode: true,
+                    id: md5(location.pathname),
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Git" title="Git" rel="4">
+                                    Git
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Android" title="Android" rel="10">
+                                    Android
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#YAML" title="YAML" rel="2">
+                                    YAML
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python" title="Python" rel="5">
+                                    Python
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Jupyter" title="Jupyter" rel="2">
+                                    Jupyter
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Android View" title="Android View" rel="4">
+                                    Android View
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MATLAB" title="MATLAB" rel="8">
+                                    MATLAB
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Java" title="Java" rel="13">
+                                    Java
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#NETWORK" title="NETWORK" rel="2">
+                                    NETWORK
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#HTTP" title="HTTP" rel="2">
+                                    HTTP
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MySQL" title="MySQL" rel="3">
+                                    MySQL
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#DataBase" title="DataBase" rel="4">
+                                    DataBase
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#化学前沿" title="化学前沿" rel="3">
+                                    化学前沿
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#DATA" title="DATA" rel="2">
+                                    DATA
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python3" title="Python3" rel="3">
+                                    Python3
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="https://apple.com">Apple</a></li>
+                    
+                        <li><a href="https://developer.apple.com/">Apple Developer</a></li>
+                    
+                        <li><a href="https://www.android.com/">Android</a></li>
+                    
+                        <li><a href="https://developer.android.com/">Android Developer</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!--MathJax-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    showProcessingMessages: false,
+    messageStyle: "none",
+    tex2jax: {
+        inlineMath: [["$","$"],["\\(","\\)"]],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+    },
+  });
+</script>
+<script type="text/javascript" src="/js/MathJax/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+ <!--Sequence css font js-->
+<link rel="stylesheet" href="/js/Sequence/css/sequence-diagram-min.css">
+<script src="/js/Sequence/js/underscore-min.js"></script>
+<!-- Snap.svg -->
+<script src="/js/Sequence/js/snap.svg-min.js"></script>
+<!-- or Raphael -->
+<!--<script src="../js/raphael.min.js"></script>-->
+<script src="/js/Sequence/fonts/daniel/daniel_700.font.js"></script>
+<script src="/js/Sequence/js/webfont.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-min.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-snap-min.js"></script>
+
+<!--Sequence JS-->
+<script>
+  $(".language-sequence").sequenceDiagram({theme: 'hand'});
+</script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a5f544474e9c">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/li-zhi-93-94">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/lee.minizhi">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/lizhizhi7">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; XiaoZhi Blog 2019
+                    <br>
+                    Theme on <a href="https://github.com/lizhizhi7/lizhizhi7.github.io">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=lizhizhi7&repo=lizhizhi7.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

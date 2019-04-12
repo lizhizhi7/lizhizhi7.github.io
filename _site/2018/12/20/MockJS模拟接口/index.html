@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Right here waiting for you.">
+    <meta name="keywords"  content="LZ Blog, MATLAB, R, ML, Python, Machine Learning">
+    <meta name="theme-color" content="#000000">
+    
+    <title>MockJS模拟接口 - 尖耳熊的博客 | XZ Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2018/12/20/MockJS%E6%A8%A1%E6%8B%9F%E6%8E%A5%E5%8F%A3/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">XiaoZhi Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/background-js.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/background-js.jpg')
+    }
+
+    .table tbody tr td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table thead tr th {
+        vertical-align: middle;
+    }
+
+    .language-sequence {
+        text-align: center;
+    }
+
+    
+</style>
+
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#JavaScript" title="JavaScript">JavaScript</a>
+                        
+                    </div>
+                    <h1>MockJS模拟接口</h1>
+                    
+                    
+                    <h2 class="subheading">JavaScript系列笔记（一）</h2>
+                    
+                    <span class="meta">Posted by Lee on December 20, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h1 id="mockjs脱离后端独立开发实现增删改查功能">Mock.js脱离后端独立开发，实现增删改查功能</h1>
+
+<p>在我们实际的生产环境中，前后端的开发往往是不同步的，而前端的开发又要依赖于后端的接口，这样对于前端开发者来说显得十分被动。那么如何才能在后端开发的同时，我们前端也能进行接口的测试呢？今天给大家来介绍一款非常强大的插件Mock.js，它可以非常方便的模拟后端的数据，也可以轻松的实现增删改查这些操作。</p>
+
+<h3 id="简单的用法">简单的用法</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">Mock</span><span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="s1">'http://123.com'</span><span class="p">,{</span>
+    <span class="s1">'name|3'</span><span class="p">:</span><span class="s1">'fei'</span><span class="p">,</span><span class="c1">//这个定义数据的模板形式下面会介绍</span>
+    <span class="s1">'age|20-30'</span><span class="p">:</span><span class="mi">25</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+    <span class="na">url</span><span class="p">:</span><span class="s1">'http://123.com'</span><span class="p">,</span>
+    <span class="na">dataType</span><span class="p">:</span><span class="s1">'json'</span><span class="p">,</span>
+    <span class="na">success</span><span class="p">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+       <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<p>在这个例子中我们截获地址为<code class="highlighter-rouge">http://123.com</code>返回的数据是一个拥有name和age的对象，那么ajax返回的数据就是Mock定义的数据，返回的数据格式如下：</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+     <span class="nl">name</span><span class="p">:</span><span class="s1">'feifeifei'</span><span class="p">,</span>
+     <span class="nx">age</span><span class="p">:</span><span class="mi">26</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="数据定义格式">数据定义格式</h3>
+
+<p>数据模板中的每个属性由 3 部分构成：属性名、生成规则、属性值：<strong>‘name|rule’: value</strong>。下面分别就各个类型进行说明</p>
+<ul>
+  <li><code class="highlighter-rouge">'name|min-max': string</code> 通过重复 string 生成一个字符串，min&lt;=重复次数&lt;=max</li>
+  <li>
+    <p><code class="highlighter-rouge">'name|count': string</code>   通过重复 string 生成一个字符串，重复次数等于 count</p>
+  </li>
+  <li><code class="highlighter-rouge">'name|min-max': number</code>   生成一个min&lt;=整数&lt;=max，属性值 number 只是用来确定类型
+例：<code class="highlighter-rouge">'age|20-30':25</code>生成一个大于等于 20、小于等于 30 的整数，属性值 25 只是用来确定类型</li>
+  <li><code class="highlighter-rouge">'name|+1': number</code>   属性值自动加 1，初始值为 number，以后每次请求在前面的基础上+1</li>
+  <li><code class="highlighter-rouge">'name|min-max.dmin-dmax': number</code>   生成一个浮点数，min&lt;=整数部分&lt;=max，小数部分保留 dmin 到 dmax 位。
+例：<code class="highlighter-rouge">'weight|100-120.2-5':110.24,</code>生成一个浮点数,整数部分大于等于 100、小于等于 120，小数部分保留 2 到 5 位</li>
+  <li>
+    <p><code class="highlighter-rouge">'name|1': boolean</code>   随机生成一个布尔值，值为 true 的概率是 1/2，值为 false 的概率同样是 1/2</p>
+  </li>
+  <li>属性值是对象：
+ <code class="highlighter-rouge">'name|count': object</code> 从属性值 object 中随机选取 count 个属性
+<code class="highlighter-rouge">'name|min-max': object</code> 从属性值 object 中随机选取 min 到 max 个属性
+例：
+    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">obj</span><span class="o">=</span><span class="p">{</span><span class="s1">'host'</span><span class="p">:</span><span class="s1">'www.baidu'</span><span class="p">,</span><span class="s1">'port'</span><span class="p">:</span><span class="s1">'12345'</span><span class="p">,</span><span class="s1">'node'</span><span class="p">:</span><span class="s1">'selector'</span><span class="p">}</span>
+<span class="s1">'life1|2'</span><span class="p">:</span><span class="nx">obj</span> <span class="c1">//从属性值 obj 中随机选取 2 个属性</span>
+<span class="s1">'life1|1-2'</span><span class="p">:</span><span class="nx">obj</span> <span class="c1">//从属性值 obj 中随机选取 1 到 2 个属性。</span>
+</code></pre></div>    </div>
+  </li>
+  <li>属性值是数组：
+ <code class="highlighter-rouge">'name|1': array</code> 从属性值 array 中随机选取 1 个元素，作为最终值
+<code class="highlighter-rouge">'name|+1': array</code> 从属性值 array 中顺序选取 1 个元素，作为最终值
+<code class="highlighter-rouge">'name|count': array</code> 通过重复属性值 array 生成一个新数组，重复次数为 count
+<code class="highlighter-rouge">'name|min-max': array</code> 通过重复属性值 array 生成一个新数组，重复次数大于等于 min，小于等于 max
+例：
+    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">arr</span><span class="o">=</span><span class="p">[</span><span class="s1">'momo'</span><span class="p">,</span><span class="s1">'yanzi'</span><span class="p">,</span><span class="s1">'ziwei'</span><span class="p">]</span>
+<span class="s1">'friend1|1'</span><span class="p">:</span><span class="nx">arr</span> <span class="c1">//从数组 arr 中随机选取 1 个元素，作为最终值</span>
+<span class="s1">'friend2|+1'</span><span class="p">:</span><span class="nx">arr</span> <span class="c1">//从属性值 arr 中顺序选取 1 个元素，作为最终值，第一次就是'momo',第二次请求就是'yanzi'</span>
+<span class="s1">'friend3|2'</span><span class="p">:</span><span class="nx">arr</span> <span class="c1">//重复arr这个数字2次作为这个属性值，得到数据应该是['momo','yanzi','ziwei','momo','yanzi','ziwei']</span>
+<span class="s1">'friend3|2-3'</span><span class="p">:</span><span class="nx">arr</span> <span class="c1">//通过重复属性值 arr 生成一个新数组，重复次数大于等于 2，小于等于 3</span>
+</code></pre></div>    </div>
+    <h3 id="实际应用举例">实际应用举例</h3>
+    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">arr</span><span class="o">=</span><span class="p">[</span><span class="s1">'momo'</span><span class="p">,</span><span class="s1">'yanzi'</span><span class="p">,</span><span class="s1">'ziwei'</span><span class="p">]</span>
+<span class="kd">var</span> <span class="nx">obj</span><span class="o">=</span><span class="p">{</span>
+ <span class="s1">'host'</span><span class="p">:</span><span class="s1">'www.baidu'</span><span class="p">,</span>
+ <span class="s1">'port'</span><span class="p">:</span><span class="s1">'12345'</span><span class="p">,</span>
+ <span class="s1">'node'</span><span class="p">:</span><span class="s1">'selector'</span>
+ <span class="p">}</span>
+<span class="nx">Mock</span><span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="s1">'http://www.bai.com'</span><span class="p">,{</span>
+ <span class="s1">'firstName|3'</span><span class="p">:</span><span class="s1">'fei'</span><span class="p">,</span><span class="c1">//重复fei这个字符串 3 次，打印出来就是'feifeifei'。</span>
+ <span class="s1">'lastName|2-5'</span><span class="p">:</span><span class="s1">'jiang'</span><span class="p">,</span><span class="c1">//重复jiang这个字符串 2-5 次。</span>
+ <span class="s1">'big|+1'</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="c1">//属性值自动加 1，初始值为 0</span>
+ <span class="s1">'age|20-30'</span><span class="p">:</span><span class="mi">25</span><span class="p">,</span><span class="c1">//生成一个大于等于 20、小于等于 30 的整数，属性值 25 只是用来确定类型</span>
+ <span class="s1">'weight|100-120.2-5'</span><span class="p">:</span><span class="mf">110.24</span><span class="p">,</span><span class="c1">//生成一个浮点数,整数部分大于等于 100、小于等于 120，小数部分保留 2 到 5 位。</span>
+ <span class="s1">'likeMovie|1'</span><span class="p">:</span><span class="nb">Boolean</span><span class="p">,</span><span class="c1">//随机生成一个布尔值，值为 true 的概率是 1/2，值为 false 的概率同样是 1/2。</span>
+ <span class="s1">'friend1|1'</span><span class="p">:</span><span class="nx">arr</span><span class="p">,</span><span class="c1">//从数组 arr 中随机选取 1 个元素，作为最终值。</span>
+ <span class="s1">'friend2|+1'</span><span class="p">:</span><span class="nx">arr</span><span class="p">,</span><span class="c1">//从属性值 arr 中顺序选取 1 个元素，作为最终值</span>
+ <span class="s1">'friend3|2-3'</span><span class="p">:</span><span class="nx">arr</span><span class="p">,</span><span class="c1">//通过重复属性值 arr 生成一个新数组，重复次数大于等于 2，小于等于 3。</span>
+ <span class="s1">'life1|2'</span><span class="p">:</span><span class="nx">obj</span><span class="p">,</span><span class="c1">//从属性值 obj 中随机选取 2 个属性</span>
+ <span class="s1">'life1|1-2'</span><span class="p">:</span><span class="nx">obj</span><span class="p">,</span><span class="c1">//从属性值 obj 中随机选取 1 到 2 个属性。</span>
+ <span class="s1">'regexp1'</span><span class="p">:</span><span class="o">/^</span><span class="p">[</span><span class="nx">a</span><span class="o">-</span><span class="nx">z</span><span class="p">][</span><span class="nx">A</span><span class="o">-</span><span class="nx">Z</span><span class="p">][</span><span class="mi">0</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="nx">$</span><span class="o">/</span><span class="p">,</span><span class="c1">//生成的符合正则表达式的字符串</span>
+ <span class="p">})</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+ <span class="na">url</span><span class="p">:</span><span class="s1">'http://www.bai.com'</span><span class="p">,</span>
+ <span class="na">dataType</span><span class="p">:</span><span class="s1">'json'</span><span class="p">,</span>
+ <span class="na">success</span><span class="p">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+ <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+ <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>至于更多的详细文档可以去<a href="http://mockjs.com/">官方文档</a>上查看，Mock.js简单易学，可以便于前端的快速开发，也可以自己定义好需要的格式，让后端配合你，按照你的格式编写他的后端代码。</p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/12/19/Jekyll&Liquid&YAML%E8%AF%AD%E6%B3%95%E7%AC%94%E8%AE%B0/" data-toggle="tooltip" data-placement="top" title="Jekyll&Liquid&YAML语法笔记">
+                        Previous<br>
+                        <span>Jekyll&Liquid&YAML语法笔记</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/12/20/Git%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86/" data-toggle="tooltip" data-placement="top" title="Git 配置代理">
+                        Next<br>
+                        <span>Git 配置代理</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="/js/md5.min.js"></script>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: '7194056b4e3867bdf12c',
+                    clientSecret: '0ee17ceedb52c45e6a8553399a0fbeaab0e9f43f',
+                    repo: 'lizhizhi7.github.io',
+                    owner: 'lizhizhi7',
+                    admin: ['lizhizhi7'],
+                    distractionFreeMode: true,
+                    id: md5(location.pathname),
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Git" title="Git" rel="4">
+                                    Git
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Android" title="Android" rel="10">
+                                    Android
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#YAML" title="YAML" rel="2">
+                                    YAML
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python" title="Python" rel="5">
+                                    Python
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Jupyter" title="Jupyter" rel="2">
+                                    Jupyter
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Android View" title="Android View" rel="4">
+                                    Android View
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MATLAB" title="MATLAB" rel="8">
+                                    MATLAB
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Java" title="Java" rel="13">
+                                    Java
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#NETWORK" title="NETWORK" rel="2">
+                                    NETWORK
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#HTTP" title="HTTP" rel="2">
+                                    HTTP
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MySQL" title="MySQL" rel="3">
+                                    MySQL
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#DataBase" title="DataBase" rel="4">
+                                    DataBase
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#化学前沿" title="化学前沿" rel="3">
+                                    化学前沿
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#DATA" title="DATA" rel="2">
+                                    DATA
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python3" title="Python3" rel="3">
+                                    Python3
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="https://apple.com">Apple</a></li>
+                    
+                        <li><a href="https://developer.apple.com/">Apple Developer</a></li>
+                    
+                        <li><a href="https://www.android.com/">Android</a></li>
+                    
+                        <li><a href="https://developer.android.com/">Android Developer</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!--MathJax-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    showProcessingMessages: false,
+    messageStyle: "none",
+    tex2jax: {
+        inlineMath: [["$","$"],["\\(","\\)"]],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+    },
+  });
+</script>
+<script type="text/javascript" src="/js/MathJax/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+ <!--Sequence css font js-->
+<link rel="stylesheet" href="/js/Sequence/css/sequence-diagram-min.css">
+<script src="/js/Sequence/js/underscore-min.js"></script>
+<!-- Snap.svg -->
+<script src="/js/Sequence/js/snap.svg-min.js"></script>
+<!-- or Raphael -->
+<!--<script src="../js/raphael.min.js"></script>-->
+<script src="/js/Sequence/fonts/daniel/daniel_700.font.js"></script>
+<script src="/js/Sequence/js/webfont.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-min.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-snap-min.js"></script>
+
+<!--Sequence JS-->
+<script>
+  $(".language-sequence").sequenceDiagram({theme: 'hand'});
+</script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a5f544474e9c">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/li-zhi-93-94">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/lee.minizhi">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/lizhizhi7">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; XiaoZhi Blog 2019
+                    <br>
+                    Theme on <a href="https://github.com/lizhizhi7/lizhizhi7.github.io">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=lizhizhi7&repo=lizhizhi7.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

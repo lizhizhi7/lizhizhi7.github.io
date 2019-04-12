@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Right here waiting for you.">
+    <meta name="keywords"  content="LZ Blog, MATLAB, R, ML, Python, Machine Learning">
+    <meta name="theme-color" content="#000000">
+    
+    <title>Vim使用方法 - 尖耳熊的博客 | XZ Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2019/02/20/Vim%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">XiaoZhi Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/background-vim.png" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/background-vim.png')
+    }
+
+    .table tbody tr td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table thead tr th {
+        vertical-align: middle;
+    }
+
+    .language-sequence {
+        text-align: center;
+    }
+
+    
+</style>
+
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Vim" title="Vim">Vim</a>
+                        
+                    </div>
+                    <h1>Vim使用方法</h1>
+                    
+                    
+                    <h2 class="subheading">Vim</h2>
+                    
+                    <span class="meta">Posted by Lee on February 20, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h3 id="命令历史">命令历史</h3>
+<p>以:和/开头的命令都有历史纪录，可以首先键入:或/然后按上下箭头来选择某个历史命令。</p>
+
+<h3 id="启动vim">启动vim</h3>
+<p>在命令行窗口中输入以下命令即可</p>
+<ul>
+  <li>vim 直接启动vim</li>
+  <li>vim filename 打开vim并创建名为filename的文件</li>
+</ul>
+
+<h3 id="文件命令">文件命令</h3>
+<ul>
+  <li>vim file 打开单个文件</li>
+  <li>vim file1 file2 file3 … 同时打开多个文件</li>
+  <li>:open file 在vim窗口中打开一个新文件</li>
+  <li>:split file 在新窗口中打开文件</li>
+  <li>:bn 切换到下一个文件</li>
+  <li>:bp 切换到上一个文件</li>
+  <li>:args 查看当前打开的文件列表，当前正在编辑的文件会用[]括起来。</li>
+  <li>:e ftp://192.168.10.76/abc.txt 打开远程文件，比如ftp或者share folder</li>
+</ul>
+
+<h3 id="vim的模式">vim的模式</h3>
+<ul>
+  <li>正常模式（按Esc或Ctrl+[进入） 左下角显示文件名或为空</li>
+  <li>插入模式（按i键进入） 左下角显示–INSERT–</li>
+  <li>可视模式（不知道如何进入） 左下角显示–VISUAL–</li>
+</ul>
+
+<h3 id="导航命令">导航命令</h3>
+<p>% 括号匹配</p>
+
+<h3 id="插入命令">插入命令</h3>
+<ul>
+  <li>i 在当前位置生前插入</li>
+  <li>I 在当前行首插入</li>
+  <li>a 在当前位置后插入</li>
+  <li>A 在当前行尾插入</li>
+  <li>o 在当前行之后插入一行</li>
+  <li>O 在当前行之前插入一行</li>
+</ul>
+
+<h3 id="查找命令">查找命令</h3>
+<ul>
+  <li>/text　　查找text，按n健查找下一个，按N健查找前一个。</li>
+  <li>?text　　查找text，反向查找，按n健查找下一个，按N健查找前一个。
+    <blockquote>
+      <p>vim中有一些特殊字符在查找时需要转义　　.*[]^%/?~$</p>
+    </blockquote>
+  </li>
+  <li>:set ignorecase　　忽略大小写的查找</li>
+  <li>:set noignorecase　　不忽略大小写的查找</li>
+</ul>
+
+<blockquote>
+  <p>查找很长的词，如果一个词很长，键入麻烦，可以将光标移动到该词上，按*或#键即可以该单词进行搜索，相当于/搜索。而#命令相当于?搜索。</p>
+</blockquote>
+
+<ul>
+  <li>:set hlsearch　　高亮搜索结果，所有结果都高亮显示，而不是只显示一个匹配。</li>
+  <li>:set nohlsearch　　关闭高亮搜索显示</li>
+  <li>:nohlsearch　　关闭当前的高亮显示，如果再次搜索或者按下n或N键，则会再次高亮。</li>
+  <li>:set incsearch　　逐步搜索模式，对当前键入的字符进行搜索而不必等待键入完成。</li>
+  <li>:set wrapscan　　重新搜索，在搜索到文件头或尾时，返回继续搜索，默认开启。</li>
+</ul>
+
+<h3 id="替换命令">替换命令</h3>
+<ul>
+  <li>ra 将当前字符替换为a，当期字符即光标所在字符。</li>
+  <li>s/old/new/ 用old替换new，替换当前行的第一个匹配</li>
+  <li>s/old/new/g 用old替换new，替换当前行的所有匹配</li>
+  <li>%s/old/new/ 用old替换new，替换所有行的第一个匹配</li>
+  <li>%s/old/new/g 用old替换new，替换整个文件的所有匹配</li>
+  <li>:10,20 s/^/    /g 在第10行知第20行每行前面加四个空格，用于缩进。</li>
+  <li>ddp 交换光标所在行和其下紧邻的一行。</li>
+</ul>
+
+<h3 id="移动命令">移动命令</h3>
+<ul>
+  <li>h 左移一个字符</li>
+  <li>l 右移一个字符，这个命令很少用，一般用w代替。</li>
+  <li>k 上移一个字符</li>
+  <li>j 下移一个字符
+    <blockquote>
+      <p>以上四个命令可以配合数字使用，比如20j就是向下移动20行，5h就是向左移动5个字符，在Vim中，很多命令都可以配合数字使用，比如删除10个字符10x，在当前位置后插入3个！，3a！<code class="highlighter-rouge">&lt;Esc&gt;</code>，这里的Esc是必须的，否则命令不生效。</p>
+    </blockquote>
+  </li>
+  <li>w 向前移动一个单词（光标停在单词首部），如果已到行尾，则转至下一行行首。此命令快，可以代替l命令。</li>
+  <li>b 向后移动一个单词 2b 向后移动2个单词</li>
+  <li>e，同w，只不过是光标停在单词尾部</li>
+  <li>ge，同b，光标停在单词尾部。</li>
+  <li>^ 移动到本行第一个非空白字符上。</li>
+  <li>0（数字0）移动到本行第一个字符上，</li>
+  <li><code class="highlighter-rouge">&lt;HOME&gt;</code> 移动到本行第一个字符。同0键。</li>
+  <li>$ 移动到行尾</li>
+  <li>3$ 移动到下面3行的行尾</li>
+  <li>gg 移动到文件头。 = [[</li>
+  <li>G（shift + g） 移动到文件尾。 = ]]</li>
+  <li>f（find）命令也可以用于移动，fx将找到光标后第一个为x的字符，3fd将找到第三个为d的字符。</li>
+  <li>F 同f，反向查找。</li>
+  <li>跳到指定行，冒号+行号，回车，比如跳到240行就是 :240回车。另一个方法是行号+G，比如230G跳到230行。</li>
+  <li>Ctrl + e 向下滚动一行</li>
+  <li>Ctrl + y 向上滚动一行</li>
+  <li>Ctrl + d 向下滚动半屏</li>
+  <li>Ctrl + u 向上滚动半屏</li>
+  <li>Ctrl + f 向下滚动一屏</li>
+  <li>Ctrl + b 向上滚动一屏</li>
+</ul>
+
+<h3 id="撤销和重做">撤销和重做</h3>
+<ul>
+  <li>u 撤销（Undo）</li>
+  <li>U 撤销对整行的操作</li>
+  <li>Ctrl + r 重做（Redo），即撤销的撤销。</li>
+</ul>
+
+<h3 id="删除命令">删除命令</h3>
+<ul>
+  <li>x 删除当前字符</li>
+  <li>3x 删除当前光标开始向后三个字符</li>
+  <li>X 删除当前字符的前一个字符。X=dh</li>
+  <li>dl 删除当前字符， dl=x</li>
+  <li>dh 删除前一个字符</li>
+  <li>dd 删除当前行</li>
+  <li>dj 删除上一行</li>
+  <li>dk 删除下一行</li>
+  <li>10d 删除当前行开始的10行。</li>
+  <li>D 删除当前字符至行尾。D=d$</li>
+  <li>d$ 删除当前字符之后的所有字符（本行）</li>
+  <li>kdgg 删除当前行之前所有行（不包括当前行）</li>
+  <li>jdG（jd shift + g）   删除当前行之后所有行（不包括当前行）</li>
+  <li>:1,10d 删除1-10行</li>
+  <li>:11,$d 删除11行及以后所有的行</li>
+  <li>:1,$d 删除所有行</li>
+  <li>J(shift + j)　　删除两行之间的空行，实际上是合并两行。</li>
+</ul>
+
+<h3 id="拷贝和粘贴">拷贝和粘贴</h3>
+<ul>
+  <li>yy 拷贝当前行</li>
+  <li>nyy 拷贝当前后开始的n行，比如2yy拷贝当前行及其下一行。</li>
+  <li>p  在当前光标后粘贴,如果之前使用了yy命令来复制一行，那么就在当前行的下一行粘贴。</li>
+  <li>shift+p 在当前行前粘贴</li>
+  <li>:1,10 co 20 将1-10行插入到第20行之后。</li>
+  <li>:1,$ co $ 将整个文件复制一份并添加到文件尾部。</li>
+  <li>正常模式下按v（逐字）或V（逐行）进入可视模式，然后用jklh命令移动即可选择某些行或字符，再按y即可复制</li>
+  <li>ddp交换当前行和其下一行</li>
+  <li>xp交换当前字符和其后一个字符</li>
+</ul>
+
+<h3 id="剪切命令">剪切命令</h3>
+<ul>
+  <li>正常模式下按v（逐字）或V（逐行）进入可视模式，然后用jklh命令移动即可选择某些行或字符，再按d即可剪切</li>
+  <li>ndd 剪切当前行之后的n行。利用p命令可以对剪切的内容进行粘贴</li>
+  <li>:1,10d 将1-10行剪切。利用p命令可将剪切后的内容进行粘贴。</li>
+  <li>:1, 10 m 20 将第1-10行移动到第20行之后。</li>
+</ul>
+
+<h3 id="退出命令">退出命令</h3>
+<ul>
+  <li>:wq 保存并退出</li>
+  <li>ZZ 保存并退出</li>
+  <li>:q! 强制退出并忽略所有更改</li>
+  <li>:e! 放弃所有修改，并打开原来文件。</li>
+</ul>
+
+<h3 id="窗口命令">窗口命令</h3>
+<ul>
+  <li>:split或new 打开一个新窗口，光标停在顶层的窗口上</li>
+  <li>:split file或:new file 用新窗口打开文件
+    <blockquote>
+      <p>split打开的窗口都是横向的，使用vsplit可以纵向打开窗口。</p>
+    </blockquote>
+  </li>
+  <li>Ctrl+ww 移动到下一个窗口</li>
+  <li>Ctrl+wj 移动到下方的窗口</li>
+  <li>Ctrl+wk 移动到上方的窗口</li>
+</ul>
+
+<h4 id="关闭窗口">关闭窗口</h4>
+<ul>
+  <li>:close 最后一个窗口不能使用此命令，可以防止意外退出vim。</li>
+  <li>:q 如果是最后一个被关闭的窗口，那么将退出vim。</li>
+  <li>ZZ 保存并退出。</li>
+</ul>
+
+<h4 id="关闭所有窗口只保留当前窗口">关闭所有窗口，只保留当前窗口</h4>
+<ul>
+  <li>:only</li>
+</ul>
+
+<h3 id="录制宏">录制宏</h3>
+
+<p>按q键加任意字母开始录制，再按q键结束录制（这意味着vim中的宏不可嵌套），使用的时候@加宏名，比如qa。。。q录制名为a的宏，@a使用这个宏。</p>
+
+<h3 id="执行shell命令">执行shell命令</h3>
+<ul>
+  <li>:!command</li>
+  <li>:!ls 列出当前目录下文件</li>
+  <li>:!perl -c script.pl 检查perl脚本语法，可以不用退出vim，非常方便。</li>
+  <li>:!perl script.pl 执行perl脚本，可以不用退出vim，非常方便。</li>
+  <li>:suspend或Ctrl - Z 挂起vim，回到shell，按fg可以返回vim。</li>
+</ul>
+
+<h3 id="注释命令">注释命令</h3>
+<p>perl程序中#开始的行为注释，所以要注释某些行，只需在行首加入#</p>
+
+<ul>
+  <li>3,5 s/^/#/g 注释第3-5行</li>
+  <li>3,5 s/^#//g 解除3-5行的注释</li>
+  <li>1,$ s/^/#/g 注释整个文档。</li>
+  <li>:%s/^/#/g 注释整个文档，此法更快。</li>
+</ul>
+
+<h3 id="帮助命令">帮助命令</h3>
+<ul>
+  <li>:help or F1 显示整个帮助</li>
+  <li>:help xxx 显示xxx的帮助，比如 :help i, :help CTRL-[（即Ctrl+[的帮助）。</li>
+  <li>:help ‘number’ Vim选项的帮助用单引号括起</li>
+  <li>:help <Esc> 特殊键的帮助用&lt;&gt;扩起</Esc></li>
+  <li>:help -t Vim启动参数的帮助用-</li>
+  <li>:help i_<Esc> 插入模式下Esc的帮助，某个模式下的帮助用模式_主题的模式
+</Esc>    <blockquote>
+      <table>
+        <tbody>
+          <tr>
+            <td>帮助文件中位于</td>
+            <td> </td>
+            <td>之间的内容是超链接，可以用Ctrl+]进入链接，Ctrl+o（Ctrl + t）返回</td>
+          </tr>
+        </tbody>
+      </table>
+    </blockquote>
+  </li>
+</ul>
+
+<h3 id="其他非编辑命令">其他非编辑命令</h3>
+<ul>
+  <li>. 重复前一次命令</li>
+  <li>:set ruler?　　查看是否设置了ruler，在.vimrc中，使用set命令设制的选项都可以通过这个命令查看</li>
+  <li>:scriptnames　　查看vim脚本文件的位置，比如.vimrc文件，语法文件及plugin等。</li>
+  <li>:set list 显示非打印字符，如tab，空格，行尾等。如果tab无法显示，请确定用set lcs=tab:&gt;-命令设置了.vimrc文件，并确保你的文件中的确有tab，如果开启了expendtab，那么tab将被扩展为空格。</li>
+</ul>
+
+<h3 id="vim教程">Vim教程</h3>
+<p>在Unix系统上</p>
+<ul>
+  <li>$ vimtutor</li>
+</ul>
+
+<p>在Windows系统上</p>
+<ul>
+  <li>:help tutor</li>
+  <li>:syntax 列出已经定义的语法项</li>
+  <li>:syntax clear 清除已定义的语法规则</li>
+  <li>:syntax case match 大小写敏感，int和Int将视为不同的语法元素</li>
+  <li>:syntax case ignore 大小写无关，int和Int将视为相同的语法元素，并使用同样的配色方案</li>
+</ul>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/02/20/MySQL%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88/" data-toggle="tooltip" data-placement="top" title="MySQL优化方案">
+                        Previous<br>
+                        <span>MySQL优化方案</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/02/24/%E8%87%AA%E5%AE%9A%E4%B9%89View/" data-toggle="tooltip" data-placement="top" title="自定义View">
+                        Next<br>
+                        <span>自定义View</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="/js/md5.min.js"></script>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: '7194056b4e3867bdf12c',
+                    clientSecret: '0ee17ceedb52c45e6a8553399a0fbeaab0e9f43f',
+                    repo: 'lizhizhi7.github.io',
+                    owner: 'lizhizhi7',
+                    admin: ['lizhizhi7'],
+                    distractionFreeMode: true,
+                    id: md5(location.pathname),
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Git" title="Git" rel="4">
+                                    Git
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Android" title="Android" rel="10">
+                                    Android
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#YAML" title="YAML" rel="2">
+                                    YAML
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python" title="Python" rel="5">
+                                    Python
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Jupyter" title="Jupyter" rel="2">
+                                    Jupyter
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Android View" title="Android View" rel="4">
+                                    Android View
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MATLAB" title="MATLAB" rel="8">
+                                    MATLAB
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Java" title="Java" rel="13">
+                                    Java
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#NETWORK" title="NETWORK" rel="2">
+                                    NETWORK
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#HTTP" title="HTTP" rel="2">
+                                    HTTP
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MySQL" title="MySQL" rel="3">
+                                    MySQL
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#DataBase" title="DataBase" rel="4">
+                                    DataBase
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#化学前沿" title="化学前沿" rel="3">
+                                    化学前沿
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#DATA" title="DATA" rel="2">
+                                    DATA
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python3" title="Python3" rel="3">
+                                    Python3
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="https://apple.com">Apple</a></li>
+                    
+                        <li><a href="https://developer.apple.com/">Apple Developer</a></li>
+                    
+                        <li><a href="https://www.android.com/">Android</a></li>
+                    
+                        <li><a href="https://developer.android.com/">Android Developer</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!--MathJax-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    showProcessingMessages: false,
+    messageStyle: "none",
+    tex2jax: {
+        inlineMath: [["$","$"],["\\(","\\)"]],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+    },
+  });
+</script>
+<script type="text/javascript" src="/js/MathJax/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+ <!--Sequence css font js-->
+<link rel="stylesheet" href="/js/Sequence/css/sequence-diagram-min.css">
+<script src="/js/Sequence/js/underscore-min.js"></script>
+<!-- Snap.svg -->
+<script src="/js/Sequence/js/snap.svg-min.js"></script>
+<!-- or Raphael -->
+<!--<script src="../js/raphael.min.js"></script>-->
+<script src="/js/Sequence/fonts/daniel/daniel_700.font.js"></script>
+<script src="/js/Sequence/js/webfont.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-min.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-snap-min.js"></script>
+
+<!--Sequence JS-->
+<script>
+  $(".language-sequence").sequenceDiagram({theme: 'hand'});
+</script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a5f544474e9c">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/li-zhi-93-94">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/lee.minizhi">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/lizhizhi7">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; XiaoZhi Blog 2019
+                    <br>
+                    Theme on <a href="https://github.com/lizhizhi7/lizhizhi7.github.io">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=lizhizhi7&repo=lizhizhi7.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
