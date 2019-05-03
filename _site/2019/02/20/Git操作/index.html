@@ -80,6 +80,14 @@
                     </li>
                     
                     <li>
+                        <a href="/Mine/MySchedule-Source/node_modules/antd/CHANGELOG.en-US/">Change Log</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/Mine/MySchedule-Source/node_modules/antd/CHANGELOG.zh-CN/">更新日志</a>
+                    </li>
+                    
+                    <li>
                         <a href="/about/">About</a>
                     </li>
                     
@@ -258,6 +266,27 @@ git pull upstream master &amp;&amp; git push origin master
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git reset –soft HEAD~1
 </code></pre></div></div>
 
+<h4 id="changing-a-remotes-url">Changing a remote’s URL</h4>
+
+<p>The git remote <code class="highlighter-rouge">set-url</code> command changes an existing remote repository URL.</p>
+
+<p>The git remote <code class="highlighter-rouge">set-url</code> command takes two arguments:</p>
+
+<p>An existing remote name. For example, origin or upstream are two common choices.
+A new URL for the remote.</p>
+
+<p>Switching remote URLs from SSH(HTTPS) to HTTPS(SSH)</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git remote -v
+&gt; origin  git@github.com:USERNAME/REPOSITORY.git (fetch)
+&gt; origin  git@github.com:USERNAME/REPOSITORY.git (push)
+$ git remote set-url origin https://github.com/USERNAME/REPOSITORY.git
+Verify that the remote URL has changed.
+$ git remote -v
+&gt; origin  https://github.com/USERNAME/REPOSITORY.git (fetch)
+&gt; origin  https://github.com/USERNAME/REPOSITORY.git (push)
+</code></pre></div></div>
+<p>The next time you git fetch, git pull, or git push to the remote repository, you’ll be asked for your GitHub username and password.</p>
+
 
                 <hr style="visibility: hidden;">
 
@@ -415,6 +444,10 @@ git pull upstream master &amp;&amp; git push origin master
                             
         				
                             
+                				<a href="/tags/#Spring" title="Spring" rel="2">
+                                    Spring
+                                </a>
+                            
         				
                             
         				
@@ -484,6 +517,28 @@ git pull upstream master &amp;&amp; git push origin master
         				
                             
         				
+                            
+                				<a href="/tags/#分布式" title="分布式" rel="2">
+                                    分布式
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Kafka" title="Kafka" rel="2">
+                                    Kafka
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Linux" title="Linux" rel="3">
+                                    Linux
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#CentOS" title="CentOS" rel="3">
+                                    CentOS
+                                </a>
                             
         				
                             

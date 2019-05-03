@@ -1,0 +1,233 @@
+
+<h2 id="postgresql">Postgresql</h2>
+
+<h3 id="centos-7">CentOS 7</h3>
+
+<p>CentOS’s default repositories contain Postgres packages(9.2), so we can install them without a hassle using the yum package system.<br />
+Install the postgresql-server package and the “contrib” package, that adds some additional utilities and functionality:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>yum <span class="nb">install </span>postgresql-server postgresql-contrib
+</code></pre></div></div>
+<p>Now that our software is installed, we have to perform a few steps before we can use it.</p>
+
+<h4 id="create-a-new-postgresql-database-cluster">Create a new PostgreSQL database cluster:</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo postgresql-setup initdb
+</code></pre></div></div>
+<p>By default, PostgreSQL does not allow password authentication. We will change that by editing its host-based authentication (HBA) configuration.<br />
+Open the HBA configuration with your favorite text editor. We will use vim:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo vim /var/lib/pgsql/data/pg_hba.conf
+</code></pre></div></div>
+<p>Find the lines that looks like this, near the bottom of the file:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>host    all             all             127.0.0.1/32            ident
+host    all             all             ::1/128                 ident
+</code></pre></div></div>
+<p>Then replace “ident” with “md5”, so they look like this:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>host    all             all             127.0.0.1/32            md5
+host    all             all             ::1/128                 md5
+</code></pre></div></div>
+<p>Save and exit. PostgreSQL is now configured to allow password authentication.<br />
+Now start and enable PostgreSQL:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo systemctl start postgresql
+sudo systemctl enable postgresql
+</code></pre></div></div>
+<p>PostgreSQL is now ready to be used. We can go over how it works and how it may be different from similar database management systems you may have used.</p>
+
+<h4 id="using-postgresql-roles-and-databases">Using PostgreSQL Roles and Databases</h4>
+
+<p>By default, Postgres uses a concept called “roles” to aid in authentication and authorization. These are, in some ways, similar to regular Unix-style accounts, but Postgres does not distinguish between users and groups and instead prefers the more flexible term “role”.<br />
+Upon installation Postgres is set up to use “ident” authentication, meaning that it associates Postgres roles with a matching Unix/Linux system account. If a Postgres role exists, it can be signed in by logging into the associated Linux system account.<br />
+The installation procedure created a user account called postgres that is associated with the default Postgres role. In order to use Postgres, we’ll need to log into that account. You can do that by typing:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo -i -u postgres
+</code></pre></div></div>
+<p>You will be asked for your normal user password and then will be given a shell prompt for the postgres user.
+You can get a Postgres prompt immediately by typing:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>psql
+</code></pre></div></div>
+<p>You will be auto-logged in and will be able to interact with the database management system right away.<br />
+However, we’re going to explain a little bit about how to use other roles and databases so that you have some flexibility as to which user and database you wish to work with.<br />
+Exit out of the PostgreSQL prompt by typing:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>\q
+</code></pre></div></div>
+<p>You should now be back in the postgres user command prompt.</p>
+
+<h4 id="create-a-new-role">Create a New Role</h4>
+
+<p>From the postgres Linux account, you have the ability to log into the database system. However, we’re also going to demonstrate how to create additional roles. The postgres Linux account, being associated with the Postgres administrative role, has access to some utilities to create users and databases.<br />
+We can create a new role by typing:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>createuser --interactive --pwprompt
+</code></pre></div></div>
+<p>This basically is an interactive shell script that calls the correct Postgres commands to create a user to your specifications. It will ask you several questions: the name of the role and whether it should be a superuser… You can get more control by passing some additional flags. Check out the options by looking at the man page:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>man createuser
+</code></pre></div></div>
+
+<h4 id="create-a-new-database">Create a New Database</h4>
+
+<p>The way that Postgres is set up by default (authenticating roles that are requested by matching system accounts) also comes with the assumption that a matching database will exist for the role to connect to.<br />
+So if I have a user called test1, that role will attempt to connect to a database called test1 by default.<br />
+You can create the appropriate database by simply calling this command as the postgres user:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>createdb -O user test1
+</code></pre></div></div>
+
+<h4 id="connect-to-postgres-with-the-new-user">Connect to Postgres with the New User</h4>
+
+<p>Let’s assume that you have a Linux system account called test1 (you can create one by typing: sudo adduser test1), and that you have created a Postgres role and database also called test1.<br />
+You can change to the Linux system account by typing:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo -i -u test1
+</code></pre></div></div>
+<p>You can then connect to the test1 database as the test1 Postgres role by typing:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>psql
+</code></pre></div></div>
+<p>This will log in automatically assuming that all of the components have been configured.<br />
+If you want your user to connect to a different database, you can do so by specifying the database like this (make sure you \q to the command prompt):</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>psql -d postgres
+</code></pre></div></div>
+<p>You can get information about the Postgres user you’re logged in as and the database you’re currently connected to by typing:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>\conninfo
+</code></pre></div></div>
+<p>Output:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>You are connected to database "postgres" as user "postgres" via socket in "/var/run/postgresql" at port "5432".
+</code></pre></div></div>
+<p>This can help remind you of your current settings if you are connecting to non-default databases or with non-default users.</p>
+
+<h4 id="create-and-delete-tables">Create and Delete Tables</h4>
+
+<p>Now that you know how to connect to the PostgreSQL database system, we will start to go over how to complete some basic tasks.<br />
+First, let’s create a table to store some data. Let’s create a table that describes playground equipment.<br />
+The basic syntax for this command is something like this:</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">table_name</span> <span class="p">(</span>
+    <span class="n">column_name1</span> <span class="n">col_type</span> <span class="p">(</span><span class="n">field_length</span><span class="p">)</span> <span class="n">column_constraints</span><span class="p">,</span>
+    <span class="n">column_name2</span> <span class="n">col_type</span> <span class="p">(</span><span class="n">field_length</span><span class="p">),</span>
+    <span class="n">column_name3</span> <span class="n">col_type</span> <span class="p">(</span><span class="n">field_length</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+<p>As you can see, we give the table a name, and then define the columns that we want, as well as the column type and the max length of the field data. We can also optionally add table constraints for each column.<br />
+For our purposes, we’re going to create a simple table like this:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CREATE TABLE playground (
+    equip_id serial PRIMARY KEY,
+    type varchar (50) NOT NULL,
+    color varchar (25) NOT NULL,
+    location varchar(25) check (location in ('north', 'south', 'west', 'east', 'northeast', 'southeast', 'southwest', 'northwest')),
+    install_date date
+);
+</code></pre></div></div>
+<p>We have made a playground table that inventories the equipment that we have. This starts with an equipment ID, which is of the serial type. This data type is an auto-incrementing integer. We have given this column the constraint of primary key which means that the values must be unique and not null.<br />
+For two of our columns, we have not given a field length. This is because some column types don’t require a set length because the length is implied by the type.<br />
+We then give columns for the equipment type and color, each of which cannot be empty. We then create a location column and create a constraint that requires the value to be one of eight possible values. The last column is a date column that records the date that we installed the equipment.<br />
+We can see our new table by typing this:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>\d
+</code></pre></div></div>
+<p>Output:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                   List of relations
+ Schema |          Name           |   Type   |  Owner   
+--------+-------------------------+----------+----------
+ public | playground              | table    | postgres
+ public | playground_equip_id_seq | sequence | postgres
+(2 rows)
+</code></pre></div></div>
+<p>As you can see, we have our playground table, but we also have something called playground_equip_id_seq that is of the type sequence. This is a representation of the “serial” type we gave our equip_id column. This keeps track of the next number in the sequence.<br />
+If you want to see just the table, you can type:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>\dt
+</code></pre></div></div>
+<p>Output:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>           List of relations
+ Schema |    Name    | Type  |  Owner   
+--------+------------+-------+----------
+ public | playground | table | postgres
+(1 row)
+</code></pre></div></div>
+
+<h4 id="add-query-and-delete-data-in-a-table">Add, Query, and Delete Data in a Table</h4>
+
+<p>Now that we have a table created, we can insert some data into it.<br />
+Let’s add a slide and a swing. We do this by calling the table we’re wanting to add to, naming the columns and then providing data for each column. Our slide and swing could be added like this:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>INSERT INTO playground (type, color, location, install_date) VALUES ('slide', 'blue', 'south', '2014-04-28');
+INSERT INTO playground (type, color, location, install_date) VALUES ('swing', 'yellow', 'northwest', '2010-08-16');
+</code></pre></div></div>
+<p>You should notice a few things. First, keep in mind that the column names should not be quoted, but the column values that you’re entering do need quotes.<br />
+Another thing to keep in mind is that we do not enter a value for the equip_id column. This is because this is auto-generated whenever a new row in the table is created.<br />
+We can then get back the information we’ve added by typing:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM playground;
+</code></pre></div></div>
+<p>Output:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> equip_id | type  | color  | location  | install_date 
+----------+-------+--------+-----------+--------------
+        1 | slide | blue   | south     | 2014-04-28
+        2 | swing | yellow | northwest | 2010-08-16
+(2 rows)
+</code></pre></div></div>
+<p>Here, you can see that our equip_id has been filled in successfully and that all of our other data has been organized correctly.<br />
+If our slide breaks and we remove it from the playground, we can also remove the row from our table by typing:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DELETE FROM playground WHERE type = 'slide';
+</code></pre></div></div>
+<p>If we query our table again, we will see our slide is no longer a part of the table:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM playground;
+</code></pre></div></div>
+<p>Output:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> equip_id | type  | color  | location  | install_date 
+----------+-------+--------+-----------+--------------
+        2 | swing | yellow | northwest | 2010-08-16
+(1 row)
+</code></pre></div></div>
+
+<h4 id="how-to-add-and-delete-columns-from-a-table">How To Add and Delete Columns from a Table</h4>
+
+<p>If we want to modify a table after it has been created to add an additional column, we can do that easily.<br />
+We can add a column to show the last maintenance visit for each piece of equipment by typing:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ALTER TABLE playground ADD last_maint date;
+</code></pre></div></div>
+<p>If you view your table information again, you will see the new column has been added (but no data has been entered):</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM playground;
+</code></pre></div></div>
+<p>Output:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> equip_id | type  | color  | location  | install_date | last_maint 
+----------+-------+--------+-----------+--------------+------------
+        2 | swing | yellow | northwest | 2010-08-16   | 
+(1 row)
+</code></pre></div></div>
+<p>We can delete a column just as easily. If we find that our work crew uses a separate tool to keep track of maintenance history, we can get rid of the column here by typing:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ALTER TABLE playground DROP last_maint;
+</code></pre></div></div>
+
+<h4 id="how-to-update-data-in-a-table">How To Update Data in a Table</h4>
+<p>We know how to add records to a table and how to delete them, but we haven’t covered how to modify existing entries yet.<br />
+You can update the values of an existing entry by querying for the record you want and setting the column to the value you wish to use. We can query for the “swing” record (this will match every swing in our table) and change its color to “red”. This could be useful if we gave it a paint job:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>UPDATE playground SET color = 'red' WHERE type = 'swing';
+</code></pre></div></div>
+<p>We can verify that the operation was successful by querying our data again:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM playground;
+</code></pre></div></div>
+<p>Output:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> equip_id | type  | color | location  | install_date 
+----------+-------+-------+-----------+--------------
+        2 | swing | red   | northwest | 2010-08-16
+(1 row)
+</code></pre></div></div>
+<p>As you can see, our slide is now registered as being red.</p>
+
+<h4 id="how-to-add-an-existing-user-to-a-database">How to add an existing user to a database</h4>
+
+<p>To grant an existing user privileges to a database, follow these steps:<br />
+Run the psql program as the database’s owner, or as the postgres superuser.
+Type the following command. Replace permissions with the permissions you want to grant, dbname with the name of the database, and username with the user:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GRANT permissions ON DATABASE dbname TO username;
+</code></pre></div></div>
+<p>The user can now access the database with the specified permissions.</p>
+
+<h4 id="how-to-delete-a-database">How to delete a database</h4>
+
+<p>Similar to the createdb command for creating databases, there is the dropdb command for deleting databases. To delete a database, you must be the owner or have superuser privileges.<br />
+Type the following command, replacing dbname with the name of the database that you want to delete:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dropdb dbname
+</code></pre></div></div>
+
+<h4 id="how-to-delete-a-user">How to delete a user</h4>
+
+<p>Similar to the createuser command for creating users, there is the dropuser command for deleting users.
+To delete a specific user, type the following command. Replace username with the name of the user that you want to delete:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dropuser username
+</code></pre></div></div>
+<p>If the user owns any databases or other objects, you cannot drop the user. Instead, you receive an error message similar to the following:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dropuser: removal of role "username" failed: ERROR:  role "username" cannot be dropped because some objects depend on it
+DETAIL:  owner of database dbname
+</code></pre></div></div>
+<p>You should change the database’s owner (or drop the database entirely), and then you can drop the user.</p>

@@ -80,6 +80,14 @@
                     </li>
                     
                     <li>
+                        <a href="/Mine/MySchedule-Source/node_modules/antd/CHANGELOG.en-US/">Change Log</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/Mine/MySchedule-Source/node_modules/antd/CHANGELOG.zh-CN/">更新日志</a>
+                    </li>
+                    
+                    <li>
                         <a href="/about/">About</a>
                     </li>
                     
@@ -178,6 +186,190 @@
                 postlist-container
             ">
     			
+<div class="post-preview">
+    <a href="/2019/04/15/Linux%E8%BF%9B%E7%A8%8B%E6%93%8D%E4%BD%9C/">
+        <h2 class="post-title">
+            Linux进程操作
+        </h2>
+        
+        <h3 class="post-subtitle">
+            Linux
+        </h3>
+        
+        <div class="post-content-preview">
+            后台运行进程
+
+Linux下一般想让某个程序在后台运行，很多都是使用&amp; 在程序结尾来让程序自动运行。比如我们要运行tesh.sh在后台：
+./tesh.sh &amp;
+
+一般这种程序使用&amp; 结尾，如果终端关闭，那么程序也会被关闭
+
+关闭终端之后继续运行
+
+需要使用nohup这个命令,比如我们有个test.sh需要在后台运行，并且希望在 后台能够一直运行，那么就使用nohup...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Lee on April 15, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/04/15/Kafka~RabbitMQ~ActiveMQ/">
+        <h2 class="post-title">
+            Kafka基础使用
+        </h2>
+        
+        <h3 class="post-subtitle">
+            分布式
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  消息队列的作用以及Kafka/RabbitMQ/ActiveMQ的对比
+
+
+Kafka和ActiveMQ对比
+
+相比过去经常使用的activemq，kafka确实非常的不同，做一个对比来深化印象
+
+
+  
+    
+      对比
+      ActiveMQ
+      Kafka
+    
+  
+  
+    
+      接口协议
+      遵守JMS规范,各语言支持较好
+ ...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Lee on April 15, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/04/14/%E5%90%84%E7%A7%8D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AE%89%E8%A3%85/">
+        <h2 class="post-title">
+            各种数据库的安装
+        </h2>
+        
+        <div class="post-content-preview">
+            
+Postgresql
+
+CentOS 7
+
+CentOS’s default repositories contain Postgres packages(9.2), so we can install them without a hassle using the yum package system.
+Install the postgresql-server package and ...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by XiaoZhi Blog on April 14, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/04/11/SpringWeb%E6%B3%A8%E8%A7%A3/">
+        <h2 class="post-title">
+            SpringWeb注解
+        </h2>
+        
+        <h3 class="post-subtitle">
+            Spring
+        </h3>
+        
+        <div class="post-content-preview">
+            @RequestMapping
+
+RequestMapping是一个用来处理请求地址映射的注解，可用于类或方法上。用于类上，表示类中的所有响应请求的方法都是以该地址作为父路径。
+RequestMapping注解有六个属性，下面我们把其分成三类进行说明。
+
+value/method
+
+value：指定请求的实际地址，指定的地址可以是URI Template 模式（后面将会说明）；
+method...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Lee on April 11, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/03/31/Linux%E4%B8%8BFTP%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E9%85%8D%E7%BD%AE/">
+        <h2 class="post-title">
+            CentOS常用命令
+        </h2>
+        
+        <h3 class="post-subtitle">
+            Linux Server
+        </h3>
+        
+        <div class="post-content-preview">
+            安装
+sudo apt-get install vsftpd
+sudo service vsftpd status
+
+
+配置文件
+
+
+  /etc/vsftp.conf（主配置文件）
+  /etc/vsftp.chroot_list（可访问用户列表，配置文件里面有关联）
+
+
+/etc/vsftpd.config 里面的注释比较多，还很详细，这里就不一一列举了，只写上我修改的
+anonymou...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Lee on March 31, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/03/31/CentOS%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+        <h2 class="post-title">
+            CentOS常用命令
+        </h2>
+        
+        <h3 class="post-subtitle">
+            Linux Server
+        </h3>
+        
+        <div class="post-content-preview">
+            用户与组管理
+
+User（/etc/passwd）
+cat /etc/passwd
+ 用户名:口令:用户标识号:组标识号:注释性描述:主目录:登录Shell
+
+usermod(*专属参数)/useradd
+	-g 主要组
+	-G 附属组
+	-c 注释
+	-d 主目录 如果此目录不存在，则同时使用-m选项，可以创建主目录。
+	-s Shell文件 指定用户的登录Shell。
+	-u 用户号 指...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Lee on March 31, 2019
+    </p>
+</div>
+<hr>
+
 <div class="post-preview">
     <a href="/2019/03/25/Python%E6%9C%89%E8%B6%A3%E7%9A%84%E5%8C%85/">
         <h2 class="post-title">
@@ -280,179 +472,6 @@ kafka对外使用topic的概念，生产者往topic里写消息，消费者从�
     </a>
     <p class="post-meta">
         Posted by Lee on March 17, 2019
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2019/03/16/Lombok%E6%B3%A8%E8%A7%A3%E8%AF%B4%E6%98%8E/">
-        <h2 class="post-title">
-            Lombok注解说明
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Java工具
-        </h3>
-        
-        <div class="post-content-preview">
-            
-  使用注解简化代码
-
-
-从 IDEA 中的 Lombok 插件特性可以看到支持的注解
-
-@Getter and @Setter
-@FieldNameConstants
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor, @RequiredArgsConstructor and @NoArgsConstructor
-@Log, @Log4j,...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lee on March 16, 2019
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2019/03/16/Java%E9%9B%86%E5%90%88%E5%A4%84%E7%90%86(Stream)/">
-        <h2 class="post-title">
-            Java集合处理(Stream)
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Java体系
-        </h3>
-        
-        <div class="post-content-preview">
-            Stream介绍
-
-Stream 使用一种类似用 SQL 语句从数据库查询数据的直观方式来提供一种对 Java 集合运算和表达的高阶抽象。
-Stream API可以极大提高Java程序员的生产力，让程序员写出高效率、干净、简洁的代码。
-这种风格将要处理的元素集合看作一种流，流在管道中传输，并且可以在管道的节点上进行处理，比如筛选，排序，聚合等。
-
-Stream有以下特性及优点：
-
-
-  无存...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lee on March 16, 2019
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2019/03/11/Android%E7%9A%84Style%E8%AE%BE%E8%AE%A1/">
-        <h2 class="post-title">
-            Android的Style设计
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Android View 系列文章
-        </h3>
-        
-        <div class="post-content-preview">
-            Style(样式)
-
-  style(样式)是针对窗体元素级别的，改变指定控件或者Layout的样式。
-
-
-创建步骤
-
-
-  在res/values目录下新建一个名叫style.xml的文件。增加一个 &lt;resources&gt;根节点。
-  在&lt;resources&gt;根节点中新建&lt;style&gt;元素，并设置一个唯一的name，也可以选择增加一个父类属性parent...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lee on March 11, 2019
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2019/03/04/%E8%BF%91%E6%9C%9F%E5%8C%96%E5%AD%A6%E5%89%8D%E6%B2%BF(3.4)/">
-        <h2 class="post-title">
-            近期化学前沿(3.4)
-        </h2>
-        
-        <h3 class="post-subtitle">
-            化学前沿系列文章
-        </h3>
-        
-        <div class="post-content-preview">
-            真正意义上的自供电心脏起搏器
-
-上海交通大学电子信息与电气工程学院微纳电子学系教师杨斌及合作者在美国化学会国际著名期刊ACS Nano（影响因子为13.709）在线发表了题为《Direct Powering a Real Cardiac Pacemaker by Natural Energy of a Heartbeat》的论文。
-
-
-
-该研究基于块体压电陶瓷的高性能压电效应，通过化学机械抛...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lee on March 4, 2019
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2019/03/04/Java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/">
-        <h2 class="post-title">
-            Java反射机制
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Java体系
-        </h3>
-        
-        <div class="post-content-preview">
-            反射机制是什么
-
-反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法和属性；这种动态获取的信息以及动态调用对象的方法的功能称为Java语言的反射机制。
-
-反射机制能做什么
-
-反射机制主要提供了以下功能：
-
-  在运行时判断任意一个对象所属的类；
-  在运行时构造任意一个类的对象；
-  在运行时判断任意一个类所具有的成员变量和...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lee on March 4, 2019
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2019/02/27/%E5%A4%9A%E4%BB%BB%E5%8A%A1%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-        <h2 class="post-title">
-            多任务深度学习
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Deep Learning
-        </h3>
-        
-        <div class="post-content-preview">
-            共享即关怀
-
-我们准备从参数硬共享（hard parameter sharing）的基础方法开始。硬共享表示我们使用一个共享的子网络，下接各个任务特定的子网络。
-
-在 TensorFlow 中，实现这样一个模型的简单方法是使用带有 multi_head 的 Estimator。这个模型和其他神经网络架构相比没什么不同，所以你可以自己想想，有哪些可能出错的地方？
-
-整合损失
-
-我们的 MTL ...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lee on February 27, 2019
     </p>
 </div>
 <hr>
@@ -563,6 +582,10 @@ Stream有以下特性及优点：
                             
                         
                             
+                                <a href="/tags/#Spring" title="Spring" rel="2">
+                                    Spring
+                                </a>
+                            
                         
                             
                         
@@ -632,6 +655,28 @@ Stream有以下特性及优点：
                         
                             
                         
+                            
+                                <a href="/tags/#分布式" title="分布式" rel="2">
+                                    分布式
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#Kafka" title="Kafka" rel="2">
+                                    Kafka
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#Linux" title="Linux" rel="3">
+                                    Linux
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#CentOS" title="CentOS" rel="3">
+                                    CentOS
+                                </a>
                             
                         
                             
