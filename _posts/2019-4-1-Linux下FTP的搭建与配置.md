@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      CentOS常用命令
+title:      Linux下FTP的搭建与配置
 subtitle:   Linux Server
 date:       2019-3-31
 author:     Lee

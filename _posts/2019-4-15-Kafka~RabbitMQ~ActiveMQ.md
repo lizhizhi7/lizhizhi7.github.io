@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      Kafka基础使用
+title:      Kafka~RabbitMQ~ActiveMQ
 subtitle:   分布式
 date:       2019-4-15
 author:     Lee
