@@ -5,9 +5,712 @@
     <description>Right here waiting for you.</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 02 May 2019 22:38:12 +0800</pubDate>
-    <lastBuildDate>Thu, 02 May 2019 22:38:12 +0800</lastBuildDate>
+    <pubDate>Sun, 16 Jun 2019 15:07:09 +0800</pubDate>
+    <lastBuildDate>Sun, 16 Jun 2019 15:07:09 +0800</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
+    
+      <item>
+        <title>Springsecurity</title>
+        <description>
+</description>
+        <pubDate>Sat, 01 Jun 2019 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/06/01/SpringSecurity/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/06/01/SpringSecurity/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Javax持久层使用</title>
+        <description>
+&lt;h3 id=&quot;examples&quot;&gt;Examples&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-Java&quot;&gt;@SuppressWarnings(&quot;serial&quot;)
+@Entity
+@Table(name=&quot;T_X&quot;)
+public class X implements Serializable
+{
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
+    @Column(length=32)
+    private String name;
+
+    @Transient   //表示此数据不在数据库表里建立属性
+    private String temp;
+
+    @Temporal(TemporalType.TIMESTAMP) //这个是带时分秒的类型
+    private Date date;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = &quot;x&quot;)
+    private A a;
+}
+
+@SuppressWarnings(&quot;serial&quot;)
+@Entity
+@Table(name=&quot;T_A&quot;)
+public class A implements Serializable
+{
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = &quot;a&quot;, fetch = FetchType.EAGER)
+    private List&amp;lt;B&amp;gt; b = new ArrayList&amp;lt;B&amp;gt;();
+
+    @OneToOne()
+    @JoinColumn(name = &quot;x_Id&quot;) //加这句后就会双方共同维护关系
+    private X x;
+}
+
+@SuppressWarnings(&quot;serial&quot;)
+@Entity
+public class B implements Serializable{
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    protected int id;
+
+    @ManyToOne()
+    @JoinColumn(name = &quot;a_id&quot;)
+    protected A a;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;要注意的是：fetch = FetchType.EAGER这句话在一个类里面只能出现一次，出现两次就会报错“cannot simultaneously fetch multiple bags”，要把其他的改为fetch = FetchType.LAZY延迟加载就可以了。听说把List集合改为Set也能解决这个错误。&lt;/p&gt;
+
+&lt;p&gt;其他要点： 
+1、@Table(name=”T_X”)这句话可以不写，不写就已类名作为表名&lt;/p&gt;
+
+&lt;p&gt;2、如果想让两个类的属性生成一个数据表，在一个类里这样加入另一个类即可： @Embedded 
+private C c;&lt;/p&gt;
+
+&lt;p&gt;3、如果想要一个类继承另一个类的所有属性，则在父类里这样写： 
+@SuppressWarnings(“serial”) 
+@Entity 
+@MappedSuperclass   //增加这一行 
+并把父类的所有属性的private改为protected即可&lt;/p&gt;
+
+&lt;p&gt;4、建议在一对多关联中在”一”方用延迟加载”多”方可以在HQL中显式的”迫切左外连接” left join fetch 这样做Hibernate可以少访问数据库,也可以用”@BatchSize(size = 5)”来减少访问数据库的次数&lt;/p&gt;
+
+&lt;p&gt;@Id 声明属性为主键&lt;/p&gt;
+
+&lt;p&gt;@GeneratedValue表示主键是自动生成策略，一般该注释和 @Id 一起使用&lt;/p&gt;
+
+&lt;p&gt;@Entity 任何 hibernte 映射对象都要有次注释&lt;/p&gt;
+
+&lt;p&gt;@Table(name = “tablename”) 类声明此对象映射到哪个表&lt;/p&gt;
+
+&lt;p&gt;@Column(name = “Name”,nullable=false,length=32) 声明数据 库字段和类属性对应关系&lt;/p&gt;
+
+&lt;p&gt;@Lob 声明字段为 Clob 或 Blob 类型&lt;/p&gt;
+
+&lt;p&gt;@OneToMany(mappedBy=”order”,cascade = CascadeType.ALL, fetch = FetchType.LAZY) 
+   @OrderBy(value = “id ASC”) 
+   一对多声明，和 ORM 产品声明类似，一看就明白了。 
+   @ManyToOne(cascade=CascadeType.REFRESH,optional=false) 
+   @JoinColumn(name = “order_id”) 
+   声明为双向关联&lt;/p&gt;
+
+&lt;p&gt;@Temporal(value=TemporalType.DATE) 做日期类型转换。&lt;/p&gt;
+
+&lt;p&gt;@OneToOne(optional= true,cascade = CascadeType.ALL, mappedBy = “person”) 
+   一对一关联声明 
+   @OneToOne(optional = false, cascade = CascadeType.REFRESH) 
+   @JoinColumn(name = “Person_ID”, referencedColumnName = “personid”,unique = true) 
+   声明为双向关联&lt;/p&gt;
+
+&lt;p&gt;@ManyToMany(mappedBy= “students”) 
+   多对多关联声明。 
+  @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY) 
+  @JoinTable(name = “Teacher_Student”, 
+    joinColumns = {@JoinColumn(name = “Teacher_ID”, referencedColumnName = “teacherid”)}, 
+    inverseJoinColumns = {@JoinColumn(name = “Student_ID”, referencedColumnName = 
+    “studentid”)}) 
+   多对多关联一般都有个关联表，是这样声明的！&lt;/p&gt;
+
+&lt;p&gt;@Transiten表示此属性与表没有映射关系，是一个暂时的属性&lt;/p&gt;
+
+&lt;p&gt;@Cache(usage= CacheConcurrencyStrategy.READ_WRITE)表示此对象应用缓存&lt;/p&gt;
+
+&lt;p&gt;JPA 与 hibernate关系&lt;/p&gt;
+
+&lt;p&gt;1,JPA(Java Persistence API)是Sun官方提出的Java持久化规范。它为Java开发人员提供了一种对象/关系映射工具来管理Java应用中的关系数据。，而Hibernate是它的一种实现。除了Hibernate，还有EclipseLink(曾经的toplink)，OpenJPA等可供选择，所以使用Jpa的一个好处是，可以更换实现而不必改动太多代码。&lt;/p&gt;
+
+&lt;p&gt;2,Hibernate作为JPA的一种实现,jpa的注解已经是hibernate的核心，hibernate只提供了一些补充，而不是两套注解。hibernate对jpa的支持够足量，在使用hibernate注解建议使用jpa。&lt;/p&gt;
+</description>
+        <pubDate>Mon, 29 Apr 2019 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/04/29/Javax%E6%8C%81%E4%B9%85%E5%B1%82%E4%BD%BF%E7%94%A8/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/04/29/Javax%E6%8C%81%E4%B9%85%E5%B1%82%E4%BD%BF%E7%94%A8/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Docker Compose</title>
+        <description>&lt;h3 id=&quot;docker-compose常用命令&quot;&gt;Docker-Compose常用命令&lt;/h3&gt;
+
+&lt;h4 id=&quot;docker-compose命令格式&quot;&gt;Docker-Compose命令格式&lt;/h4&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; &amp;lt;arg&amp;gt;...] &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;options] &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;COMMAND] &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ARGS...]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;命令选项如下：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-f，–file FILE指定Compose模板文件，默认为docker-compose.yml，可以多次指定。
+-p，–project-name NAME指定项目名称，默认将使用所在目录名称作为项目名。
+-x-network-driver 使用Docker的可拔插网络后端特性（需要Docker 1.9+版本）
+-x-network-driver DRIVER指定网络后端的驱动，默认为bridge（需要Docker 1.9+版本）
+-verbose输出更多调试信息
+-v，–version打印版本并退出
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;docker-compose up&lt;/strong&gt;&lt;br /&gt;
+docker-compose up [options] [–scale SERVICE=NUM…] [SERVICE…]
+选项包括：
+```
+-d 在后台运行服务容器
+–no-color 不使用颜色来区分不同的服务的控制输出
+–no-deps 不启动服务所链接的容器
+–force-recreate 强制重新创建容器，不能与–no-recreate同时使用
+–no-recreate 如果容器已经存在，则不重新创建，不能与–force-recreate同时使用
+–no-build 不自动构建缺失的服务镜像
+–build 在启动容器前构建服务镜像
+–abort-on-container-exit 停止所有容器，如果任何一个容器被停止，不能与-d同时使用
+-t, –timeout TIMEOUT 停止容器时候的超时（默认为10秒）
+–remove-orphans 删除服务中没有在compose文件中定义的容器
+–scale SERVICE=NUM 设置服务运行容器的个数，将覆盖在compose中通过scale指定的参数
+docker-compose up
+启动所有服务
+docker-compose up -d
+在后台所有启动服务
+-f 指定使用的Compose模板文件，默认为docker-compose.yml，可以多次指定。
+docker-compose -f docker-compose.yml up -d&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;docker-compose ps&lt;/strong&gt;
+docker-compose ps [options] [SERVICE…]
+docker-compose ps
+列出项目中目前的所有容器&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;docker-compose stop&lt;/strong&gt;
+docker-compose stop [options] [SERVICE…]
+选项包括：
+-t, –timeout TIMEOUT 停止容器时候的超时（默认为10秒）
+docker-compose stop
+停止正在运行的容器，可以通过docker-compose start 再次启动&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;5、docker-compose -h
+docker-compose -h
+查看帮助&lt;/p&gt;
+
+&lt;p&gt;6、docker-compose down
+docker-compose down [options]
+停止和删除容器、网络、卷、镜像。
+选项包括：
+–rmi type，删除镜像，类型必须是：all，删除compose文件中定义的所有镜像；local，删除镜像名为空的镜像
+-v, –volumes，删除已经在compose文件中定义的和匿名的附在容器上的数据卷
+–remove-orphans，删除服务中没有在compose中定义的容器
+docker-compose down
+停用移除所有容器以及网络相关&lt;/p&gt;
+
+&lt;p&gt;7、docker-compose logs
+docker-compose logs [options] [SERVICE…]
+查看服务容器的输出。默认情况下，docker-compose将对不同的服务输出使用不同的颜色来区分。可以通过–no-color来关闭颜色。
+docker-compose logs
+查看服务容器的输出&lt;/p&gt;
+
+&lt;p&gt;8、docker-compose build
+docker-compose build [options] [–build-arg key=val…] [SERVICE…]
+构建（重新构建）项目中的服务容器。
+选项包括：
+–compress 通过gzip压缩构建上下环境
+–force-rm 删除构建过程中的临时容器
+–no-cache 构建镜像过程中不使用缓存
+–pull 始终尝试通过拉取操作来获取更新版本的镜像
+-m, –memory MEM为构建的容器设置内存大小
+–build-arg key=val为服务设置build-time变量
+服务容器一旦构建后，将会带上一个标记名。可以随时在项目目录下运行docker-compose build来重新构建服务&lt;/p&gt;
+
+&lt;p&gt;9、docker-compose pull
+docker-compose pull [options] [SERVICE…]
+拉取服务依赖的镜像。
+选项包括：
+–ignore-pull-failures，忽略拉取镜像过程中的错误
+–parallel，多个镜像同时拉取
+–quiet，拉取镜像过程中不打印进度信息
+docker-compose pull
+拉取服务依赖的镜像&lt;/p&gt;
+
+&lt;p&gt;10、docker-compose restart
+docker-compose restart [options] [SERVICE…]
+重启项目中的服务。
+选项包括：
+-t, –timeout TIMEOUT，指定重启前停止容器的超时（默认为10秒）
+docker-compose restart
+重启项目中的服务&lt;/p&gt;
+
+&lt;p&gt;11、docker-compose rm
+docker-compose rm [options] [SERVICE…]
+删除所有（停止状态的）服务容器。
+选项包括：
+–f, –force，强制直接删除，包括非停止状态的容器
+-v，删除容器所挂载的数据卷
+docker-compose rm
+删除所有（停止状态的）服务容器。推荐先执行docker-compose stop命令来停止容器。&lt;/p&gt;
+
+&lt;p&gt;12、docker-compose start
+docker-compose start [SERVICE…]
+docker-compose start
+启动已经存在的服务容器。&lt;/p&gt;
+
+&lt;p&gt;13、docker-compose run
+docker-compose run [options] [-v VOLUME…] [-p PORT…] [-e KEY=VAL…] SERVICE [COMMAND] [ARGS…]
+在指定服务上执行一个命令。
+docker-compose run ubuntu ping www.baidu.com
+在指定容器上执行一个ping命令。&lt;/p&gt;
+
+&lt;p&gt;14、docker-compose scale
+docker-compose scale web=3 db=2
+设置指定服务运行的容器个数。通过service=num的参数来设置数量&lt;/p&gt;
+
+&lt;p&gt;15、docker-compose pause
+docker-compose pause [SERVICE…]
+暂停一个服务容器&lt;/p&gt;
+
+&lt;p&gt;16、docker-compose kill
+docker-compose kill [options] [SERVICE…]
+通过发送SIGKILL信号来强制停止服务容器。 
+支持通过-s参数来指定发送的信号，例如通过如下指令发送SIGINT信号：
+docker-compose kill -s SIGINT&lt;/p&gt;
+
+&lt;p&gt;17、dokcer-compose config
+docker-compose config [options]
+验证并查看compose文件配置。
+选项包括：
+–resolve-image-digests 将镜像标签标记为摘要
+-q, –quiet 只验证配置，不输出。 当配置正确时，不输出任何内容，当文件配置错误，输出错误信息
+–services 打印服务名，一行一个
+–volumes 打印数据卷名，一行一个&lt;/p&gt;
+
+&lt;p&gt;18、docker-compose create
+docker-compose create [options] [SERVICE…]
+为服务创建容器。
+选项包括：
+–force-recreate：重新创建容器，即使配置和镜像没有改变，不兼容–no-recreate参数
+–no-recreate：如果容器已经存在，不需要重新创建，不兼容–force-recreate参数
+–no-build：不创建镜像，即使缺失
+–build：创建容器前，生成镜像&lt;/p&gt;
+
+&lt;p&gt;19、docker-compose exec
+docker-compose exec [options] SERVICE COMMAND [ARGS…]
+选项包括：
+-d 分离模式，后台运行命令。
+–privileged 获取特权。
+–user USER 指定运行的用户。
+-T 禁用分配TTY，默认docker-compose exec分配TTY。
+–index=index，当一个服务拥有多个容器时，可通过该参数登陆到该服务下的任何服务，例如：docker-compose exec –index=1 web /bin/bash ，web服务中包含多个容器&lt;/p&gt;
+
+&lt;p&gt;20、docker-compose port
+docker-compose port [options] SERVICE PRIVATE_PORT
+显示某个容器端口所映射的公共端口。
+选项包括：
+–protocol=proto，指定端口协议，TCP（默认值）或者UDP
+–index=index，如果同意服务存在多个容器，指定命令对象容器的序号（默认为1）&lt;/p&gt;
+
+&lt;p&gt;21、docker-compose push
+docker-compose push [options] [SERVICE…]
+推送服务依的镜像。
+选项包括：
+–ignore-push-failures 忽略推送镜像过程中的错误&lt;/p&gt;
+
+&lt;p&gt;22、docker-compose stop
+docker-compose stop [options] [SERVICE…]
+显示各个容器运行的进程情况。&lt;/p&gt;
+
+&lt;p&gt;23、docker-compose unpause
+docker-compose unpause [SERVICE…]
+恢复处于暂停状态中的服务。&lt;/p&gt;
+
+&lt;p&gt;24、docker-compose version
+docker-compose version
+打印版本信息。&lt;/p&gt;
+
+&lt;p&gt;三、Docker-Compose模板文件
+1、Docker-Compose模板文件简介
+Compose允许用户通过一个docker-compose.yml模板文件（YAML 格式）来定义一组相关联的应用容器为一个项目（project）。
+Compose模板文件是一个定义服务、网络和卷的YAML文件。Compose模板文件默认路径是当前目录下的docker-compose.yml，可以使用.yml或.yaml作为文件扩展名。
+Docker-Compose标准模板文件应该包含version、services、networks 三大部分，最关键的是services和networks两个部分。&lt;/p&gt;
+
+&lt;p&gt;version: ‘2’
+services:
+  web:
+    image: dockercloud/hello-world
+    ports:
+      - 8080
+    networks:
+      - front-tier
+      - back-tier&lt;/p&gt;
+
+&lt;p&gt;redis:
+    image: redis
+    links:
+      - web
+    networks:
+      - back-tier&lt;/p&gt;
+
+&lt;p&gt;lb:
+    image: dockercloud/haproxy
+    ports:
+      - 80:80
+    links:
+      - web
+    networks:
+      - front-tier
+      - back-tier
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock&lt;/p&gt;
+
+&lt;p&gt;networks:
+  front-tier:
+    driver: bridge
+  back-tier:
+    driver: bridge
+Compose目前有三个版本分别为Version 1，Version 2，Version 3，Compose区分Version 1和Version 2（Compose 1.6.0+，Docker Engine 1.10.0+）。Version 2支持更多的指令。Version 1将来会被弃用。&lt;/p&gt;
+
+&lt;p&gt;2、image
+image是指定服务的镜像名称或镜像ID。如果镜像在本地不存在，Compose将会尝试拉取镜像。&lt;/p&gt;
+
+&lt;p&gt;services: 
+    web: 
+        image: hello-world
+3、build
+服务除了可以基于指定的镜像，还可以基于一份Dockerfile，在使用up启动时执行构建任务，构建标签是build，可以指定Dockerfile所在文件夹的路径。Compose将会利用Dockerfile自动构建镜像，然后使用镜像启动服务容器。
+build: /path/to/build/dir
+也可以是相对路径，只要上下文确定就可以读取到Dockerfile。
+build: ./dir
+设定上下文根目录，然后以该目录为准指定Dockerfile。&lt;/p&gt;
+
+&lt;p&gt;build:
+  context: ../
+  dockerfile: path/of/Dockerfile
+build都是一个目录，如果要指定Dockerfile文件需要在build标签的子级标签中使用dockerfile标签指定。
+如果同时指定image和build两个标签，那么Compose会构建镜像并且把镜像命名为image值指定的名字。&lt;/p&gt;
+
+&lt;p&gt;4、context
+context选项可以是Dockerfile的文件路径，也可以是到链接到git仓库的url，当提供的值是相对路径时，被解析为相对于撰写文件的路径，此目录也是发送到Docker守护进程的context&lt;/p&gt;
+
+&lt;p&gt;build:
+  context: ./dir
+5、dockerfile
+使用dockerfile文件来构建，必须指定构建路径&lt;/p&gt;
+
+&lt;p&gt;build:
+  context: .
+  dockerfile: Dockerfile-alternate
+dockerfile指令不能跟image同时使用，否则Compose将不确定根据哪个指令来生成最终的服务镜像。&lt;/p&gt;
+
+&lt;p&gt;6、command
+使用command可以覆盖容器启动后默认执行的命令。
+command: bundle exec thin -p 3000&lt;/p&gt;
+
+&lt;p&gt;7、container_name
+Compose的容器名称格式是：&lt;项目名称&gt;&lt;服务名称&gt;&lt;序号&gt;
+可以自定义项目名称、服务名称，但如果想完全控制容器的命名，可以使用标签指定：
+container_name: app&lt;/序号&gt;&lt;/服务名称&gt;&lt;/项目名称&gt;&lt;/p&gt;
+
+&lt;p&gt;8、depends_on
+在使用Compose时，最大的好处就是少打启动命令，但一般项目容器启动的顺序是有要求的，如果直接从上到下启动容器，必然会因为容器依赖问题而启动失败。例如在没启动数据库容器的时候启动应用容器，应用容器会因为找不到数据库而退出。depends_on标签用于解决容器的依赖、启动先后的问题。&lt;/p&gt;
+
+&lt;p&gt;version: ‘2’
+services:
+  web:
+    build: .
+    depends_on:
+      - db
+      - redis
+  redis:
+    image: redis
+  db:
+    image: postgres
+上述YAML文件定义的容器会先启动redis和db两个服务，最后才启动web 服务。&lt;/p&gt;
+
+&lt;p&gt;9、pid
+pid: “host”
+将PID模式设置为主机PID模式，跟主机系统共享进程命名空间。容器使用pid标签将能够访问和操纵其他容器和宿主机的名称空间。&lt;/p&gt;
+
+&lt;p&gt;10、ports
+ports用于映射端口的标签。
+使用HOST:CONTAINER格式或者只是指定容器的端口，宿主机会随机映射端口。&lt;/p&gt;
+
+&lt;p&gt;ports:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;“3000”&lt;/li&gt;
+  &lt;li&gt;“8000:8000”&lt;/li&gt;
+  &lt;li&gt;“49100:22”&lt;/li&gt;
+  &lt;li&gt;“127.0.0.1:8001:8001”
+当使用HOST:CONTAINER格式来映射端口时，如果使用的容器端口小于60可能会得到错误得结果，因为YAML将会解析xx:yy这种数字格式为60进制。所以建议采用字符串格式。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;11、extra_hosts
+添加主机名的标签，会在/etc/hosts文件中添加一些记录。&lt;/p&gt;
+
+&lt;p&gt;extra_hosts:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;“somehost:162.242.195.82”&lt;/li&gt;
+  &lt;li&gt;“otherhost:50.31.209.229”
+启动后查看容器内部hosts：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;162.242.195.82  somehost
+50.31.209.229   otherhost
+12、volumes
+挂载一个目录或者一个已存在的数据卷容器，可以直接使用 [HOST:CONTAINER]格式，或者使用[HOST:CONTAINER:ro]格式，后者对于容器来说，数据卷是只读的，可以有效保护宿主机的文件系统。
+Compose的数据卷指定路径可以是相对路径，使用 . 或者 .. 来指定相对目录。
+数据卷的格式可以是下面多种形式：&lt;/p&gt;
+
+&lt;p&gt;volumes:
+  // 只是指定一个路径，Docker 会自动在创建一个数据卷（这个路径是容器内部的）。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;/var/lib/mysql
+  // 使用绝对路径挂载数据卷&lt;/li&gt;
+  &lt;li&gt;/opt/data:/var/lib/mysql
+  // 以 Compose 配置文件为中心的相对路径作为数据卷挂载到容器。&lt;/li&gt;
+  &lt;li&gt;./cache:/tmp/cache
+  // 使用用户的相对路径（~/ 表示的目录是 /home/&lt;用户目录&gt;/ 或者 /root/）。&lt;/用户目录&gt;&lt;/li&gt;
+  &lt;li&gt;~/configs:/etc/configs/:ro
+  // 已经存在的命名的数据卷。&lt;/li&gt;
+  &lt;li&gt;datavolume:/var/lib/mysql
+如果不使用宿主机的路径，可以指定一个volume_driver。
+volume_driver: mydriver&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;13、volumes_from
+从另一个服务或容器挂载其数据卷：&lt;/p&gt;
+
+&lt;p&gt;volumes_from:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;service_name
+    &lt;ul&gt;
+      &lt;li&gt;container_name
+14、dns
+自定义DNS服务器。可以是一个值，也可以是一个列表。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;dns：8.8.8.8
+dns：
+    - 8.8.8.8  &lt;br /&gt;
+      - 9.9.9.9
+15、dns_search
+配置DNS搜索域。可以是一个值，也可以是一个列表。&lt;/p&gt;
+
+&lt;p&gt;dns_search：example.com
+dns_search：
+    - domain1.example.com
+    - domain2.example.com
+16、entrypoint
+在Dockerfile中有一个指令叫做ENTRYPOINT指令，用于指定接入点。
+在docker-compose.yml中可以定义接入点，覆盖Dockerfile中的定义：
+entrypoint: /code/entrypoint.sh&lt;/p&gt;
+
+&lt;p&gt;17、env_file
+在docker-compose.yml中可以定义一个专门存放变量的文件。
+如果通过docker-compose -f FILE指定配置文件，则env_file中路径会使用配置文件路径。
+如果有变量名称与environment指令冲突，则以后者为准。格式如下：
+env_file: .env
+或者根据docker-compose.yml设置多个：&lt;/p&gt;
+
+&lt;p&gt;env_file:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;./common.env&lt;/li&gt;
+  &lt;li&gt;./apps/web.env&lt;/li&gt;
+  &lt;li&gt;/opt/secrets.env
+如果在配置文件中有build操作，变量并不会进入构建过程中。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;18、cap_add
+增加指定容器的内核能力（capacity）。
+让容器具有所有能力可以指定：&lt;/p&gt;
+
+&lt;p&gt;cap_add:
+    - ALL
+19、cap_drop
+去掉指定容器的内核能力（capacity）。
+去掉NET_ADMIN能力可以指定：&lt;/p&gt;
+
+&lt;p&gt;cap_drop:
+    - NET_ADMIN
+20、cgroup_parent
+创建了一个cgroup组名称为cgroups_1:
+cgroup_parent: cgroups_1&lt;/p&gt;
+
+&lt;p&gt;21、devices
+指定设备映射关系，例如：&lt;/p&gt;
+
+&lt;p&gt;devices:
+    - “/dev/ttyUSB1:/dev/ttyUSB0”
+22、expose
+暴露端口，但不映射到宿主机，只允许能被连接的服务访问。仅可以指定内部端口为参数，如下所示：&lt;/p&gt;
+
+&lt;p&gt;expose:
+    - “3000”
+    - “8000”
+23、extends
+基于其它模板文件进行扩展。例如，对于webapp服务定义了一个基础模板文件为common.yml：&lt;/p&gt;
+
+&lt;h1 id=&quot;commonyml&quot;&gt;common.yml&lt;/h1&gt;
+&lt;p&gt;webapp:
+    build: ./webapp
+    environment:
+        - DEBUG=false
+        - SEND_EMAILS=false
+再编写一个新的development.yml文件，使用common.yml中的webapp服务进行扩展：&lt;/p&gt;
+
+&lt;h1 id=&quot;developmentyml&quot;&gt;development.yml&lt;/h1&gt;
+&lt;p&gt;web:
+    extends:
+        file: common.yml
+        service: webapp
+    ports:
+        - “8000:8000”
+    links:
+        - db
+    environment:
+        - DEBUG=true
+db:
+    image: mysql
+后者会自动继承common.yml中的webapp服务及环境变量定义。
+extends限制如下：
+A、要避免出现循环依赖
+B、extends不会继承links和volumes_from中定义的容器和数据卷资源
+推荐在基础模板中只定义一些可以共享的镜像和环境变量，在扩展模板中具体指定应用变量、链接、数据卷等信息&lt;/p&gt;
+
+&lt;p&gt;24、external_links
+链接到docker-compose.yml外部的容器，可以是非Compose管理的外部容器。&lt;/p&gt;
+
+&lt;p&gt;external_links:
+    - redis_1
+    - project_db_1:mysql
+    - project_db_1:postgresql
+25、labels
+为容器添加Docker元数据（metadata）信息。例如，可以为容器添加辅助说明信息：&lt;/p&gt;
+
+&lt;p&gt;labels：
+    com.startupteam.description: “webapp for a strtup team”
+26、links
+链接到其它服务中的容器。使用服务名称（同时作为别名），或者“服务名称:服务别名”（如 SERVICE:ALIAS），例如：&lt;/p&gt;
+
+&lt;p&gt;links:
+    - db
+    - db:database
+    - redis
+使用别名将会自动在服务容器中的/etc/hosts里创建。例如：&lt;/p&gt;
+
+&lt;p&gt;172.17.2.186  db
+172.17.2.186  database
+172.17.2.187  redis
+27、log_driver
+指定日志驱动类型。目前支持三种日志驱动类型：&lt;/p&gt;
+
+&lt;p&gt;log_driver: “json-file”
+log_driver: “syslog”
+log_driver: “none”
+28、log_opt
+日志驱动的相关参数。例如：&lt;/p&gt;
+
+&lt;p&gt;log_driver: “syslog”log_opt: 
+    syslog-address: “tcp://192.168.0.42:123”
+29、net
+设置网络模式。&lt;/p&gt;
+
+&lt;p&gt;net: “bridge”
+net: “none”
+net: “host”
+30、security_opt
+指定容器模板标签（label）机制的默认属性（用户、角色、类型、级别等）。例如，配置标签的用户名和角色名：&lt;/p&gt;
+
+&lt;p&gt;security_opt:
+    - label:user:USER
+    - label:role:ROLE
+31、环境变量
+环境变量可以用来配置Docker-Compose的行为。
+COMPOSE_PROJECT_NAME
+设置通过Compose启动的每一个容器前添加的项目名称，默认是当前工作目录的名字。
+COMPOSE_FILE
+设置docker-compose.yml模板文件的路径。默认路径是当前工作目录。
+DOCKER_HOST
+设置Docker daemon的地址。默认使用unix:///var/run/docker.sock。 DOCKER_TLS_VERIFY
+如果设置不为空，则与Docker daemon交互通过TLS进行。
+DOCKER_CERT_PATH
+配置TLS通信所需要的验证(ca.pem、cert.pem 和 key.pem)文件的路径，默认是 ~/.docker 。&lt;/p&gt;
+
+&lt;p&gt;四、Docker-Compose模板文件示例
+1、docker-compose模板文件编写
+docker-compose.yaml文件如下：&lt;/p&gt;
+
+&lt;p&gt;version: ‘2’
+services:
+  web1:
+    image: nginx
+    ports: 
+      - “6061:80”
+    container_name: “web1”
+    networks:
+      - dev
+  web2:
+    image: nginx
+    ports: 
+      - “6062:80”
+    container_name: “web2”
+    networks:
+      - dev
+      - pro
+  web3:
+    image: nginx
+    ports: 
+      - “6063:80”
+    container_name: “web3”
+    networks:
+      - pro&lt;/p&gt;
+
+&lt;p&gt;networks:
+  dev:
+    driver: bridge
+  pro:
+    driver: bridge&lt;/p&gt;
+
+&lt;p&gt;#volumes:
+docker-compose.yaml文件指定了三个web服务。&lt;/p&gt;
+
+&lt;p&gt;2、启动应用
+创建一个webapp目录，将docker-compose.yaml文件拷贝到webapp目录下，使用docker-compose启动应用。
+docker-compose up -d&lt;/p&gt;
+
+&lt;p&gt;3、服务访问
+通过浏览器访问web1，web2，web3服务:
+http://127.0.0.1:6061
+http://127.0.0.1:6062
+http://127.0.0.1:6063&lt;/p&gt;
+</description>
+        <pubDate>Sun, 28 Apr 2019 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/04/28/Docker-Compose/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/04/28/Docker-Compose/</guid>
+        
+        <category>Docker</category>
+        
+        <category>容器</category>
+        
+        <category>容器编排</category>
+        
+        
+      </item>
     
       <item>
         <title>Linux进程操作</title>
@@ -46,7 +749,7 @@
       </item>
     
       <item>
-        <title>Kafka基础使用</title>
+        <title>Kafka~RabbitMQ~ActiveMQ</title>
         <description>&lt;blockquote&gt;
   &lt;p&gt;消息队列的作用以及Kafka/RabbitMQ/ActiveMQ的对比&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -467,7 +1170,7 @@ DETAIL:  owner of database dbname
       </item>
     
       <item>
-        <title>SpringWeb注解</title>
+        <title>Spring注解</title>
         <description>&lt;h3 id=&quot;requestmapping&quot;&gt;@RequestMapping&lt;/h3&gt;
 
 &lt;p&gt;RequestMapping是一个用来处理请求地址映射的注解，可用于类或方法上。用于类上，表示类中的所有响应请求的方法都是以该地址作为父路径。
@@ -477,12 +1180,13 @@ RequestMapping注解有六个属性，下面我们把其分成三类进行说明
 
 &lt;p&gt;value：指定请求的实际地址，指定的地址可以是URI Template 模式（后面将会说明）；
 method：指定请求的method类型， GET、POST、PUT、DELETE等；&lt;/p&gt;
+
 &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@Controller&lt;/span&gt;
 &lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/appointments&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;AppointmentsController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
 
     &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AppointmentBook&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;appointmentBook&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-    
+
     &lt;span class=&quot;nd&quot;&gt;@Autowired&lt;/span&gt;
     &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;AppointmentsController&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AppointmentBook&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;appointmentBook&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;appointmentBook&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;appointmentBook&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
@@ -584,10 +1288,329 @@ headers： 指定request中必须包含某些指定的header值，才能让该�
 &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;仅处理request的header中包含了指定“Refer”请求头和对应值为“http://www.ifeng.com/”的请求；&lt;/p&gt;
+
+&lt;h4 id=&quot;requestparam&quot;&gt;@RequestParam&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;使用 @RequestParam 绑定 HttpServletRequest 请求参数到控制器方法参数&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;requestParam&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;testRequestParam&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@RequestParam&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@RequestParam&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;age&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;age&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;requestParam&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;在上面代码中利用@RequestParam 从HttpServletRequest 中绑定了参数name 到控制器方法参数name ，绑定了参数age 到控制器方法参数age 。值得注意的是和@PathVariable 一样，当你没有明确指定从request 中取哪个参数时，Spring 在代码是debug 编译的情况下会默认取更方法参数同名的参数，如果不是debug 编译的就会报错。此外，当需要从request 中绑定的参数和方法的参数名不相同的时候，也需要在@RequestParam 中明确指出是要绑定哪个参数。在上面的代码中如果我访问/requestParam.do?name=hello&amp;amp;age=1 则Spring 将会把request请求参数name 的值hello 赋给对应的处理方法参数name ，把参数age 的值1 赋给对应的处理方法参数age 。&lt;/p&gt;
+
+&lt;p&gt;在@RequestParam 中除了指定绑定哪个参数的属性value 之外，还有一个属性required ，它表示所指定的参数是否必须在request 属性中存在，默认是true ，表示必须存在，当不存在时就会报错。在上面代码中我们指定了参数name 的required 的属性为false ，而没有指定age 的required 属性，这时候如果我们访问/requestParam.do而没有传递参数的时候，系统就会抛出异常，因为age 参数是必须存在的，而我们没有指定。而如果我们访问/requestParam.do?age=1 的时候就可以正常访问，因为我们传递了必须的参数age ，而参数name 是非必须的，不传递也可以。&lt;/p&gt;
+
+&lt;h4 id=&quot;cookievalue&quot;&gt;@CookieValue&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;使用 @CookieValue 绑定 cookie 的值到 Controller 方法参数&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;cookieValue&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;testCookieValue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@CookieValue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;hello&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cookieValue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@CookieValue&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hello&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;out&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cookieValue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;-----------&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hello&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;cookieValue&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;在上面的代码中我们使用@CookieValue 绑定了cookie 的值到方法参数上。上面一共绑定了两个参数，一个是明确指定要绑定的是名称为hello 的cookie 的值，一个是没有指定。使用没有指定的形式的规则和@PathVariable、@RequestParam 的规则是一样的，即在debug 编译模式下将自动获取跟方法参数名同名的cookie 值。&lt;/p&gt;
+
+&lt;h4 id=&quot;requestheader&quot;&gt;@RequestHeader&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;使用 @RequestHeader 注解绑定 HttpServletRequest 头信息到Controller 方法参数&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;testRequestHeader&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;testRequestHeader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@RequestHeader&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Host&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hostAddr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@RequestHeader&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Host&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@RequestHeader&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;host&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;out&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hostAddr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;-----&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Host&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;-----&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;host&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;requestHeader&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;在上面的代码中我们使用了 @RequestHeader 绑定了 HttpServletRequest 请求头 host 到Controller 的方法参数。上面方法的三个参数都将会赋予同一个值，由此我们可以知道在绑定请求头参数到方法参数的时候规则和 @PathVariable 、 @RequestParam 以及 @CookieValue 是一样的，即没有指定绑定哪个参数到方法参数的时候，在 debug 编译模式下将使用方法参数名作为需要绑定的参数。但是有一点 @RequestHeader 跟另外三种绑定方式是不一样的，那就是在使用 @RequestHeader 的时候是大小写不敏感的，即 @RequestHeader(“Host”) 和 @RequestHeader(“host”) 绑定的都是 Host 头信息。记住在 @PathVariable 、 @RequestParam 和 @CookieValue 中都是大小写敏感的&lt;/p&gt;
+
+&lt;h4 id=&quot;以-requestmapping-标记的处理器方法支持的方法参数和返回类型&quot;&gt;以 @RequestMapping 标记的处理器方法支持的方法参数和返回类型&lt;/h4&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;支持的方法参数类型
+    &lt;ul&gt;
+      &lt;li&gt;HttpServlet 对象，主要包括HttpServletRequest 、HttpServletResponse 和HttpSession 对象。 这些参数Spring 在调用处理器方法的时候会自动给它们赋值，所以当在处理器方法中需要使用到这些对象的时候，可以直接在方法上给定一个方法参数的申明，然后在方法体里面直接用就可以了。但是有一点需要注意的是在使用HttpSession 对象的时候，如果此时HttpSession 对象还没有建立起来的话就会有问题。&lt;/li&gt;
+      &lt;li&gt;Spring 自己的WebRequest 对象。 使用该对象可以访问到存放在HttpServletRequest 和HttpSession 中的属性值。&lt;/li&gt;
+      &lt;li&gt;InputStream 、OutputStream 、Reader 和Writer 。 InputStream 和Reader 是针对HttpServletRequest 而言的，可以从里面取数据；OutputStream 和Writer 是针对HttpServletResponse 而言的，可以往里面写数据。&lt;/li&gt;
+      &lt;li&gt;使用@PathVariable 、@RequestParam 、@CookieValue 和@RequestHeader 标记的参数。&lt;/li&gt;
+      &lt;li&gt;使用@ModelAttribute 标记的参数。&lt;/li&gt;
+      &lt;li&gt;java.util.Map 、Spring 封装的Model 和ModelMap 。 这些都可以用来封装模型数据，用来给视图做展示。&lt;/li&gt;
+      &lt;li&gt;实体类。 可以用来接收上传的参数。&lt;/li&gt;
+      &lt;li&gt;Spring 封装的MultipartFile 。 用来接收上传文件的。&lt;/li&gt;
+      &lt;li&gt;Spring 封装的Errors 和BindingResult 对象。 这两个对象参数必须紧接在需要验证的实体对象参数之后，它里面包含了实体对象的验证结果。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;支持的返回类型
+    &lt;ul&gt;
+      &lt;li&gt;一个包含模型和视图的ModelAndView 对象。&lt;/li&gt;
+      &lt;li&gt;一个模型对象，这主要包括Spring 封装好的Model 和ModelMap ，以及java.util.Map ，当没有视图返回的时候视图名称将由RequestToViewNameTranslator 来决定。&lt;/li&gt;
+      &lt;li&gt;一个View 对象。这个时候如果在渲染视图的过程中模型的话就可以给处理器方法定义一个模型参数，然后在方法体里面往模型中添加值。&lt;/li&gt;
+      &lt;li&gt;一个String 字符串。这往往代表的是一个视图名称。这个时候如果需要在渲染视图的过程中需要模型的话就可以给处理器方法一个模型参数，然后在方法体里面往模型中添加值就可以了。&lt;/li&gt;
+      &lt;li&gt;返回值是void 。这种情况一般是我们直接把返回结果写到HttpServletResponse 中了，如果没有写的话，那么Spring 将会利用RequestToViewNameTranslator 来返回一个对应的视图名称。如果视图中需要模型的话，处理方法与返回字符串的情况相同。&lt;/li&gt;
+      &lt;li&gt;如果处理器方法被注解@ResponseBody 标记的话，那么处理器方法的任何返回类型都会通过HttpMessageConverters 转换之后写到HttpServletResponse 中，而不会像上面的那些情况一样当做视图或者模型来处理。&lt;/li&gt;
+      &lt;li&gt;除以上几种情况之外的其他任何返回类型都会被当做模型中的一个属性来处理，而返回的视图还是由RequestToViewNameTranslator 来决定，添加到模型中的属性名称可以在该方法上用@ModelAttribute(“attributeName”) 来定义，否则将使用返回类型的类名称的首字母小写形式来表示。使用@ModelAttribute 标记的方法会在@RequestMapping 标记的方法执行之前执行。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;引言：&lt;/p&gt;
+
+&lt;p&gt;接上一篇文章讲述处理@RequestMapping的方法参数绑定之后，详细介绍下@RequestBody、@ResponseBody的具体用法和使用时机；同时对曾经看的一篇文章中讲述的某些部分进行澄清 （文章地址：http://www.byywee.com/page/M0/S702/702424.html）。&lt;/p&gt;
+
+&lt;p&gt;简介：
+@RequestBody
+作用：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  i) 该注解用于读取Request请求的body部分数据，使用系统默认配置的HttpMessageConverter进行解析，然后把相应的数据绑定到要返回的对象上；
+
+  ii) 再把HttpMessageConverter返回的对象数据绑定到 controller中方法的参数上。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;使用时机：&lt;/p&gt;
+
+&lt;p&gt;A) GET、POST方式提时， 根据request header Content-Type的值来判断:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;application/x-www-form-urlencoded， 可选（即非必须，因为这种情况的数据@RequestParam, @ModelAttribute也可以处理，当然@RequestBody也能处理）；
+multipart/form-data, 不能处理（即使用@RequestBody不能处理这种格式的数据）；
+其他格式， 必须（其他格式包括application/json, application/xml等。这些格式的数据，必须使用@RequestBody来处理）；
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;B) PUT方式提交时， 根据request header Content-Type的值来判断:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;application/x-www-form-urlencoded， 必须；
+multipart/form-data, 不能处理；
+其他格式， 必须； 说明：request的body部分的数据编码格式由header部分的Content-Type指定；
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;@ResponseBody&lt;/p&gt;
+
+&lt;p&gt;作用：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  该注解用于将Controller的方法返回的对象，通过适当的HttpMessageConverter转换为指定格式后，写入到Response对象的body数据区。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;使用时机：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  返回的数据不是html标签的页面，而是其他某种格式的数据时（如json、xml等）使用；
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;HttpMessageConverter
+复制代码
+&lt;span style=&quot;font-family:Microsoft YaHei;&quot;&gt;/**&lt;/span&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Strategy interface that specifies a converter that can convert from and to HTTP requests and responses.
+ *&lt;/li&gt;
+  &lt;li&gt;@author Arjen Poutsma&lt;/li&gt;
+  &lt;li&gt;@author Juergen Hoeller&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;@since 3.0
+ */
+public interface HttpMessageConverter&lt;T&gt; {&lt;/T&gt;&lt;/p&gt;
+
+    &lt;p&gt;/**&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Indicates whether the given class can be read by this converter.&lt;/li&gt;
+      &lt;li&gt;@param clazz the class to test for readability&lt;/li&gt;
+      &lt;li&gt;@param mediaType the media type to read, can be {@code null} if not specified.&lt;/li&gt;
+      &lt;li&gt;Typically the value of a {@code Content-Type} header.&lt;/li&gt;
+      &lt;li&gt;@return {@code true} if readable; {@code false} otherwise
+  */
+ boolean canRead(Class&amp;lt;?&amp;gt; clazz, MediaType mediaType);&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;/**&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Indicates whether the given class can be written by this converter.&lt;/li&gt;
+      &lt;li&gt;@param clazz the class to test for writability&lt;/li&gt;
+      &lt;li&gt;@param mediaType the media type to write, can be {@code null} if not specified.&lt;/li&gt;
+      &lt;li&gt;Typically the value of an {@code Accept} header.&lt;/li&gt;
+      &lt;li&gt;@return {@code true} if writable; {@code false} otherwise
+  */
+ boolean canWrite(Class&amp;lt;?&amp;gt; clazz, MediaType mediaType);&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;/**&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Return the list of {@link MediaType} objects supported by this converter.&lt;/li&gt;
+      &lt;li&gt;@return the list of supported media types
+  */
+ List&lt;MediaType&gt; getSupportedMediaTypes();&lt;/MediaType&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;/**&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Read an object of the given type form the given input message, and returns it.&lt;/li&gt;
+      &lt;li&gt;@param clazz the type of object to return. This type must have previously been passed to the&lt;/li&gt;
+      &lt;li&gt;{@link #canRead canRead} method of this interface, which must have returned {@code true}.&lt;/li&gt;
+      &lt;li&gt;@param inputMessage the HTTP input message to read from&lt;/li&gt;
+      &lt;li&gt;@return the converted object&lt;/li&gt;
+      &lt;li&gt;@throws IOException in case of I/O errors&lt;/li&gt;
+      &lt;li&gt;@throws HttpMessageNotReadableException in case of conversion errors
+  */
+ T read(Class&amp;lt;? extends T&amp;gt; clazz, HttpInputMessage inputMessage)
+     throws IOException, HttpMessageNotReadableException;&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;/**&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Write an given object to the given output message.&lt;/li&gt;
+      &lt;li&gt;@param t the object to write to the output message. The type of this object must have previously been&lt;/li&gt;
+      &lt;li&gt;passed to the {@link #canWrite canWrite} method of this interface, which must have returned {@code true}.&lt;/li&gt;
+      &lt;li&gt;@param contentType the content type to use when writing. May be {@code null} to indicate that the&lt;/li&gt;
+      &lt;li&gt;default content type of the converter must be used. If not {@code null}, this media type must have&lt;/li&gt;
+      &lt;li&gt;previously been passed to the {@link #canWrite canWrite} method of this interface, which must have&lt;/li&gt;
+      &lt;li&gt;returned {@code true}.&lt;/li&gt;
+      &lt;li&gt;@param outputMessage the message to write to&lt;/li&gt;
+      &lt;li&gt;@throws IOException in case of I/O errors&lt;/li&gt;
+      &lt;li&gt;@throws HttpMessageNotWritableException in case of conversion errors
+  */
+ void write(T t, MediaType contentType, HttpOutputMessage outputMessage)
+     throws IOException, HttpMessageNotWritableException;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;}
+&amp;lt;/span&amp;gt;
+复制代码
+该接口定义了四个方法，分别是读取数据时的 canRead(), read() 和 写入数据时的canWrite(), write()方法。&lt;/p&gt;
+
+&lt;p&gt;在使用 &lt;mvc:annotation-driven&gt;&lt;/mvc:annotation-driven&gt;标签配置时，默认配置了RequestMappingHandlerAdapter（注意是RequestMappingHandlerAdapter不是AnnotationMethodHandlerAdapter,详情查看Spring 3.1 document “16.14 Configuring Spring MVC”章节），并为他配置了一下默认的HttpMessageConverter：&lt;/p&gt;
+
+&lt;p&gt;复制代码
+    ByteArrayHttpMessageConverter converts byte arrays.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;StringHttpMessageConverter converts strings.
+
+ResourceHttpMessageConverter converts to/from org.springframework.core.io.Resource for all media types.
+
+SourceHttpMessageConverter converts to/from a javax.xml.transform.Source.
+
+FormHttpMessageConverter converts form data to/from a MultiValueMap&amp;lt;String, String&amp;gt;.
+
+Jaxb2RootElementHttpMessageConverter converts Java objects to/from XML — added if JAXB2 is present on the classpath.
+
+MappingJacksonHttpMessageConverter converts to/from JSON — added if Jackson is present on the classpath.
+
+AtomFeedHttpMessageConverter converts Atom feeds — added if Rome is present on the classpath.
+
+RssChannelHttpMessageConverter converts RSS feeds — added if Rome is present on the classpath. 复制代码 ByteArrayHttpMessageConverter: 负责读取二进制格式的数据和写出二进制格式的数据；
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;StringHttpMessageConverter：   负责读取字符串格式的数据和写出二进制格式的数据；&lt;/p&gt;
+
+&lt;p&gt;ResourceHttpMessageConverter：负责读取资源文件和写出资源文件数据；&lt;/p&gt;
+
+&lt;p&gt;FormHttpMessageConverter：       负责读取form提交的数据（能读取的数据格式为 application/x-www-form-urlencoded，不能读取multipart/form-data格式数据）；负责写入application/x-www-from-urlencoded和multipart/form-data格式的数据；&lt;/p&gt;
+
+&lt;p&gt;MappingJacksonHttpMessageConverter:  负责读取和写入json格式的数据；&lt;/p&gt;
+
+&lt;p&gt;SouceHttpMessageConverter：                   负责读取和写入 xml 中javax.xml.transform.Source定义的数据；&lt;/p&gt;
+
+&lt;p&gt;Jaxb2RootElementHttpMessageConverter:  负责读取和写入xml 标签格式的数据；&lt;/p&gt;
+
+&lt;p&gt;AtomFeedHttpMessageConverter:              负责读取和写入Atom格式的数据；&lt;/p&gt;
+
+&lt;p&gt;RssChannelHttpMessageConverter:           负责读取和写入RSS格式的数据；&lt;/p&gt;
+
+&lt;p&gt;当使用@RequestBody和@ResponseBody注解时，RequestMappingHandlerAdapter就使用它们来进行读取或者写入相应格式的数据。&lt;/p&gt;
+
+&lt;p&gt;HttpMessageConverter匹配过程：
+@RequestBody注解时： 根据Request对象header部分的Content-Type类型，逐一匹配合适的HttpMessageConverter来读取数据；&lt;/p&gt;
+
+&lt;p&gt;spring 3.1源代码如下：&lt;/p&gt;
+
+&lt;p&gt;复制代码
+private Object readWithMessageConverters(MethodParameter methodParam, HttpInputMessage inputMessage, Class paramType)
+            throws Exception {&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    MediaType contentType = inputMessage.getHeaders().getContentType();
+    if (contentType == null) {
+        StringBuilder builder = new StringBuilder(ClassUtils.getShortName(methodParam.getParameterType()));
+        String paramName = methodParam.getParameterName();
+        if (paramName != null) {
+            builder.append(' ');
+            builder.append(paramName);
+        }
+        throw new HttpMediaTypeNotSupportedException(
+                &quot;Cannot extract parameter (&quot; + builder.toString() + &quot;): no Content-Type found&quot;);
+    }
+
+    List&amp;lt;MediaType&amp;gt; allSupportedMediaTypes = new ArrayList&amp;lt;MediaType&amp;gt;();
+    if (this.messageConverters != null) {
+        for (HttpMessageConverter&amp;lt;?&amp;gt; messageConverter : this.messageConverters) {
+            allSupportedMediaTypes.addAll(messageConverter.getSupportedMediaTypes());
+            if (messageConverter.canRead(paramType, contentType)) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(&quot;Reading [&quot; + paramType.getName() + &quot;] as \&quot;&quot; + contentType
+                            +&quot;\&quot; using [&quot; + messageConverter + &quot;]&quot;);
+                }
+                return messageConverter.read(paramType, inputMessage);
+            }
+        }
+    }
+    throw new HttpMediaTypeNotSupportedException(contentType, allSupportedMediaTypes);
+} 复制代码 @ResponseBody注解时： 根据Request对象header部分的Accept属性（逗号分隔），逐一按accept中的类型，去遍历找到能处理的HttpMessageConverter；
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;源代码如下：&lt;/p&gt;
+
+&lt;p&gt;复制代码
+private void writeWithMessageConverters(Object returnValue,
+                HttpInputMessage inputMessage, HttpOutputMessage outputMessage)
+                throws IOException, HttpMediaTypeNotAcceptableException {
+            List&lt;MediaType&gt; acceptedMediaTypes = inputMessage.getHeaders().getAccept();
+            if (acceptedMediaTypes.isEmpty()) {
+                acceptedMediaTypes = Collections.singletonList(MediaType.ALL);
+            }
+            MediaType.sortByQualityValue(acceptedMediaTypes);
+            Class&amp;lt;?&amp;gt; returnValueType = returnValue.getClass();
+            List&lt;MediaType&gt; allSupportedMediaTypes = new ArrayList&lt;MediaType&gt;();
+            if (getMessageConverters() != null) {
+                for (MediaType acceptedMediaType : acceptedMediaTypes) {
+                    for (HttpMessageConverter messageConverter : getMessageConverters()) {
+                        if (messageConverter.canWrite(returnValueType, acceptedMediaType)) {
+                            messageConverter.write(returnValue, acceptedMediaType, outputMessage);
+                            if (logger.isDebugEnabled()) {
+                                MediaType contentType = outputMessage.getHeaders().getContentType();
+                                if (contentType == null) {
+                                    contentType = acceptedMediaType;
+                                }
+                                logger.debug(&quot;Written [&quot; + returnValue + &quot;] as \&quot;&quot; + contentType +
+                                        &quot;\&quot; using [&quot; + messageConverter + &quot;]&quot;);
+                            }
+                            this.responseArgumentUsed = true;
+                            return;
+                        }
+                    }
+                }
+                for (HttpMessageConverter messageConverter : messageConverters) {
+                    allSupportedMediaTypes.addAll(messageConverter.getSupportedMediaTypes());
+                }
+            }
+            throw new HttpMediaTypeNotAcceptableException(allSupportedMediaTypes);
+        }
+复制代码
+补充：
+MappingJacksonHttpMessageConverter 调用了 objectMapper.writeValue(OutputStream stream, Object)方法，使用@ResponseBody注解返回的对象就传入Object参数内。若返回的对象为已经格式化好的json串时，不使用@RequestBody注解，而应该这样处理：
+1、response.setContentType(&quot;application/json; charset=UTF-8&quot;);
+2、response.getWriter().print(jsonStr);
+直接输出到body区，然后的视图为void。&lt;/MediaType&gt;&lt;/MediaType&gt;&lt;/MediaType&gt;&lt;/p&gt;
 </description>
         <pubDate>Thu, 11 Apr 2019 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2019/04/11/SpringWeb%E6%B3%A8%E8%A7%A3/</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/04/11/SpringWeb%E6%B3%A8%E8%A7%A3/</guid>
+        <link>http://localhost:4000/2019/04/11/Spring%E6%B3%A8%E8%A7%A3/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/04/11/Spring%E6%B3%A8%E8%A7%A3/</guid>
         
         <category>Spring</category>
         
@@ -597,7 +1620,63 @@ headers： 指定request中必须包含某些指定的header值，才能让该�
       </item>
     
       <item>
-        <title>CentOS常用命令</title>
+        <title>Linux下FTP的搭建与配置</title>
+        <description>&lt;h3 id=&quot;安装-xrdptightvncserver&quot;&gt;安装 xrdp、tightvncserver&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-Bash&quot;&gt;sudo apt-get install tightvncserver xrdp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;安装xubuntu-desktop&quot;&gt;安装xubuntu-desktop&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-Bash&quot;&gt;sudo apt-get install xubuntu-desktop
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;修改配置文件&quot;&gt;修改配置文件&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-Bash&quot;&gt;echo xfce4-session &amp;gt;~/.xsession
+sudo vi /etc/xrdp/startwm.sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;加入”xfce4-session”&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-Bash&quot;&gt;xfce4-session
+test -x /etc/X11/XSession &amp;amp;&amp;amp; exec /etc/X11/Xsession
+exec /bin/bash /etc/X11/XSession
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在/etc/X11/Xsession文件最上方加入”xfce4-session”
+重启xdrp服务使其生效&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-Bash&quot;&gt;sudo service xrdp restart
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;授权其他用户登录&quot;&gt;授权其他用户登录&lt;/h3&gt;
+
+&lt;p&gt;默认情况下， 只有root用户可以登录，通过修改root用户目录下的.ICEauthority文件权限后，可授权其他用户登录&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-Bash&quot;&gt;chmod 666 ~/ICEauthority
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;登录&quot;&gt;登录&lt;/h3&gt;
+
+&lt;p&gt;通过windows自带的mstsc可以进行登录&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;如果需要通过外网访问登录，需映射出3389及3050两个端口。比如将 3389 -&amp;gt; 53389, 3050 -&amp;gt; 53050&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        <pubDate>Sun, 31 Mar 2019 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/03/31/Ubuntu%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/03/31/Ubuntu%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/</guid>
+        
+        <category>Linux</category>
+        
+        <category>Ubuntu</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Linux下FTP的搭建与配置</title>
         <description>&lt;h3 id=&quot;安装&quot;&gt;安装&lt;/h3&gt;
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;vsftpd
 &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;service vsftpd status
@@ -879,8 +1958,14 @@ yum check-update //检查可更新的程序
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h4 id=&quot;查看进程&quot;&gt;查看进程&lt;/h4&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ps -aux | grep redis
-kill -9 PID
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;lsof -i:8000
+netstat -tunlp | grep 8000
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-t (tcp) 仅显示tcp相关选项
+-u (udp) 仅显示udp相关选项
+-n 拒绝显示别名，能显示数字的全部转化为数字
+-l 仅列出在Listen(监听)的服务状态
+-p 显示建立相关链接的程序名
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
         <pubDate>Sun, 31 Mar 2019 00:00:00 +0800</pubDate>
@@ -890,529 +1975,6 @@ kill -9 PID
         <category>Linux</category>
         
         <category>CentOS</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Python有趣的包</title>
-        <description>&lt;h3 id=&quot;文章提取器&quot;&gt;文章提取器&lt;/h3&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/grangier/python-goose.git
-&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;python-goose
-pip &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; requirements.txt
-python setup.py &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;goose&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Goose&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;goose.text&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;StopWordsChinese&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'http://www.bbc.co.uk/zhongwen/simp/chinese_news/2012/12/121210_hongkong_politics.shtml'&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Goose&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'stopwords_class'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;StopWordsChinese&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;article&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;extract&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;article&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cleaned_text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;150&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;美化-curl&quot;&gt;美化 curl&lt;/h3&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;httpstat
-httpstat httpbin.org/get
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;处理中文文本内容&quot;&gt;处理中文文本内容&lt;/h3&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-U&lt;/span&gt; textblob#英文文本的情感分析
-pip &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;snownlp#中文文本的情感分析
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;snownlp&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SnowNLP&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;I am happy today. I feel sad today.&quot;&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;textblob&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TextBlob&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;blob&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TextBlob&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;TextBlob&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;I am happy today. I feel sad today.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;blob&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sentiment&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Sentiment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;polarity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.15000000000000002&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;subjectivity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SnowNLP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;u'这个东西真心很赞'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;words&lt;/span&gt;         &lt;span class=&quot;c1&quot;&gt;# [u'这个', u'东西', u'真心',
-&lt;/span&gt;                &lt;span class=&quot;c1&quot;&gt;#  u'很', u'赞']
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tags&lt;/span&gt;          &lt;span class=&quot;c1&quot;&gt;# [(u'这个', u'r'), (u'东西', u'n'),
-&lt;/span&gt;                &lt;span class=&quot;c1&quot;&gt;#  (u'真心', u'd'), (u'很', u'd'),
-&lt;/span&gt;                &lt;span class=&quot;c1&quot;&gt;#  (u'赞', u'Vg')]
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sentiments&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# 0.9769663402895832 positive的概率
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pinyin&lt;/span&gt;        &lt;span class=&quot;c1&quot;&gt;# [u'zhe', u'ge', u'dong', u'xi',
-&lt;/span&gt;                &lt;span class=&quot;c1&quot;&gt;#  u'zhen', u'xin', u'hen', u'zan']
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SnowNLP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;u'「繁體字」「繁體中文」的叫法在臺灣亦很常見。'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;han&lt;/span&gt;           &lt;span class=&quot;c1&quot;&gt;# u'「繁体字」「繁体中文」的叫法
-&lt;/span&gt;                &lt;span class=&quot;c1&quot;&gt;# 在台湾亦很常见。'
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;解析-nginx-访问日志并格式化输出&quot;&gt;解析 nginx 访问日志并格式化输出&lt;/h3&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;ngxtop
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ngxtop
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;python-财经数据接口包&quot;&gt;Python 财经数据接口包&lt;/h3&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;tushare
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;tushare&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ts&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#一次性获取最近一个日交易日所有股票的交易数据
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ts&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_today_all&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;开源漏洞靶场&quot;&gt;开源漏洞靶场&lt;/h3&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# 安装docker&lt;/span&gt;
-apt-get update &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt-get &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;docker.io
-&lt;span class=&quot;c&quot;&gt;# 启动docker服务&lt;/span&gt;
-service docker start
-&lt;span class=&quot;c&quot;&gt;# 安装compose&lt;/span&gt;
-pip &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;docker-compose
-&lt;span class=&quot;c&quot;&gt;# 拉取项目&lt;/span&gt;
-git clone git@github.com:phith0n/vulhub.git
-&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;vulhub
-&lt;span class=&quot;c&quot;&gt;# 进入某一个漏洞/环境的目录&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;nginx_php5_mysql
-&lt;span class=&quot;c&quot;&gt;# 自动化编译环境&lt;/span&gt;
-docker-compose build
-&lt;span class=&quot;c&quot;&gt;# 启动整个环境&lt;/span&gt;
-docker-compose up &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#测试完成后，删除整个环境&lt;/span&gt;
-docker-compose down
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-</description>
-        <pubDate>Mon, 25 Mar 2019 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2019/03/25/Python%E6%9C%89%E8%B6%A3%E7%9A%84%E5%8C%85/</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/03/25/Python%E6%9C%89%E8%B6%A3%E7%9A%84%E5%8C%85/</guid>
-        
-        <category>Python</category>
-        
-        <category>Python3</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Python类的预置方法</title>
-        <description>&lt;h3 id=&quot;with上下文管理器&quot;&gt;with上下文管理器&lt;/h3&gt;
-
-&lt;p&gt;with管理上下文的作用是对一些重复的代码简单化，并且能优化try/except/finally的写法。&lt;br /&gt;
-上下文的实现是通过两个魔法函数enter和exit实现，后来更新再造后，使用contextlib提供的API可以更加方便的完成。&lt;/p&gt;
-
-&lt;h4 id=&quot;使用enter和exit实现1&quot;&gt;使用enter和exit实现(1)&lt;/h4&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;wallet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__init__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;man&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-        &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;man&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;man&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__enter__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;man&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'放心大胆的掏出了钱包'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__exit__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;exc_type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;exc_val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;exc_tb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;man&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'小心翼翼的收起来钱包'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;use_money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;man&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wallet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;man&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;use_money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'langzi'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'花了600块钱'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;返回结果：&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;langzi放心大胆的掏出了钱包
-花了600块钱
-langzi小心翼翼的收起来钱包
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;使用enter和exit实现2&quot;&gt;使用enter和exit实现(2)&lt;/h4&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;wallet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__init__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;man&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-        &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;man&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;man&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__enter__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;man&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'放心大胆的掏出了钱包'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;# return self 这一步非常重要，作用是返回实例
-&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__exit__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;exc_type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;exc_val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;exc_tb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;man&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'小心翼翼的收起来钱包'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;use_money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;man&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'花了'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;money&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'元'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wallet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'浪子'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;use_money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'600'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;运行结果：&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;浪子放心大胆的掏出了钱包
-浪子花了600元
-浪子小心翼翼的收起来钱包
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;使用contextlib实现&quot;&gt;使用contextlib实现&lt;/h4&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;contextlib&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contextlib&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contextmanager&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;use_money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;man&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;man&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'十分放心大胆的掏出钱包'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;yield&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;
-        &lt;span class=&quot;c1&quot;&gt;# yield生成器，运行到这里会返回一个值(你随便写一个就行)
-&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;finally&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;man&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'万分谨慎的收起了钱包'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;use_money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'langzi'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'花了1块钱'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;返回结果：&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;langzi十分放心大胆的掏出钱包
-花了1块钱
-langzi万分谨慎的收起了钱包
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-</description>
-        <pubDate>Wed, 20 Mar 2019 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2019/03/20/Python%E7%B1%BB%E7%9A%84%E9%A2%84%E7%BD%AE%E6%96%B9%E6%B3%95/</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/03/20/Python%E7%B1%BB%E7%9A%84%E9%A2%84%E7%BD%AE%E6%96%B9%E6%B3%95/</guid>
-        
-        <category>Python</category>
-        
-        <category>Python3</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Kafka基础使用</title>
-        <description>&lt;h3 id=&quot;简介&quot;&gt;简介&lt;/h3&gt;
-
-&lt;p&gt;kafka是一个分布式消息队列。具有高性能、持久化、多副本备份、横向扩展能力。生产者往队列里写消息，消费者从队列里取消息进行业务逻辑。一般在架构设计中起到解耦、削峰、异步处理的作用。&lt;br /&gt;
-kafka对外使用topic的概念，生产者往topic里写消息，消费者从读消息。为了做到水平扩展，一个topic实际是由多个partition组成的，遇到瓶颈时，可以通过增加partition的数量来进行横向扩容。单个parition内是保证消息有序。&lt;br /&gt;
-每新写一条消息，kafka就是在对应的文件append写，所以性能非常高。&lt;br /&gt;
-kafka的总体数据流是这样的：
-&lt;img src=&quot;https://ws1.sinaimg.cn/large/e6c519e9gy1g18zcsu24xj21280x5dl0.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;大概用法就是，Producers往Brokers里面的指定Topic中写消息，Consumers从Brokers里面拉去指定Topic的消息，然后进行业务处理。
-图中有两个topic，topic 0有两个partition，topic 1有一个partition，三副本备份。可以看到consumer gourp 1中的consumer 2没有分到partition处理，这是有可能出现的，下面会讲到。&lt;br /&gt;
-关于broker、topics、partitions的一些元信息用zk来存，监控和路由啥的也都会用到zk。&lt;/p&gt;
-
-&lt;h3 id=&quot;生产&quot;&gt;生产&lt;/h3&gt;
-
-&lt;p&gt;基本流程是这样的：
-&lt;img src=&quot;https://ws1.sinaimg.cn/large/e6c519e9gy1g18zdfdrixj21g40w4jsv.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;创建一条记录，记录中一个要指定对应的topic和value，key和partition可选。 先序列化，然后按照topic和partition，放进对应的发送队列中。kafka produce都是批量请求，会积攒一批，然后一起发送，不是调send()就进行立刻进行网络发包。&lt;br /&gt;
-如果partition没填，那么情况会是这样的：&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;key有填
-按照key进行哈希，相同key去一个partition。（如果扩展了partition的数量那么就不能保证了）&lt;/li&gt;
-  &lt;li&gt;key没填
-round-robin来选partition&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;这些要发往同一个partition的请求按照配置，攒一波，然后由一个单独的线程一次性发过去。&lt;/p&gt;
-
-&lt;h4 id=&quot;api&quot;&gt;API&lt;/h4&gt;
-
-&lt;p&gt;有high level api，替我们把很多事情都干了，offset，路由啥都替我们干了，用以来很简单。
-还有simple api，offset啥的都是要我们自己记录。&lt;/p&gt;
-
-&lt;h4 id=&quot;partition&quot;&gt;partition&lt;/h4&gt;
-&lt;p&gt;当存在多副本的情况下，会尽量把多个副本，分配到不同的broker上。&lt;strong&gt;kafka会为partition选出一个leader，之后所有该partition的请求，实际操作的都是leader，然后再同步到其他的follower。&lt;/strong&gt;当一个broker歇菜后，所有leader在该broker上的partition都会重新选举，选出一个leader。（这里不像分布式文件存储系统那样会自动进行复制保持副本数）&lt;br /&gt;
-然后这里就涉及两个细节：怎么分配partition，怎么选leader。&lt;br /&gt;
-&lt;strong&gt;关于partition的分配，还有leader的选举，总得有个执行者。在kafka中，这个执行者就叫controller。&lt;/strong&gt;kafka使用zk在broker中选出一个controller，用于partition分配和leader选举。&lt;/p&gt;
-
-&lt;h4 id=&quot;partition的分配&quot;&gt;partition的分配&lt;/h4&gt;
-&lt;ol&gt;
-  &lt;li&gt;将所有Broker（假设共n个Broker）和待分配的Partition排序&lt;/li&gt;
-  &lt;li&gt;将第i个Partition分配到第（i mod n）个Broker上 （这个就是leader）&lt;/li&gt;
-  &lt;li&gt;将第i个Partition的第j个Replica分配到第（(i + j) mode n）个Broker上&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&quot;leader容灾&quot;&gt;leader容灾&lt;/h4&gt;
-&lt;p&gt;controller会在Zookeeper的/brokers/ids节点上注册Watch，一旦有broker宕机，它就能知道。当broker宕机后，controller就会给受到影响的partition选出新leader。controller从zk的/brokers/topics/[topic]/partitions/[partition]/state中，读取对应partition的ISR（in-sync replica已同步的副本）列表，选一个出来做leader。&lt;br /&gt;
-选出leader后，更新zk，然后发送LeaderAndISRRequest给受影响的broker，让它们改变知道这事。为什么这里不是使用zk通知，而是直接给broker发送rpc请求，我的理解可能是这样做zk有性能问题吧。&lt;br /&gt;
-如果ISR列表是空，那么会根据配置，随便选一个replica做leader，或者干脆这个partition就是歇菜。如果ISR列表的有机器，但是也歇菜了，那么还可以等ISR的机器活过来。&lt;/p&gt;
-
-&lt;h4 id=&quot;多副本同步&quot;&gt;多副本同步&lt;/h4&gt;
-&lt;p&gt;这里的策略，服务端这边的处理是follower从leader批量拉取数据来同步。但是具体的可靠性，是由生产者来决定的。&lt;br /&gt;
-生产者生产消息的时候，通过request.required.acks参数来设置数据的可靠性。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;acks&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;what happen&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;which means that the producer never waits for an acknowledgement from the broker.发过去就完事了，不关心broker是否处理成功，可能丢数据。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;which means that the producer gets an acknowledgement after the leader replica has received the data. 当写Leader成功后就返回,其他的replica都是通过fetcher去同步的,所以kafka是异步写，主备切换可能丢数据。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;-1&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;which means that the producer gets an acknowledgement after all in-sync replicas have received the data. 要等到isr里所有机器同步成功，才能返回成功，延时取决于最慢的机器。强一致，不会丢数据。&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;在acks=-1的时候，如果ISR少于&lt;code class=&quot;highlighter-rouge&quot;&gt;min.insync.replicas&lt;/code&gt;指定的数目，那么就会返回不可用。&lt;br /&gt;
-这里ISR列表中的机器是会变化的，根据配置&lt;code class=&quot;highlighter-rouge&quot;&gt;replica.lag.time.max.ms&lt;/code&gt;，多久没同步，就会从ISR列表中剔除。以前还有根据落后多少条消息就踢出ISR，在1.0版本后就去掉了，因为这个值很难取，在高峰的时候很容易出现节点不断的进出ISR列表。&lt;br /&gt;
-从ISA中选出leader后，follower会从把自己日志中上一个高水位后面的记录去掉，然后去和leader拿新的数据。因为新的leader选出来后，follower上面的数据，可能比新leader多，所以要截取。这里高水位的意思，对于partition和leader，就是所有ISR中都有的最新一条记录。消费者最多只能读到高水位；&lt;br /&gt;
-从leader的角度来说高水位的更新会延迟一轮，例如写入了一条新消息，ISR中的broker都fetch到了，但是ISR中的broker只有在下一轮的fetch中才能告诉leader。&lt;br /&gt;
-也正是由于这个高水位延迟一轮，在一些情况下，kafka会出现丢数据和主备数据不一致的情况，0.11开始，使用leader epoch来代替高水位。（https://cwiki.apache.org/confluence/display/KAFKA/KIP-101+-+Alter+Replication+Protocol+to+use+Leader+Epoch+rather+than+High+Watermark+for+Truncation#KIP-101-AlterReplicationProtocoltouseLeaderEpochratherthanHighWatermarkforTruncation-Scenario1:HighWatermarkTruncationfollowedbyImmediateLeaderElection）&lt;/p&gt;
-
-&lt;p&gt;思考：
-当acks=-1时&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;是follwers都来fetch就返回成功，还是等follwers第二轮fetch？&lt;/li&gt;
-  &lt;li&gt;leader已经写入本地，但是ISR中有些机器失败，那么怎么处理呢？&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;消费&quot;&gt;消费&lt;/h3&gt;
-&lt;p&gt;订阅topic是以一个消费组来订阅的，一个消费组里面可以有多个消费者。同一个消费组中的两个消费者，不会同时消费一个partition。换句话来说，就是一个partition，只能被消费组里的一个消费者消费，但是可以同时被多个消费组消费。因此，如果消费组内的消费者如果比partition多的话，那么就会有个别消费者一直空闲。
-&lt;img src=&quot;https://ws1.sinaimg.cn/large/e6c519e9gy1g18zeft44ij21xo13atd4.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;api-1&quot;&gt;API&lt;/h4&gt;
-&lt;p&gt;订阅topic时，可以用正则表达式，如果有新topic匹配上，那能自动订阅上。&lt;/p&gt;
-
-&lt;h4 id=&quot;offset的保存&quot;&gt;offset的保存&lt;/h4&gt;
-&lt;p&gt;一个消费组消费partition，需要保存offset记录消费到哪，以前保存在zk中，由于zk的写性能不好，以前的解决方法都是consumer每隔一分钟上报一次。这里zk的性能严重影响了消费的速度，而且很容易出现重复消费。
-在0.10版本后，kafka把这个offset的保存，从zk总剥离，保存在一个名叫__consumeroffsets topic的topic中。写进消息的key由groupid、topic、partition组成，value是偏移量offset。topic配置的清理策略是compact。总是保留最新的key，其余删掉。一般情况下，每个key的offset都是缓存在内存中，查询的时候不用遍历partition，如果没有缓存，第一次就会遍历partition建立缓存，然后查询返回。&lt;/p&gt;
-
-&lt;p&gt;确定consumer group位移信息写入__consumers_offsets的哪个partition，具体计算公式：&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;__consumers_offsets partition =
-           Math.abs(groupId.hashCode() % groupMetadataTopicPartitionCount)   
-//groupMetadataTopicPartitionCount由offsets.topic.num.partitions指定，默认是50个分区。
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;思考：
-如果正在跑的服务，修改了offsets.topic.num.partitions，那么offset的保存是不是就乱套了？&lt;/p&gt;
-
-&lt;h4 id=&quot;分配partitionreblance&quot;&gt;分配partition–reblance&lt;/h4&gt;
-&lt;p&gt;生产过程中broker要分配partition，&lt;strong&gt;消费过程这里，也要分配partition给消费者。类似broker中选了一个controller出来，消费也要从broker中选一个coordinator，用于分配partition。&lt;/strong&gt;
-下面从顶向下，分别阐述一下&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;怎么选coordinator。&lt;/li&gt;
-  &lt;li&gt;交互流程。&lt;/li&gt;
-  &lt;li&gt;reblance的流程。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&quot;选coordinator&quot;&gt;选coordinator&lt;/h4&gt;
-&lt;ol&gt;
-  &lt;li&gt;看offset保存在那个partition&lt;/li&gt;
-  &lt;li&gt;该partition leader所在的broker就是被选定的coordinator&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;这里我们可以看到，consumer group的coordinator，和保存consumer group offset的partition leader是同一台机器。&lt;/p&gt;
-
-&lt;h4 id=&quot;交互流程&quot;&gt;交互流程&lt;/h4&gt;
-&lt;p&gt;把coordinator选出来之后，就是要分配了
-整个流程是这样的：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;consumer启动、或者coordinator宕机了，consumer会任意请求一个broker，发送ConsumerMetadataRequest请求，broker会按照上面说的方法，选出这个consumer对应coordinator的地址。&lt;/li&gt;
-  &lt;li&gt;consumer 发送heartbeat请求给coordinator，返回IllegalGeneration的话，就说明consumer的信息是旧的了，需要重新加入进来，进行reblance。返回成功，那么consumer就从上次分配的partition中继续执行。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&quot;reblance流程&quot;&gt;reblance流程&lt;/h4&gt;
-&lt;ol&gt;
-  &lt;li&gt;consumer给coordinator发送JoinGroupRequest请求。&lt;/li&gt;
-  &lt;li&gt;这时其他consumer发heartbeat请求过来时，coordinator会告诉他们，要reblance了。&lt;/li&gt;
-  &lt;li&gt;其他consumer发送JoinGroupRequest请求。&lt;/li&gt;
-  &lt;li&gt;所有记录在册的consumer都发了JoinGroupRequest请求之后，coordinator就会在这里consumer中随便选一个leader。然后回JoinGroupRespone，这会告诉consumer你是follower还是leader，对于leader，还会把follower的信息带给它，让它根据这些信息去分配partition&lt;/li&gt;
-  &lt;li&gt;consumer向coordinator发送SyncGroupRequest，其中leader的SyncGroupRequest会包含分配的情况。&lt;/li&gt;
-  &lt;li&gt;coordinator回包，把分配的情况告诉consumer，包括leader。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;当partition或者消费者的数量发生变化时，都得进行reblance。
-列举一下会reblance的情况：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;增加partition&lt;/li&gt;
-  &lt;li&gt;增加消费者&lt;/li&gt;
-  &lt;li&gt;消费者主动关闭&lt;/li&gt;
-  &lt;li&gt;消费者宕机了&lt;/li&gt;
-  &lt;li&gt;coordinator自己也宕机了&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;消息投递语义&quot;&gt;消息投递语义&lt;/h3&gt;
-&lt;p&gt;kafka支持3种消息投递语义&lt;br /&gt;
-&lt;strong&gt;At most once：&lt;/strong&gt;最多一次，消息可能会丢失，但不会重复&lt;br /&gt;
-&lt;strong&gt;At least once：&lt;/strong&gt;最少一次，消息不会丢失，可能会重复&lt;br /&gt;
-&lt;strong&gt;Exactly once：&lt;/strong&gt;只且一次，消息不丢失不重复，只且消费一次（0.11中实现，仅限于下游也是kafka）&lt;br /&gt;
-在业务中，常常都是使用At least once的模型，如果需要可重入的话，往往是业务自己实现。&lt;/p&gt;
-
-&lt;h4 id=&quot;at-least-once&quot;&gt;At least once&lt;/h4&gt;
-&lt;p&gt;先获取数据，再进行业务处理，业务处理成功后commit offset。
-1、生产者生产消息异常，消息是否成功写入不确定，重做，可能写入重复的消息
-2、消费者处理消息，业务处理成功后，更新offset失败，消费者重启的话，会重复消费&lt;/p&gt;
-
-&lt;h4 id=&quot;at-most-once&quot;&gt;At most once&lt;/h4&gt;
-&lt;p&gt;先获取数据，再commit offset，最后进行业务处理。
-1、生产者生产消息异常，不管，生产下一个消息，消息就丢了
-2、消费者处理消息，先更新offset，再做业务处理，做业务处理失败，消费者重启，消息就丢了&lt;/p&gt;
-
-&lt;h4 id=&quot;exactly-once&quot;&gt;Exactly once&lt;/h4&gt;
-&lt;p&gt;思路是这样的，首先要保证消息不丢，再去保证不重复。所以盯着At least once的原因来搞。 首先想出来的：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;生产者重做导致重复写入消息—-生产保证幂等性&lt;/li&gt;
-  &lt;li&gt;消费者重复消费—消灭重复消费，或者业务接口保证幂等性重复消费也没问题&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;strong&gt;由于业务接口是否幂等，不是kafka能保证的，所以kafka这里提供的exactly once是有限制的，消费者的下游也必须是kafka。&lt;/strong&gt;所以一下讨论的，没特殊说明，消费者的下游系统都是kafka（注:使用kafka conector，它对部分系统做了适配，实现了exactly once）。&lt;/p&gt;
-
-&lt;p&gt;生产者幂等性好做，没啥问题。&lt;/p&gt;
-
-&lt;p&gt;解决重复消费有两个方法：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;下游系统保证幂等性，重复消费也不会导致多条记录。&lt;/li&gt;
-  &lt;li&gt;把commit offset和业务处理绑定成一个事务。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;本来exactly once实现第1点就ok了。&lt;/p&gt;
-
-&lt;p&gt;但是在一些使用场景下，我们的数据源可能是多个topic，处理后输出到多个topic，这时我们会希望输出时要么全部成功，要么全部失败。这就需要实现事务性。既然要做事务，那么干脆&lt;strong&gt;把重复消费的问题从根源上解决，把commit offset和输出到其他topic绑定成一个事务。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;生产幂等性&quot;&gt;生产幂等性&lt;/h4&gt;
-&lt;p&gt;思路是这样的，为每个producer分配一个pid，作为该producer的唯一标识。producer会为每一个维护一个单调递增的seq。类似的，broker也会为每个记录下最新的seq。当req_seq == broker_seq+1时，broker才会接受该消息。因为：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;消息的seq比broker的seq大超过时，说明中间有数据还没写入，即乱序了。&lt;/li&gt;
-  &lt;li&gt;消息的seq不比broker的seq小，那么说明该消息已被保存。
-&lt;img src=&quot;https://ws1.sinaimg.cn/large/e6c519e9gy1g18zf3e2tsj20ds0lpq34.jpg&quot; alt=&quot;&quot; /&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&quot;事务性原子性广播&quot;&gt;事务性/原子性广播&lt;/h4&gt;
-&lt;p&gt;场景是这样的：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;先从多个源topic中获取数据。&lt;/li&gt;
-  &lt;li&gt;做业务处理，写到下游的多个目的topic。&lt;/li&gt;
-  &lt;li&gt;更新多个源topic的offset。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;其中第2、3点作为一个事务，要么全成功，要么全失败。这里得益与offset实际上是用特殊的topic去保存，这两点都归一为写多个topic的事务性处理。
-&lt;img src=&quot;https://ws1.sinaimg.cn/large/e6c519e9gy1g18zflvue9j20o00h5weq.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;基本思路是这样的：
-引入tid（transaction id），和pid不同，这个id是应用程序提供的，用于标识事务，和producer是谁并没关系。就是任何producer都可以使用这个tid去做事务，这样进行到一半就死掉的事务，可以由另一个producer去恢复。
-同时为了记录事务的状态，类似对offset的处理，引入transaction coordinator用于记录transaction log。在集群中会有多个transaction coordinator，每个tid对应唯一一个transaction coordinator。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;注：transaction log删除策略是compact，已完成的事务会标记成null，compact后不保留。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;做事务时，先标记开启事务，写入数据，全部成功就在transaction log中记录为prepare commit状态，否则写入prepare abort的状态。之后再去给每个相关的partition写入一条marker（commit或者abort）消息，标记这个事务的message可以被读取或已经废弃。成功后在transaction log记录下commit/abort状态，至此事务结束。&lt;/p&gt;
-
-&lt;p&gt;数据流：
-&lt;img src=&quot;https://ws1.sinaimg.cn/large/e6c519e9gy1g18zg8mlqcj20k00f6754.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;首先使用tid请求任意一个broker（代码中写的是负载最小的broker），找到对应的transaction coordinator。&lt;/li&gt;
-  &lt;li&gt;请求transaction coordinator获取到对应的pid，和pid对应的epoch，这个epoch用于防止僵死进程复活导致消息错乱，当消息的epoch比当前维护的epoch小时，拒绝掉。tid和pid有一一对应的关系，这样对于同一个tid会返回相同的pid。&lt;/li&gt;
-  &lt;li&gt;client先请求transaction coordinator记录的事务状态，初始状态是BEGIN，如果是该事务中第一个到达的，同时会对事务进行计时；client输出数据到相关的partition中；client再请求transaction coordinator记录offset的事务状态；client发送offset commit到对应offset partition。&lt;/li&gt;
-  &lt;li&gt;client发送commit请求，transaction coordinator记录prepare commit/abort，然后发送marker给相关的partition。全部成功后，记录commit/abort的状态，最后这个记录不需要等待其他replica的ack，因为prepare不丢就能保证最终的正确性了。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;这里prepare的状态主要是用于事务恢复，例如给相关的partition发送控制消息，没发完就宕机了，备机起来后，producer发送请求获取pid时，会把未完成的事务接着完成。&lt;br /&gt;
-当partition中写入commit的marker后，相关的消息就可被读取。所以kafka事务在prepare commit到commit这个时间段内，消息是逐渐可见的，而不是同一时刻可见。&lt;br /&gt;
-详细细节可看：https://cwiki.apache.org/confluence/display/KAFKA/KIP-98+-+Exactly+Once+Delivery+and+Transactional+Messaging#KIP-98-ExactlyOnceDeliveryandTransactionalMessaging-TransactionalGuarantees&lt;/p&gt;
-
-&lt;h4 id=&quot;消费事务&quot;&gt;消费事务&lt;/h4&gt;
-&lt;p&gt;前面都是从生产的角度看待事务。还需要从消费的角度去考虑一些问题。
-消费时，partition中会存在一些消息处于未commit状态，即业务方应该看不到的消息，需要过滤这些消息不让业务看到，kafka选择在消费者进程中进行过来，而不是在broker中过滤，主要考虑的还是性能。kafka高性能的一个关键点是zero copy，如果需要在broker中过滤，那么势必需要读取消息内容到内存，就会失去zero copy的特性。&lt;/p&gt;
-
-&lt;h3 id=&quot;文件组织&quot;&gt;文件组织&lt;/h3&gt;
-&lt;p&gt;kafka的数据，实际上是以文件的形式存储在文件系统的。topic下有partition，partition下有segment，segment是实际的一个个文件，topic和partition都是抽象概念。&lt;br /&gt;
-在目录/{topicName}-{partitionid}/下，存储着实际的log文件（即segment），还有对应的索引文件。&lt;br /&gt;
-每个segment文件大小相等，文件名以这个segment中最小的offset命名，文件扩展名是.log；segment对应的索引的文件名字一样，扩展名是.index。有两个index文件，一个是offset index用于按offset去查message，一个是time index用于按照时间去查，其实这里可以优化合到一起，下面只说offset index。总体的组织是这样的：
-&lt;img src=&quot;https://ws1.sinaimg.cn/large/e6c519e9gy1g18zgpwpx9j217c0z9dhg.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;为了减少索引文件的大小，降低空间使用，方便直接加载进内存中，这里的索引使用稀疏矩阵，不会每一个message都记录下具体位置，而是每隔一定的字节数，再建立一条索引。 索引包含两部分，分别是baseOffset，还有position。&lt;br /&gt;
-baseOffset：意思是这条索引对应segment文件中的第几条message。这样做方便使用数值压缩算法来节省空间。例如kafka使用的是varint。&lt;br /&gt;
-position：在segment中的绝对位置。&lt;br /&gt;
-查找offset对应的记录时，会先用二分法，找出对应的offset在哪个segment中，然后使用索引，在定位出offset在segment中的大概位置，再遍历查找message。&lt;/p&gt;
-
-&lt;h3 id=&quot;常用配置项&quot;&gt;常用配置项&lt;/h3&gt;
-
-&lt;h4 id=&quot;broker配置&quot;&gt;broker配置&lt;/h4&gt;
-&lt;p&gt;|配置项|作用|
-|:-:|:-:|
-|broker.id|broker的唯一标识|
-|auto.create.topics.auto|设置成true，就是遇到没有的topic自动创建topic。|
-|log.dirs|log的目录数，目录里面放partition，当生成新的partition时，会挑目录里partition数最少的目录放。|&lt;/p&gt;
-
-&lt;h4 id=&quot;topic配置&quot;&gt;topic配置&lt;/h4&gt;
-&lt;p&gt;|配置项|作用|
-|:-:|:-:|
-|num.partitions|新建一个topic，会有几个partition。|
-|log.retention.ms|对应的还有minutes，hours的单位。日志保留时间，因为删除是文件维度而不是消息维度，看的是日志文件的mtime。|
-|log.retention.bytes|partion最大的容量，超过就清理老的。注意这个是partion维度，就是说如果你的topic有8个partition，配置1G，那么平均分配下，topic理论最大值8G。|
-|log.segment.bytes|一个segment的大小。超过了就滚动。|
-|log.segment.ms|一个segment的打开时间，超过了就滚动。|
-|message.max.bytes|message最大多大|&lt;/p&gt;
-
-&lt;p&gt;关于日志清理，默认当前正在写的日志，是怎么也不会清理掉的。&lt;br /&gt;
-还有0.10之前的版本，时间看的是日志文件的mtime，但这个指是不准确的，有可能文件被touch一下，mtime就变了。因此在0.10版本开始，改为使用该文件最新一条消息的时间来判断。&lt;br /&gt;
-按大小清理这里也要注意，Kafka在定时任务中尝试比较当前日志量总大小是否超过阈值至少一个日志段的大小。如果超过但是没超过一个日志段，那么就不会删除。&lt;/p&gt;
-</description>
-        <pubDate>Sun, 17 Mar 2019 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2019/03/17/Kafka%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/03/17/Kafka%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/</guid>
-        
-        <category>分布式</category>
-        
-        <category>Kafka</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Docker基础操作</title>
-        <description>&lt;h3 id=&quot;常用docker命令&quot;&gt;常用Docker命令&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker ps -a&lt;/code&gt; 显示全部镜像&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker commit 容器ID 容器名称&lt;/code&gt; 提交你自己的容器&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker run -t -i -p 4004:80 容器名称 (/bin/bash)&lt;/code&gt; 运行容器(-i 交互/-t TTY虚拟终端/-p 主机端口:容器端口)&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker stop&lt;/code&gt; 停止一个容器&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker images&lt;/code&gt; 将会列出此时系统中所有你建立过的镜像&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;使用dockerfile&quot;&gt;使用DockerFile&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# 此处是必须有的，基于ubuntu16.04的镜像开始
-FROM ubuntu:16.04
-# 作者信息
-MAINTAINER Mark
-COPY apt.conf /etc/apt/apt.conf
-# apt.conf是apt的代理配置文件，如你在封闭式的环境下开发就需要创建好apt.conf文件，样式与你Dockerfile的根镜像的系统中的apt.conf样式一样，如此处我的根镜像为ubuntu系统，我编写好代理文件复制到test目录下，注意Dockerfile操作的文件都是基于当前目录下进行的。
-# 不是封闭式的环境无需此步COPY apt.conf操作
-# 因无法保证此处获取的ubuntu16.4的apt-get的源是最新的，需更新apt-get
-RUN apt-get update -y
-# 通过apt-get安装apache2
-RUN apt-get install apache2 -y
-# 最后暴露80端口
-EXPOSE 80
-# Dockerfile中开头为#号的为注释，至此Dockerfile编写完成
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker build /test/ -t apache2&lt;/code&gt;&lt;br /&gt;
-docker会自动获取该路径下名为Dockerfile的文件并开始建立镜像名为apache2的镜像&lt;/p&gt;
-</description>
-        <pubDate>Sun, 17 Mar 2019 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2019/03/17/Docker%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C/</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/03/17/Docker%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C/</guid>
-        
-        <category>Docker</category>
-        
-        <category>容器</category>
         
         
       </item>

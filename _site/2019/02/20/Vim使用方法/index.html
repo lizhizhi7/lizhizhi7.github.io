@@ -251,7 +251,7 @@
 
 <h3 id="插入命令">插入命令</h3>
 <ul>
-  <li>i 在当前位置生前插入</li>
+  <li>i 在当前位置之前插入</li>
   <li>I 在当前行首插入</li>
   <li>a 在当前位置后插入</li>
   <li>A 在当前行尾插入</li>
@@ -327,6 +327,7 @@
 </ul>
 
 <h3 id="撤销和重做">撤销和重做</h3>
+
 <ul>
   <li>u 撤销（Undo）</li>
   <li>U 撤销对整行的操作</li>
@@ -334,16 +335,18 @@
 </ul>
 
 <h3 id="删除命令">删除命令</h3>
+
 <ul>
   <li>x 删除当前字符</li>
-  <li>3x 删除当前光标开始向后三个字符</li>
+  <li>nx 删除当前光标开始向后n个字符</li>
   <li>X 删除当前字符的前一个字符。X=dh</li>
   <li>dl 删除当前字符， dl=x</li>
   <li>dh 删除前一个字符</li>
   <li>dd 删除当前行</li>
   <li>dj 删除上一行</li>
   <li>dk 删除下一行</li>
-  <li>10d 删除当前行开始的10行。</li>
+  <li>nd 删除当前行开始的n行。</li>
+  <li>ndd 删除下一行开始的n行。</li>
   <li>D 删除当前字符至行尾。D=d$</li>
   <li>d$ 删除当前字符之后的所有字符（本行）</li>
   <li>kdgg 删除当前行之前所有行（不包括当前行）</li>
@@ -355,6 +358,7 @@
 </ul>
 
 <h3 id="拷贝和粘贴">拷贝和粘贴</h3>
+
 <ul>
   <li>yy 拷贝当前行</li>
   <li>nyy 拷贝当前后开始的n行，比如2yy拷贝当前行及其下一行。</li>
@@ -368,6 +372,7 @@
 </ul>
 
 <h3 id="剪切命令">剪切命令</h3>
+
 <ul>
   <li>正常模式下按v（逐字）或V（逐行）进入可视模式，然后用jklh命令移动即可选择某些行或字符，再按d即可剪切</li>
   <li>ndd 剪切当前行之后的n行。利用p命令可以对剪切的内容进行粘贴</li>
@@ -476,6 +481,56 @@
   <li>:syntax case ignore 大小写无关，int和Int将视为相同的语法元素，并使用同样的配色方案</li>
 </ul>
 
+<h3 id="vim的窗口切换">Vim的窗口切换</h3>
+
+<h4 id="同时打开多个文件并横向排列">同时打开多个文件，并横向排列</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim <span class="nt">-o</span> t.c t.h
+</code></pre></div></div>
+
+<h4 id="同时打开多个文件后纵向排列如果没有使用参数o那么可以在打开文件后操作">同时打开多个文件后纵向排列，如果没有使用参数o，那么可以在打开文件后操作</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim t.c t.h
+:all   //横向
+:vertical all    //纵向
+</code></pre></div></div>
+
+<h4 id="同一文件分割窗口如果有一个很长的文件你想看着前面来写后面就要用到这个">同一文件分割窗口。如果有一个很长的文件，你想看着前面，来写后面，就要用到这个</h4>
+<ul>
+  <li>:split</li>
+  <li>:sp</li>
+</ul>
+
+<h4 id="关闭窗口-1">关闭窗口</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#关闭当前窗口</span>
+:close
+<span class="c">#保留当前窗口，关闭其他窗口</span>
+:only
+</code></pre></div></div>
+
+<h4 id="打开一个文件后又想打开别的文件">打开一个文件后，又想打开别的文件</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#横向打开一个文件</span>
+:sp 文件名
+<span class="c">#纵向打开一个文件</span>
+:vsplit<span class="o">(</span>vsp<span class="o">)</span> 文件名
+<span class="c">#打开一个新窗口，注意这时是看不到的</span>
+:new 文件名
+<span class="c">#纵向打开它</span>
+:vnew 文件名
+</code></pre></div></div>
+
+<h4 id="在窗口间跳转">在窗口间跳转</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ctrl+w j 向下移动
+ctrl+w k 向上移动
+ctrl+w h 向左移动
+ctrl+w l  向右移动
+ctrl+w t 移动到顶端
+ctrl+w b 移动到底端
+</code></pre></div></div>
+
+<h4 id="移动窗口">移动窗口</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Ctrl + w + r：向右或向下方交换窗口，而Ctrl + w + R则和它方向相反。
+Ctrl + w + x：交换同列或同行的窗口的位置。vim默认交换当前窗口的与它下一个窗口的位置，如果下方没有窗口，则试着与上一个窗口交换位置。亦可在此命令前加上数量，与制定的窗口交换位置。
+</code></pre></div></div>
+
 
                 <hr style="visibility: hidden;">
 
@@ -557,7 +612,7 @@
                     <div class="tags">
         				
                             
-                				<a href="/tags/#Git" title="Git" rel="4">
+                				<a href="/tags/#Git" title="Git" rel="5">
                                     Git
                                 </a>
                             
@@ -703,7 +758,15 @@
                             
         				
                             
+                				<a href="/tags/#Docker" title="Docker" rel="4">
+                                    Docker
+                                </a>
+                            
         				
+                            
+                				<a href="/tags/#容器" title="容器" rel="4">
+                                    容器
+                                </a>
                             
         				
                             
@@ -719,7 +782,7 @@
                             
         				
                             
-                				<a href="/tags/#Linux" title="Linux" rel="3">
+                				<a href="/tags/#Linux" title="Linux" rel="4">
                                     Linux
                                 </a>
                             
@@ -728,6 +791,10 @@
                 				<a href="/tags/#CentOS" title="CentOS" rel="3">
                                     CentOS
                                 </a>
+                            
+        				
+                            
+        				
                             
         				
                             

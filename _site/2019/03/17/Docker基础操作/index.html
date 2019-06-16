@@ -250,6 +250,100 @@ EXPOSE 80
 <p><code class="highlighter-rouge">docker build /test/ -t apache2</code><br />
 docker会自动获取该路径下名为Dockerfile的文件并开始建立镜像名为apache2的镜像</p>
 
+<h3 id="进入docker容器常见的做法">进入Docker容器常见的做法</h3>
+
+<h4 id="使用docker-attach进入docker容器">使用docker attach进入Docker容器</h4>
+
+<p>Docker提供了attach命令来进入Docker容器。
+接下来我们创建一个守护态的Docker容器，然后使用docker attach命令进入该容器。</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>docker run <span class="nt">-itd</span> ubuntu:14.04 /bin/bash  
+</code></pre></div></div>
+<p>然后我们使用docker ps查看到该容器信息，接下来就使用docker attach进入该容器</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>docker attach 44fc0f0582d9  
+</code></pre></div></div>
+<p>可以看到我们已经进入到该容器中了。
+但是，使用该命令有一个问题。当多个窗口同时使用该命令进入该容器时，所有的窗口都会同步显示。如果有一个窗口阻塞了，那么其他窗口也无法再进行操作。
+因为这个原因，所以docker attach命令不太适合于生产环境，平时自己开发应用时可以使用该命令。</p>
+
+<h4 id="使用ssh进入docker容器">使用SSH进入Docker容器</h4>
+<p>　　在生产环境中排除了使用docker attach命令进入容器之后，相信大家第一个想到的就是ssh。在镜像（或容器）中安装SSH Server，这样就能保证多人进入容器且相互之间不受干扰了，相信大家在当前的生产环境中（没有使用Docker的情况）也是这样做的。但是使用了Docker容器之后不建议使用ssh进入到Docker容器内。</p>
+
+<h4 id="使用nsenter进入docker容器">使用nsenter进入Docker容器</h4>
+<p>　　在上面两种方式都不适合的情况下，还有一种比较方便的方法，即使用nsenter进入Docker容器。关于什么是nsenter请参考<a href="https://github.com/jpetazzo/nsenter">文章</a>在了解了什么是nsenter之后，系统默认将我们需要的nsenter安装到主机中。如果没有安装的话，按下面步骤安装即可（注意是主机而非容器或镜像）</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>wget https://www.kernel.org/pub/linux/utils/util-linux/v2.24/util-linux-2.24.tar.gz  
+<span class="nv">$ </span><span class="nb">tar</span> <span class="nt">-xzvf</span> util-linux-2.24.tar.gz  
+<span class="nv">$ </span><span class="nb">cd </span>util-linux-2.24/  
+<span class="nv">$ </span>./configure <span class="nt">--without-ncurses</span>  
+<span class="nv">$ </span>make nsenter  
+<span class="nv">$ </span><span class="nb">sudo cp </span>nsenter /usr/local/bin  
+</code></pre></div></div>
+<p>安装好nsenter之后可以查看一下该命令的使用。
+nsenter可以访问另一个进程的名称空间。所以为了连接到某个容器我们还需要获取该容器的第一个进程的PID。可以使用docker inspect命令来拿到该PID。
+docker inspect命令使用如下：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>docker inspect <span class="nt">--help</span>
+</code></pre></div></div>
+<p>inspect命令可以分层级显示一个镜像或容器的信息。比如我们当前有一个正在运行的容器。可以使用docker inspect来查看该容器的详细信息。</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>docker inspect 44fc0f0582d9  
+</code></pre></div></div>
+<p>由其该信息非常多，此处只截取了其中一部分进行展示。如果要显示该容器第一个进行的PID可以使用如下方式</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>docker inspect <span class="nt">-f</span>  44fc0f0582d9  
+</code></pre></div></div>
+<p>在拿到该进程PID之后我们就可以使用nsenter命令访问该容器了。</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>nsenter <span class="nt">--target</span> 3326 <span class="nt">--mount</span> <span class="nt">--uts</span> <span class="nt">--ipc</span> <span class="nt">--net</span> <span class="nt">--pid</span>  
+<span class="nv">$ </span><span class="nb">sudo </span>nsenter <span class="nt">--target</span> 3326 <span class="nt">--mount</span> <span class="nt">--uts</span> <span class="nt">--ipc</span> <span class="nt">--net</span> <span class="nt">--pid</span>
+</code></pre></div></div>
+<p>其中的3326即刚才拿到的进程的PID
+当然，如果你认为每次都输入那么多参数太麻烦的话，网上也有许多做好的脚本供大家使用。
+地址如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://yeasy.gitbooks.io/docker_practice/content/container/enter.html
+http://www.tuicool.com/articles/eYnUBrR
+</code></pre></div></div>
+
+<h4 id="使用docker-exec进入docker容器">使用docker exec进入Docker容器</h4>
+
+<p>除了上面几种做法之外，docker在1.3.X版本之后还提供了一个新的命令exec用于进入容器，这种方式相对更简单一些，下面我们来看一下该命令的使用：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>docker <span class="nb">exec</span> <span class="nt">--help</span>
+</code></pre></div></div>
+
+<p>接下来我们使用该命令进入一个已经在运行的容器</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>docker ps  
+<span class="nb">sudo </span>docker <span class="nb">exec</span> <span class="nt">-it</span> 775c7c9ee1e1 /bin/bash  
+</code></pre></div></div>
+
+<h3 id="dockerfile简单使用">Dockerfile简单使用</h3>
+
+<p>新建一个Dockerfile，然后执行下面的命令</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker build <span class="nt">-t</span> name:tag <span class="nb">.</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">指令</th>
+      <th style="text-align: center">含义解释</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">FROM</td>
+      <td style="text-align: center">FROM debian:stretch表示以debian:stretch作为基础镜像进行构建</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">RUN</td>
+      <td style="text-align: center">可以看出RUN后面跟的其实就是一些shell命令，通过&amp;&amp;将这些脚本连接在了一行执行，这么做的原因是为了减少镜像的层数，每多一行RUN都会给镜像增加一层，所以这里选择将所有命令联结在一起执行以减少层数</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">ARG</td>
+      <td style="text-align: center">特地将这个指令放在RUN之后讲解，这个指令可以进行一些宏定义，比如我定义ENV JAVA_HOME=/opt/jdk，之后RUN后面的shell命令中的${JAVA_HOME}都会被/opt/jdk代替</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">ENV</td>
+      <td style="text-align: center">可以看出这个指令的作用是在shell中设置一些环境变量（其实就是export）</td>
+    </tr>
+  </tbody>
+</table>
+
 
                 <hr style="visibility: hidden;">
 
@@ -331,7 +425,7 @@ docker会自动获取该路径下名为Dockerfile的文件并开始建立镜像�
                     <div class="tags">
         				
                             
-                				<a href="/tags/#Git" title="Git" rel="4">
+                				<a href="/tags/#Git" title="Git" rel="5">
                                     Git
                                 </a>
                             
@@ -477,7 +571,15 @@ docker会自动获取该路径下名为Dockerfile的文件并开始建立镜像�
                             
         				
                             
+                				<a href="/tags/#Docker" title="Docker" rel="4">
+                                    Docker
+                                </a>
+                            
         				
+                            
+                				<a href="/tags/#容器" title="容器" rel="4">
+                                    容器
+                                </a>
                             
         				
                             
@@ -493,7 +595,7 @@ docker会自动获取该路径下名为Dockerfile的文件并开始建立镜像�
                             
         				
                             
-                				<a href="/tags/#Linux" title="Linux" rel="3">
+                				<a href="/tags/#Linux" title="Linux" rel="4">
                                     Linux
                                 </a>
                             
@@ -502,6 +604,10 @@ docker会自动获取该路径下名为Dockerfile的文件并开始建立镜像�
                 				<a href="/tags/#CentOS" title="CentOS" rel="3">
                                     CentOS
                                 </a>
+                            
+        				
+                            
+        				
                             
         				
                             

@@ -187,6 +187,174 @@
             ">
     			
 <div class="post-preview">
+    <a href="/2019/02/20/Vim%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">
+        <h2 class="post-title">
+            Vim使用方法
+        </h2>
+        
+        <h3 class="post-subtitle">
+            Vim
+        </h3>
+        
+        <div class="post-content-preview">
+            命令历史
+以:和/开头的命令都有历史纪录，可以首先键入:或/然后按上下箭头来选择某个历史命令。
+
+启动vim
+在命令行窗口中输入以下命令即可
+
+  vim 直接启动vim
+  vim filename 打开vim并创建名为filename的文件
+
+
+文件命令
+
+  vim file 打开单个文件
+  vim file1 file2 file3 … 同时打开多个文件
+  :open file ...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Lee on February 20, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/02/20/MySQL%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88/">
+        <h2 class="post-title">
+            MySQL优化方案
+        </h2>
+        
+        <h3 class="post-subtitle">
+            MySQL系列文章
+        </h3>
+        
+        <div class="post-content-preview">
+            explain 分析SQL语句
+
+使用explain关键字可以模拟优化器执行sql查询语句，从而得知MySQL 是如何处理sql语句。
++----+-------------+-------+------------+------+---------------+-----+---------+------+------+----------+-------+
+| id | select_t...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Lee on February 20, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/02/20/Git%E6%93%8D%E4%BD%9C/">
+        <h2 class="post-title">
+            Git操作
+        </h2>
+        
+        <h3 class="post-subtitle">
+            管理代码的正确姿势
+        </h3>
+        
+        <div class="post-content-preview">
+            拉取远程代码并且覆盖本地更改
+git fetch origin &amp;&amp; git reset –hard origin/master
+
+列出远程和本地所有分支
+git branch -a
+git branch -r
+
+强制更新远程分支
+git push origin master -f
+
+回滚一个 merge
+git revert -m 1 xxxx
+
+修改之前的提交记录或者很久...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Lee on February 20, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/02/19/MySQL%E6%8E%A8%E8%8D%90%E8%A7%84%E8%8C%83/">
+        <h2 class="post-title">
+            MySQL推荐规范
+        </h2>
+        
+        <h3 class="post-subtitle">
+            MySQL系列文章
+        </h3>
+        
+        <div class="post-content-preview">
+            数据库命令规范
+
+
+  所有数据库对象名称必须使用小写字母并用下划线分割。
+  所有数据库对象名称禁止使用 MySQL 保留关键字（如果表名中包含关键字查询时，需要将其用单引号括起来）。
+  数据库对象的命名要能做到见名识意，并且最后不要超过32个字符。
+  临时库表必须以 tmp_ 为前缀并以日期为后缀，备份表必须以 bak_ 为前缀并以日期 ( 时间戳 ) 为后缀。
+  所有存储相同数据...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Lee on February 19, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/02/18/%E8%BF%91%E6%9C%9F%E5%8C%96%E5%AD%A6%E5%89%8D%E6%B2%BF(2.18)/">
+        <h2 class="post-title">
+            近期化学前沿(2.18)
+        </h2>
+        
+        <h3 class="post-subtitle">
+            化学前沿系列文章
+        </h3>
+        
+        <div class="post-content-preview">
+            河北工业大学杜英杰等人Adv.Sci. 蛋白诱导法构建中空MOF及复合催化剂
+
+
+  近日，河北工业大学杜英杰等人首次报道了通过调控蛋白参与MOF的形成，成功构建了蛋白诱导法构建中空MOF及复合催化剂的方法。利用蛋白分子对金属-NaDC凝胶的影响，通过改变蛋白的加入量，调节凝胶的粘弹性和表面形貌，进而将其作为软模板，在其表面进行MOF（ZIF-8）的生长，最终构建了中空MOF粒子。研究成果以...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Lee on February 18, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/02/18/%E4%BD%BF%E7%94%A8ProGuard%E6%B7%B7%E6%B7%86/">
+        <h2 class="post-title">
+            使用ProGuard混淆
+        </h2>
+        
+        <h3 class="post-subtitle">
+            Java工具
+        </h3>
+        
+        <div class="post-content-preview">
+            ProGuard作用
+
+压缩（Shrinking）：默认开启，用以减小应用体积，移除未被使用的类和成员，并且会在优化动作执行之后再次执行（因为优化后可能会再次暴露一些未被使用的类和成员）。如果想要关闭压缩，在proguard-rules.pro文件中加入：
+# 关闭压缩
+-dontshrink 
+
+
+优化（Optimization）：默认开启，在字节码级别执行优化，让应用运行的更快。同上，如...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Lee on February 18, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="/2019/02/18/MySQL%E5%9F%BA%E7%A1%80%E7%BB%93%E6%9E%84/">
         <h2 class="post-title">
             MySQL基础结构
@@ -296,154 +464,6 @@ Error是非程序异常，即程序不能捕获的异常，一般是编译或者
 </div>
 <hr>
 
-<div class="post-preview">
-    <a href="/2019/01/11/%E4%BB%A3%E7%90%86%E7%9A%84%E5%BB%BA%E7%AB%8B-%E4%BA%8C/">
-        <h2 class="post-title">
-            代理的建立(二)
-        </h2>
-        
-        <h3 class="post-subtitle">
-            网络系列
-        </h3>
-        
-        <div class="post-content-preview">
-            HTTP 代理原理及实现（二）
-
-在上篇《HTTP 代理原理及实现（一）》里，我介绍了 HTTP 代理的两种形式，并用 Node.js 实现了一个可用的普通 / 隧道代理。普通代理可以用来承载 HTTP 流量；隧道代理可以用来承载任何 TCP 流量，包括 HTTP 和 HTTPS。今天这篇文章介绍剩余部分：如何将浏览器与代理之间的流量传输升级为 HTTPS。
-
-上篇文章中实现的代理，是一个标...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lee on January 11, 2019
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2019/01/11/%E4%BB%A3%E7%90%86%E7%9A%84%E5%BB%BA%E7%AB%8B-%E4%B8%80/">
-        <h2 class="post-title">
-            代理的建立(一)
-        </h2>
-        
-        <h3 class="post-subtitle">
-            网络系列
-        </h3>
-        
-        <div class="post-content-preview">
-            HTTP 代理原理及实现（一）
-
-Web 代理是一种存在于网络中间的实体，提供各式各样的功能。现代网络系统中，Web 代理无处不在。我之前有关 HTTP 的博文中，多次提到了代理对 HTTP 请求及响应的影响。今天这篇文章，我打算谈谈 HTTP 代理本身的一些原理，以及如何用 Node.js 快速实现代理。
-
-HTTP 代理存在两种形式，分别简单介绍如下：
-
-第一种是 RFC 7230 - ...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lee on January 11, 2019
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2019/01/11/SpringMVC%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE/">
-        <h2 class="post-title">
-            SpringMVC基础配置
-        </h2>
-        
-        <h3 class="post-subtitle">
-            SpringMVC
-        </h3>
-        
-        <div class="post-content-preview">
-            SpringMVC的优势
-
-
-  角色划分：控制器(controller)、验证器(validator)、命令对象(command obect)、表单对象(form object)、模型对象(model object)、Servlet分发器(DispatcherServlet)、处理器映射(handler mapping)、试图解析器(view resoler)。每一个角色都可以由一个专门的...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lee on January 11, 2019
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2019/01/08/Java%E8%AF%81%E4%B9%A6%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/">
-        <h2 class="post-title">
-            Java证书库的使用
-        </h2>
-        
-        <h3 class="post-subtitle">
-            加密与混淆
-        </h3>
-        
-        <div class="post-content-preview">
-            
-  Keytool是一个Java数据证书的管理工具 ,Keytool将密钥（key）和证书（certificates）存在一个称为keystore的文件中。
-
-
-在keystore里，包含两种数据
-
-
-  密钥实体（Key entity）——密钥（secret key）又或者是私钥和配对公钥（采用非对称加密）
-  可信任的证书实体（trusted certificate entries）—...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lee on January 8, 2019
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2019/01/08/Gradle%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/">
-        <h2 class="post-title">
-            Gradle使用技巧
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Java工具
-        </h3>
-        
-        <div class="post-content-preview">
-            添加依赖
-
-注意Android Studio3.x(Gradle版本为3.x) / 2.x(Gradle版本为2.x)的不同用法！以下均以3.x以后版本为主
-
-在Gradle3.0中，compile依赖关系已被弃用，被implementation和api替代，provided被compile only替代，apk被runtime only替代，剩下的看名字就知道了。
-
-implementat...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lee on January 8, 2019
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2019/01/02/R%E8%AF%AD%E8%A8%80%E5%85%A5%E9%97%A8/">
-        <h2 class="post-title">
-            R语言入门
-        </h2>
-        
-        <h3 class="post-subtitle">
-            R语言系列-0
-        </h3>
-        
-        <div class="post-content-preview">
-            
-
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lee on January 2, 2019
-    </p>
-</div>
-<hr>
-
 
 <!-- Pager -->
 
@@ -478,7 +498,7 @@ implementat...
                     <div class="tags">
                         
                             
-                                <a href="/tags/#Git" title="Git" rel="4">
+                                <a href="/tags/#Git" title="Git" rel="5">
                                     Git
                                 </a>
                             
@@ -624,7 +644,15 @@ implementat...
                             
                         
                             
+                                <a href="/tags/#Docker" title="Docker" rel="4">
+                                    Docker
+                                </a>
+                            
                         
+                            
+                                <a href="/tags/#容器" title="容器" rel="4">
+                                    容器
+                                </a>
                             
                         
                             
@@ -640,7 +668,7 @@ implementat...
                             
                         
                             
-                                <a href="/tags/#Linux" title="Linux" rel="3">
+                                <a href="/tags/#Linux" title="Linux" rel="4">
                                     Linux
                                 </a>
                             
@@ -649,6 +677,10 @@ implementat...
                                 <a href="/tags/#CentOS" title="CentOS" rel="3">
                                     CentOS
                                 </a>
+                            
+                        
+                            
+                        
                             
                         
                             

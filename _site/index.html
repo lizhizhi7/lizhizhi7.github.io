@@ -187,6 +187,81 @@
             ">
     			
 <div class="post-preview">
+    <a href="/2019/06/01/SpringSecurity/">
+        <h2 class="post-title">
+            Springsecurity
+        </h2>
+        
+        <div class="post-content-preview">
+            
+
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by XiaoZhi Blog on June 1, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/04/29/Javax%E6%8C%81%E4%B9%85%E5%B1%82%E4%BD%BF%E7%94%A8/">
+        <h2 class="post-title">
+            Javax持久层使用
+        </h2>
+        
+        <div class="post-content-preview">
+            
+Examples
+
+@SuppressWarnings("serial")
+@Entity
+@Table(name="T_X")
+public class X implements Serializable
+{
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
+    @Colu...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by XiaoZhi Blog on April 29, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/04/28/Docker-Compose/">
+        <h2 class="post-title">
+            Docker Compose
+        </h2>
+        
+        <h3 class="post-subtitle">
+            容器系列
+        </h3>
+        
+        <div class="post-content-preview">
+            Docker-Compose常用命令
+
+Docker-Compose命令格式
+
+docker-compose [-f &lt;arg&gt;...] [options] [COMMAND] [ARGS...]
+
+
+命令选项如下：
+
+-f，–file FILE指定Compose模板文件，默认为docker-compose.yml，可以多次指定。
+-p，–project-name NAME指定项...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Lee on April 28, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="/2019/04/15/Linux%E8%BF%9B%E7%A8%8B%E6%93%8D%E4%BD%9C/">
         <h2 class="post-title">
             Linux进程操作
@@ -218,7 +293,7 @@ Linux下一般想让某个程序在后台运行，很多都是使用&amp; 在程
 <div class="post-preview">
     <a href="/2019/04/15/Kafka~RabbitMQ~ActiveMQ/">
         <h2 class="post-title">
-            Kafka基础使用
+            Kafka~RabbitMQ~ActiveMQ
         </h2>
         
         <h3 class="post-subtitle">
@@ -278,9 +353,9 @@ Install the postgresql-server package and ...
 <hr>
 
 <div class="post-preview">
-    <a href="/2019/04/11/SpringWeb%E6%B3%A8%E8%A7%A3/">
+    <a href="/2019/04/11/Spring%E6%B3%A8%E8%A7%A3/">
         <h2 class="post-title">
-            SpringWeb注解
+            Spring注解
         </h2>
         
         <h3 class="post-subtitle">
@@ -306,9 +381,43 @@ method...
 <hr>
 
 <div class="post-preview">
+    <a href="/2019/03/31/Ubuntu%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/">
+        <h2 class="post-title">
+            Linux下FTP的搭建与配置
+        </h2>
+        
+        <h3 class="post-subtitle">
+            Linux Server
+        </h3>
+        
+        <div class="post-content-preview">
+            安装 xrdp、tightvncserver
+
+sudo apt-get install tightvncserver xrdp
+
+
+安装xubuntu-desktop
+
+sudo apt-get install xubuntu-desktop
+
+
+修改配置文件
+
+echo xfce4-session &gt;~/.xsession
+sudo vi /etc/xrdp/startwm.sh
+...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Lee on March 31, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="/2019/03/31/Linux%E4%B8%8BFTP%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E9%85%8D%E7%BD%AE/">
         <h2 class="post-title">
-            CentOS常用命令
+            Linux下FTP的搭建与配置
         </h2>
         
         <h3 class="post-subtitle">
@@ -370,112 +479,6 @@ usermod(*专属参数)/useradd
 </div>
 <hr>
 
-<div class="post-preview">
-    <a href="/2019/03/25/Python%E6%9C%89%E8%B6%A3%E7%9A%84%E5%8C%85/">
-        <h2 class="post-title">
-            Python有趣的包
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Python
-        </h3>
-        
-        <div class="post-content-preview">
-            文章提取器
-
-git clone https://github.com/grangier/python-goose.git
-cd python-goose
-pip install -r requirements.txt
-python setup.py install
-
-from goose import Goose
-from goose.text import StopWordsChines...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lee on March 25, 2019
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2019/03/20/Python%E7%B1%BB%E7%9A%84%E9%A2%84%E7%BD%AE%E6%96%B9%E6%B3%95/">
-        <h2 class="post-title">
-            Python类的预置方法
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Python 3
-        </h3>
-        
-        <div class="post-content-preview">
-            with上下文管理器
-
-with管理上下文的作用是对一些重复的代码简单化，并且能优化try/except/finally的写法。
-上下文的实现是通过两个魔法函数enter和exit实现，后来更新再造后，使用contextlib提供的API可以更加方便的完成。
-
-使用enter和exit实现(1)
-
-class wallet(object):
-    def __init__(self,man...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lee on March 20, 2019
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2019/03/17/Kafka%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/">
-        <h2 class="post-title">
-            Kafka基础使用
-        </h2>
-        
-        <h3 class="post-subtitle">
-            分布式
-        </h3>
-        
-        <div class="post-content-preview">
-            简介
-
-kafka是一个分布式消息队列。具有高性能、持久化、多副本备份、横向扩展能力。生产者往队列里写消息，消费者从队列里取消息进行业务逻辑。一般在架构设计中起到解耦、削峰、异步处理的作用。
-kafka对外使用topic的概念，生产者往topic里写消息，消费者从读消息。为了做到水平扩展，一个topic实际是由多个partition组成的，遇到瓶颈时，可以通过增加partition的数量来进...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lee on March 17, 2019
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2019/03/17/Docker%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C/">
-        <h2 class="post-title">
-            Docker基础操作
-        </h2>
-        
-        <h3 class="post-subtitle">
-            容器系列
-        </h3>
-        
-        <div class="post-content-preview">
-            常用Docker命令
-
-
-  docker ps -a 显示全部镜像
-  docker commit 容器ID 容器名称 提交你自己的容器
-  docker run -t -i -p 4004:80 容器名称 (/bin/bash) 运行容器(-i 交互/-t TTY虚拟终端/-p 主机端口:容器端口)
-  docker stop 停止一个容器
-  docker images 将会列出此时系...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lee on March 17, 2019
-    </p>
-</div>
-<hr>
-
 
 <!-- Pager -->
 
@@ -506,7 +509,7 @@ kafka对外使用topic的概念，生产者往topic里写消息，消费者从�
                     <div class="tags">
                         
                             
-                                <a href="/tags/#Git" title="Git" rel="4">
+                                <a href="/tags/#Git" title="Git" rel="5">
                                     Git
                                 </a>
                             
@@ -652,7 +655,15 @@ kafka对外使用topic的概念，生产者往topic里写消息，消费者从�
                             
                         
                             
+                                <a href="/tags/#Docker" title="Docker" rel="4">
+                                    Docker
+                                </a>
+                            
                         
+                            
+                                <a href="/tags/#容器" title="容器" rel="4">
+                                    容器
+                                </a>
                             
                         
                             
@@ -668,7 +679,7 @@ kafka对外使用topic的概念，生产者往topic里写消息，消费者从�
                             
                         
                             
-                                <a href="/tags/#Linux" title="Linux" rel="3">
+                                <a href="/tags/#Linux" title="Linux" rel="4">
                                     Linux
                                 </a>
                             
@@ -677,6 +688,10 @@ kafka对外使用topic的概念，生产者往topic里写消息，消费者从�
                                 <a href="/tags/#CentOS" title="CentOS" rel="3">
                                     CentOS
                                 </a>
+                            
+                        
+                            
+                        
                             
                         
                             

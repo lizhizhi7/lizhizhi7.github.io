@@ -1,0 +1,72 @@
+微信小程序：分页和加载更多
+2018年10月07日 14:29:22 qq_37461695 阅读数：513
+直接上代码吧。不足之处，多多指教，一起进步
+
+1.wxml页面的最后敲上，css自己定义
+
+<view class="loadmore" mtype="{{mtype}}" hidden="{{hidden}}"><text>已经没有更多了~</text></view>
+2.js的初始数据中设置：
+
+data: {
+    page: 0,    //当前页
+    totalPage: 0,   //总页数
+    mtype: 1,    //加载更多动画显示类型
+    hidden: true    //加载动画显示与隐藏
+},
+3.js的内置触底函数中如下操作
+
+//页面滑动到底部
+onReachBottom: function (e) {
+    console.log("lower");
+    var that = this;
+    var page = that.data.page + 1;  //当前页+1 = 下一页
+    that.getPhotoInfo(page);
+},
+4.js后台交互函数
+
+getPhotoInfo:function(e){
+    var that = this;
+    var atPage = e; //当前页
+    var params = {
+        page: atPage //页数
+    };
+
+    if(atPage == 1){
+        api.getPhotoInfo(params).then(res => {
+            console.log(res)
+        if (res['code'] == '200') {
+            wx.stopPullDownRefresh(); //停止下拉刷新
+            //更新数据
+            that.setData( {
+                photoInfo: res.data.list,
+                page: atPage,
+                totalPage: res.data.totalPage,
+                hidden: true,
+                mtype: 1
+            });
+        }
+        })
+    }else if(atPage <= that.data.totalPage){
+        api.getPhotoInfo(params).then(res => {
+            console.log(res)
+        if (res['code'] == '200') {
+            wx.stopPullDownRefresh(); //停止下拉刷新
+            //更新数据
+            that.setData( {
+                photoInfo: that.data.photoInfo.concat(res.data.list),  //此处concat类似push，但又不完全是，可以测试下
+                page: atPage,
+                totalPage: res.data.totalPage,
+                hidden: true,
+                mtype: 1
+            });
+        }
+        })
+    }else {
+        //更新数据，已经没有了 返回
+        that.setData( {
+            hidden: false,
+            mtype: 1
+        });
+    }
+},
+ 

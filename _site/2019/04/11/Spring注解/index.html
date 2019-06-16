@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Right here waiting for you.">
+    <meta name="keywords"  content="LZ Blog, MATLAB, R, ML, Python, Machine Learning">
+    <meta name="theme-color" content="#000000">
+    
+    <title>Spring注解 - 尖耳熊的博客 | XZ Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2019/04/11/Spring%E6%B3%A8%E8%A7%A3/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">XiaoZhi Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/Mine/MySchedule-Source/node_modules/antd/CHANGELOG.en-US/">Change Log</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/Mine/MySchedule-Source/node_modules/antd/CHANGELOG.zh-CN/">更新日志</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/background-spring.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/background-spring.jpg')
+    }
+
+    .table tbody tr td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table thead tr th {
+        vertical-align: middle;
+    }
+
+    .language-sequence {
+        text-align: center;
+    }
+
+    
+</style>
+
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spring" title="Spring">Spring</a>
+                        
+                        <a class="tag" href="/tags/#Spring Web" title="Spring Web">Spring Web</a>
+                        
+                    </div>
+                    <h1>Spring注解</h1>
+                    
+                    
+                    <h2 class="subheading">Spring</h2>
+                    
+                    <span class="meta">Posted by Lee on April 11, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h3 id="requestmapping">@RequestMapping</h3>
+
+<p>RequestMapping是一个用来处理请求地址映射的注解，可用于类或方法上。用于类上，表示类中的所有响应请求的方法都是以该地址作为父路径。
+RequestMapping注解有六个属性，下面我们把其分成三类进行说明。</p>
+
+<h4 id="valuemethod">value/method</h4>
+
+<p>value：指定请求的实际地址，指定的地址可以是URI Template 模式（后面将会说明）；
+method：指定请求的method类型， GET、POST、PUT、DELETE等；</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/appointments"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AppointmentsController</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">AppointmentBook</span> <span class="n">appointmentBook</span><span class="o">;</span>
+
+    <span class="nd">@Autowired</span>
+    <span class="kd">public</span> <span class="nf">AppointmentsController</span><span class="o">(</span><span class="n">AppointmentBook</span> <span class="n">appointmentBook</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">appointmentBook</span> <span class="o">=</span> <span class="n">appointmentBook</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Appointment</span><span class="o">&gt;</span> <span class="nf">get</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">appointmentBook</span><span class="o">.</span><span class="na">getAppointmentsForToday</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span><span class="o">=</span><span class="s">"/{day}"</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Appointment</span><span class="o">&gt;</span> <span class="nf">getForDay</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="nd">@DateTimeFormat</span><span class="o">(</span><span class="n">iso</span><span class="o">=</span><span class="n">ISO</span><span class="o">.</span><span class="na">DATE</span><span class="o">)</span> <span class="n">Date</span> <span class="n">day</span><span class="o">,</span> <span class="n">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">appointmentBook</span><span class="o">.</span><span class="na">getAppointmentsForDay</span><span class="o">(</span><span class="n">day</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span><span class="o">=</span><span class="s">"/new"</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="n">AppointmentForm</span> <span class="nf">getNewForm</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">AppointmentForm</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">POST</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">add</span><span class="o">(</span><span class="nd">@Valid</span> <span class="n">AppointmentForm</span> <span class="n">appointment</span><span class="o">,</span> <span class="n">BindingResult</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">hasErrors</span><span class="o">())</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="s">"appointments/new"</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">appointmentBook</span><span class="o">.</span><span class="na">addAppointment</span><span class="o">(</span><span class="n">appointment</span><span class="o">);</span>
+        <span class="k">return</span> <span class="s">"redirect:/appointments"</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>value的uri值为以下三类：</strong></p>
+
+<p>A）指定为普通的具体值；
+B) 指定为含有某变量的一类值(URI Template Patterns with Path Variables)；
+C) 指定为含正则表达式的一类值( URI Template Patterns with Regular Expressions);</p>
+
+<p>example B)</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span><span class="o">=</span><span class="s">"/owners/{ownerId}"</span><span class="o">,</span> <span class="n">method</span><span class="o">=</span><span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
+<span class="kd">public</span> <span class="n">String</span> <span class="nf">findOwner</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="n">String</span> <span class="n">ownerId</span><span class="o">,</span> <span class="n">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">Owner</span> <span class="n">owner</span> <span class="o">=</span> <span class="n">ownerService</span><span class="o">.</span><span class="na">findOwner</span><span class="o">(</span><span class="n">ownerId</span><span class="o">);</span>  
+  <span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"owner"</span><span class="o">,</span> <span class="n">owner</span><span class="o">);</span>  
+  <span class="k">return</span> <span class="s">"displayOwner"</span><span class="o">;</span> 
+<span class="o">}</span>
+</code></pre></div></div>
+<p>example C)</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/spring-web/{symbolicName:[a-z-]+}-{version:\d\.\d\.\d}.{extension:\.[a-z]}"</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handle</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="n">String</span> <span class="n">version</span><span class="o">,</span> <span class="nd">@PathVariable</span> <span class="n">String</span> <span class="n">extension</span><span class="o">)</span> <span class="o">{</span>    
+    <span class="c1">// ...</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="consumesproduces">consumes/produces</h4>
+
+<p>consumes：指定处理请求的提交内容类型（Content-Type），例如application/json, text/html;
+produces：指定返回的内容类型，仅当request请求头中的(Accept)类型中包含该指定类型才返回；</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">"/pets"</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">POST</span><span class="o">,</span> <span class="n">consumes</span><span class="o">=</span><span class="s">"application/json"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">addPet</span><span class="o">(</span><span class="nd">@RequestBody</span> <span class="n">Pet</span> <span class="n">pet</span><span class="o">,</span> <span class="n">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>    
+    <span class="c1">// implementation omitted</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>方法仅处理request Content-Type为“application/json”类型的请求。</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">"/pets/{petId}"</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">,</span> <span class="n">produces</span><span class="o">=</span><span class="s">"application/json"</span><span class="o">)</span>
+<span class="nd">@ResponseBody</span>
+<span class="kd">public</span> <span class="n">Pet</span> <span class="nf">getPet</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="n">String</span> <span class="n">petId</span><span class="o">,</span> <span class="n">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>    
+    <span class="c1">// implementation omitted</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>方法仅处理request请求中Accept头中包含了”application/json”的请求，同时暗示了返回的内容类型为application/json;</p>
+
+<h4 id="paramsheaders">params/headers</h4>
+
+<p>params： 指定request中必须包含某些参数值是，才让该方法处理。
+headers： 指定request中必须包含某些指定的header值，才能让该方法处理请求。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/owners/{ownerId}"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RelativePathUriTemplateController</span> <span class="o">{</span>
+
+  <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">"/pets/{petId}"</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">,</span> <span class="n">params</span><span class="o">=</span><span class="s">"myParam=myValue"</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">findPet</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="n">String</span> <span class="n">ownerId</span><span class="o">,</span> <span class="nd">@PathVariable</span> <span class="n">String</span> <span class="n">petId</span><span class="o">,</span> <span class="n">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>    
+    <span class="c1">// implementation omitted</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>仅处理请求中包含了名为“myParam”，值为“myValue”的请求；</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/owners/{ownerId}"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RelativePathUriTemplateController</span> <span class="o">{</span>
+
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">"/pets"</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">,</span> <span class="n">headers</span><span class="o">=</span><span class="s">"Referer=http://www.ifeng.com/"</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">findPet</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="n">String</span> <span class="n">ownerId</span><span class="o">,</span> <span class="nd">@PathVariable</span> <span class="n">String</span> <span class="n">petId</span><span class="o">,</span> <span class="n">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>    
+    <span class="c1">// implementation omitted</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>仅处理request的header中包含了指定“Refer”请求头和对应值为“http://www.ifeng.com/”的请求；</p>
+
+<h4 id="requestparam">@RequestParam</h4>
+
+<blockquote>
+  <p>使用 @RequestParam 绑定 HttpServletRequest 请求参数到控制器方法参数</p>
+</blockquote>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@RequestMapping</span> <span class="o">(</span> <span class="s">"requestParam"</span> <span class="o">)</span>
+<span class="kd">public</span> <span class="n">String</span> <span class="nf">testRequestParam</span><span class="o">(</span> <span class="nd">@RequestParam</span><span class="o">(</span><span class="n">required</span><span class="o">=</span><span class="kc">false</span><span class="o">)</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="nd">@RequestParam</span> <span class="o">(</span> <span class="s">"age"</span> <span class="o">)</span> <span class="kt">int</span> <span class="n">age</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="s">"requestParam"</span> <span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>在上面代码中利用@RequestParam 从HttpServletRequest 中绑定了参数name 到控制器方法参数name ，绑定了参数age 到控制器方法参数age 。值得注意的是和@PathVariable 一样，当你没有明确指定从request 中取哪个参数时，Spring 在代码是debug 编译的情况下会默认取更方法参数同名的参数，如果不是debug 编译的就会报错。此外，当需要从request 中绑定的参数和方法的参数名不相同的时候，也需要在@RequestParam 中明确指出是要绑定哪个参数。在上面的代码中如果我访问/requestParam.do?name=hello&amp;age=1 则Spring 将会把request请求参数name 的值hello 赋给对应的处理方法参数name ，把参数age 的值1 赋给对应的处理方法参数age 。</p>
+
+<p>在@RequestParam 中除了指定绑定哪个参数的属性value 之外，还有一个属性required ，它表示所指定的参数是否必须在request 属性中存在，默认是true ，表示必须存在，当不存在时就会报错。在上面代码中我们指定了参数name 的required 的属性为false ，而没有指定age 的required 属性，这时候如果我们访问/requestParam.do而没有传递参数的时候，系统就会抛出异常，因为age 参数是必须存在的，而我们没有指定。而如果我们访问/requestParam.do?age=1 的时候就可以正常访问，因为我们传递了必须的参数age ，而参数name 是非必须的，不传递也可以。</p>
+
+<h4 id="cookievalue">@CookieValue</h4>
+
+<blockquote>
+  <p>使用 @CookieValue 绑定 cookie 的值到 Controller 方法参数</p>
+</blockquote>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@RequestMapping</span> <span class="o">(</span> <span class="s">"cookieValue"</span> <span class="o">)</span>
+<span class="kd">public</span> <span class="n">String</span> <span class="nf">testCookieValue</span><span class="o">(</span> <span class="nd">@CookieValue</span> <span class="o">(</span> <span class="s">"hello"</span> <span class="o">)</span> <span class="n">String</span> <span class="n">cookieValue</span><span class="o">,</span> <span class="nd">@CookieValue</span> <span class="n">String</span> <span class="n">hello</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span> <span class="n">out</span> <span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">cookieValue</span> <span class="o">+</span> <span class="s">"-----------"</span> <span class="o">+</span> <span class="n">hello</span><span class="o">);</span>
+    <span class="k">return</span> <span class="s">"cookieValue"</span> <span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>在上面的代码中我们使用@CookieValue 绑定了cookie 的值到方法参数上。上面一共绑定了两个参数，一个是明确指定要绑定的是名称为hello 的cookie 的值，一个是没有指定。使用没有指定的形式的规则和@PathVariable、@RequestParam 的规则是一样的，即在debug 编译模式下将自动获取跟方法参数名同名的cookie 值。</p>
+
+<h4 id="requestheader">@RequestHeader</h4>
+
+<blockquote>
+  <p>使用 @RequestHeader 注解绑定 HttpServletRequest 头信息到Controller 方法参数</p>
+</blockquote>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@RequestMapping</span> <span class="o">(</span> <span class="s">"testRequestHeader"</span> <span class="o">)</span>
+<span class="kd">public</span> <span class="n">String</span> <span class="nf">testRequestHeader</span><span class="o">(</span> <span class="nd">@RequestHeader</span> <span class="o">(</span> <span class="s">"Host"</span> <span class="o">)</span> <span class="n">String</span> <span class="n">hostAddr</span><span class="o">,</span> <span class="nd">@RequestHeader</span> <span class="n">String</span> <span class="n">Host</span><span class="o">,</span> <span class="nd">@RequestHeader</span> <span class="n">String</span> <span class="n">host</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span> <span class="n">out</span> <span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">hostAddr</span> <span class="o">+</span> <span class="s">"-----"</span> <span class="o">+</span> <span class="n">Host</span> <span class="o">+</span> <span class="s">"-----"</span> <span class="o">+</span> <span class="n">host</span> <span class="o">);</span>
+    <span class="k">return</span> <span class="s">"requestHeader"</span> <span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>在上面的代码中我们使用了 @RequestHeader 绑定了 HttpServletRequest 请求头 host 到Controller 的方法参数。上面方法的三个参数都将会赋予同一个值，由此我们可以知道在绑定请求头参数到方法参数的时候规则和 @PathVariable 、 @RequestParam 以及 @CookieValue 是一样的，即没有指定绑定哪个参数到方法参数的时候，在 debug 编译模式下将使用方法参数名作为需要绑定的参数。但是有一点 @RequestHeader 跟另外三种绑定方式是不一样的，那就是在使用 @RequestHeader 的时候是大小写不敏感的，即 @RequestHeader(“Host”) 和 @RequestHeader(“host”) 绑定的都是 Host 头信息。记住在 @PathVariable 、 @RequestParam 和 @CookieValue 中都是大小写敏感的</p>
+
+<h4 id="以-requestmapping-标记的处理器方法支持的方法参数和返回类型">以 @RequestMapping 标记的处理器方法支持的方法参数和返回类型</h4>
+
+<ol>
+  <li>支持的方法参数类型
+    <ul>
+      <li>HttpServlet 对象，主要包括HttpServletRequest 、HttpServletResponse 和HttpSession 对象。 这些参数Spring 在调用处理器方法的时候会自动给它们赋值，所以当在处理器方法中需要使用到这些对象的时候，可以直接在方法上给定一个方法参数的申明，然后在方法体里面直接用就可以了。但是有一点需要注意的是在使用HttpSession 对象的时候，如果此时HttpSession 对象还没有建立起来的话就会有问题。</li>
+      <li>Spring 自己的WebRequest 对象。 使用该对象可以访问到存放在HttpServletRequest 和HttpSession 中的属性值。</li>
+      <li>InputStream 、OutputStream 、Reader 和Writer 。 InputStream 和Reader 是针对HttpServletRequest 而言的，可以从里面取数据；OutputStream 和Writer 是针对HttpServletResponse 而言的，可以往里面写数据。</li>
+      <li>使用@PathVariable 、@RequestParam 、@CookieValue 和@RequestHeader 标记的参数。</li>
+      <li>使用@ModelAttribute 标记的参数。</li>
+      <li>java.util.Map 、Spring 封装的Model 和ModelMap 。 这些都可以用来封装模型数据，用来给视图做展示。</li>
+      <li>实体类。 可以用来接收上传的参数。</li>
+      <li>Spring 封装的MultipartFile 。 用来接收上传文件的。</li>
+      <li>Spring 封装的Errors 和BindingResult 对象。 这两个对象参数必须紧接在需要验证的实体对象参数之后，它里面包含了实体对象的验证结果。</li>
+    </ul>
+  </li>
+  <li>支持的返回类型
+    <ul>
+      <li>一个包含模型和视图的ModelAndView 对象。</li>
+      <li>一个模型对象，这主要包括Spring 封装好的Model 和ModelMap ，以及java.util.Map ，当没有视图返回的时候视图名称将由RequestToViewNameTranslator 来决定。</li>
+      <li>一个View 对象。这个时候如果在渲染视图的过程中模型的话就可以给处理器方法定义一个模型参数，然后在方法体里面往模型中添加值。</li>
+      <li>一个String 字符串。这往往代表的是一个视图名称。这个时候如果需要在渲染视图的过程中需要模型的话就可以给处理器方法一个模型参数，然后在方法体里面往模型中添加值就可以了。</li>
+      <li>返回值是void 。这种情况一般是我们直接把返回结果写到HttpServletResponse 中了，如果没有写的话，那么Spring 将会利用RequestToViewNameTranslator 来返回一个对应的视图名称。如果视图中需要模型的话，处理方法与返回字符串的情况相同。</li>
+      <li>如果处理器方法被注解@ResponseBody 标记的话，那么处理器方法的任何返回类型都会通过HttpMessageConverters 转换之后写到HttpServletResponse 中，而不会像上面的那些情况一样当做视图或者模型来处理。</li>
+      <li>除以上几种情况之外的其他任何返回类型都会被当做模型中的一个属性来处理，而返回的视图还是由RequestToViewNameTranslator 来决定，添加到模型中的属性名称可以在该方法上用@ModelAttribute(“attributeName”) 来定义，否则将使用返回类型的类名称的首字母小写形式来表示。使用@ModelAttribute 标记的方法会在@RequestMapping 标记的方法执行之前执行。</li>
+    </ul>
+  </li>
+</ol>
+
+<p>引言：</p>
+
+<p>接上一篇文章讲述处理@RequestMapping的方法参数绑定之后，详细介绍下@RequestBody、@ResponseBody的具体用法和使用时机；同时对曾经看的一篇文章中讲述的某些部分进行澄清 （文章地址：http://www.byywee.com/page/M0/S702/702424.html）。</p>
+
+<p>简介：
+@RequestBody
+作用：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  i) 该注解用于读取Request请求的body部分数据，使用系统默认配置的HttpMessageConverter进行解析，然后把相应的数据绑定到要返回的对象上；
+
+  ii) 再把HttpMessageConverter返回的对象数据绑定到 controller中方法的参数上。
+</code></pre></div></div>
+
+<p>使用时机：</p>
+
+<p>A) GET、POST方式提时， 根据request header Content-Type的值来判断:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>application/x-www-form-urlencoded， 可选（即非必须，因为这种情况的数据@RequestParam, @ModelAttribute也可以处理，当然@RequestBody也能处理）；
+multipart/form-data, 不能处理（即使用@RequestBody不能处理这种格式的数据）；
+其他格式， 必须（其他格式包括application/json, application/xml等。这些格式的数据，必须使用@RequestBody来处理）；
+</code></pre></div></div>
+
+<p>B) PUT方式提交时， 根据request header Content-Type的值来判断:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>application/x-www-form-urlencoded， 必须；
+multipart/form-data, 不能处理；
+其他格式， 必须； 说明：request的body部分的数据编码格式由header部分的Content-Type指定；
+</code></pre></div></div>
+
+<p>@ResponseBody</p>
+
+<p>作用：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  该注解用于将Controller的方法返回的对象，通过适当的HttpMessageConverter转换为指定格式后，写入到Response对象的body数据区。
+</code></pre></div></div>
+
+<p>使用时机：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  返回的数据不是html标签的页面，而是其他某种格式的数据时（如json、xml等）使用；
+</code></pre></div></div>
+
+<p>HttpMessageConverter
+复制代码
+<span style="font-family:Microsoft YaHei;">/**</span></p>
+<ul>
+  <li>Strategy interface that specifies a converter that can convert from and to HTTP requests and responses.
+ *</li>
+  <li>@author Arjen Poutsma</li>
+  <li>@author Juergen Hoeller</li>
+  <li>
+    <p>@since 3.0
+ */
+public interface HttpMessageConverter<T> {</T></p>
+
+    <p>/**</p>
+    <ul>
+      <li>Indicates whether the given class can be read by this converter.</li>
+      <li>@param clazz the class to test for readability</li>
+      <li>@param mediaType the media type to read, can be {@code null} if not specified.</li>
+      <li>Typically the value of a {@code Content-Type} header.</li>
+      <li>@return {@code true} if readable; {@code false} otherwise
+  */
+ boolean canRead(Class&lt;?&gt; clazz, MediaType mediaType);</li>
+    </ul>
+
+    <p>/**</p>
+    <ul>
+      <li>Indicates whether the given class can be written by this converter.</li>
+      <li>@param clazz the class to test for writability</li>
+      <li>@param mediaType the media type to write, can be {@code null} if not specified.</li>
+      <li>Typically the value of an {@code Accept} header.</li>
+      <li>@return {@code true} if writable; {@code false} otherwise
+  */
+ boolean canWrite(Class&lt;?&gt; clazz, MediaType mediaType);</li>
+    </ul>
+
+    <p>/**</p>
+    <ul>
+      <li>Return the list of {@link MediaType} objects supported by this converter.</li>
+      <li>@return the list of supported media types
+  */
+ List<MediaType> getSupportedMediaTypes();</MediaType></li>
+    </ul>
+
+    <p>/**</p>
+    <ul>
+      <li>Read an object of the given type form the given input message, and returns it.</li>
+      <li>@param clazz the type of object to return. This type must have previously been passed to the</li>
+      <li>{@link #canRead canRead} method of this interface, which must have returned {@code true}.</li>
+      <li>@param inputMessage the HTTP input message to read from</li>
+      <li>@return the converted object</li>
+      <li>@throws IOException in case of I/O errors</li>
+      <li>@throws HttpMessageNotReadableException in case of conversion errors
+  */
+ T read(Class&lt;? extends T&gt; clazz, HttpInputMessage inputMessage)
+     throws IOException, HttpMessageNotReadableException;</li>
+    </ul>
+
+    <p>/**</p>
+    <ul>
+      <li>Write an given object to the given output message.</li>
+      <li>@param t the object to write to the output message. The type of this object must have previously been</li>
+      <li>passed to the {@link #canWrite canWrite} method of this interface, which must have returned {@code true}.</li>
+      <li>@param contentType the content type to use when writing. May be {@code null} to indicate that the</li>
+      <li>default content type of the converter must be used. If not {@code null}, this media type must have</li>
+      <li>previously been passed to the {@link #canWrite canWrite} method of this interface, which must have</li>
+      <li>returned {@code true}.</li>
+      <li>@param outputMessage the message to write to</li>
+      <li>@throws IOException in case of I/O errors</li>
+      <li>@throws HttpMessageNotWritableException in case of conversion errors
+  */
+ void write(T t, MediaType contentType, HttpOutputMessage outputMessage)
+     throws IOException, HttpMessageNotWritableException;</li>
+    </ul>
+  </li>
+</ul>
+
+<p>}
+&lt;/span&gt;
+复制代码
+该接口定义了四个方法，分别是读取数据时的 canRead(), read() 和 写入数据时的canWrite(), write()方法。</p>
+
+<p>在使用 <mvc:annotation-driven></mvc:annotation-driven>标签配置时，默认配置了RequestMappingHandlerAdapter（注意是RequestMappingHandlerAdapter不是AnnotationMethodHandlerAdapter,详情查看Spring 3.1 document “16.14 Configuring Spring MVC”章节），并为他配置了一下默认的HttpMessageConverter：</p>
+
+<p>复制代码
+    ByteArrayHttpMessageConverter converts byte arrays.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>StringHttpMessageConverter converts strings.
+
+ResourceHttpMessageConverter converts to/from org.springframework.core.io.Resource for all media types.
+
+SourceHttpMessageConverter converts to/from a javax.xml.transform.Source.
+
+FormHttpMessageConverter converts form data to/from a MultiValueMap&lt;String, String&gt;.
+
+Jaxb2RootElementHttpMessageConverter converts Java objects to/from XML — added if JAXB2 is present on the classpath.
+
+MappingJacksonHttpMessageConverter converts to/from JSON — added if Jackson is present on the classpath.
+
+AtomFeedHttpMessageConverter converts Atom feeds — added if Rome is present on the classpath.
+
+RssChannelHttpMessageConverter converts RSS feeds — added if Rome is present on the classpath. 复制代码 ByteArrayHttpMessageConverter: 负责读取二进制格式的数据和写出二进制格式的数据；
+</code></pre></div></div>
+
+<p>StringHttpMessageConverter：   负责读取字符串格式的数据和写出二进制格式的数据；</p>
+
+<p>ResourceHttpMessageConverter：负责读取资源文件和写出资源文件数据；</p>
+
+<p>FormHttpMessageConverter：       负责读取form提交的数据（能读取的数据格式为 application/x-www-form-urlencoded，不能读取multipart/form-data格式数据）；负责写入application/x-www-from-urlencoded和multipart/form-data格式的数据；</p>
+
+<p>MappingJacksonHttpMessageConverter:  负责读取和写入json格式的数据；</p>
+
+<p>SouceHttpMessageConverter：                   负责读取和写入 xml 中javax.xml.transform.Source定义的数据；</p>
+
+<p>Jaxb2RootElementHttpMessageConverter:  负责读取和写入xml 标签格式的数据；</p>
+
+<p>AtomFeedHttpMessageConverter:              负责读取和写入Atom格式的数据；</p>
+
+<p>RssChannelHttpMessageConverter:           负责读取和写入RSS格式的数据；</p>
+
+<p>当使用@RequestBody和@ResponseBody注解时，RequestMappingHandlerAdapter就使用它们来进行读取或者写入相应格式的数据。</p>
+
+<p>HttpMessageConverter匹配过程：
+@RequestBody注解时： 根据Request对象header部分的Content-Type类型，逐一匹配合适的HttpMessageConverter来读取数据；</p>
+
+<p>spring 3.1源代码如下：</p>
+
+<p>复制代码
+private Object readWithMessageConverters(MethodParameter methodParam, HttpInputMessage inputMessage, Class paramType)
+            throws Exception {</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    MediaType contentType = inputMessage.getHeaders().getContentType();
+    if (contentType == null) {
+        StringBuilder builder = new StringBuilder(ClassUtils.getShortName(methodParam.getParameterType()));
+        String paramName = methodParam.getParameterName();
+        if (paramName != null) {
+            builder.append(' ');
+            builder.append(paramName);
+        }
+        throw new HttpMediaTypeNotSupportedException(
+                "Cannot extract parameter (" + builder.toString() + "): no Content-Type found");
+    }
+
+    List&lt;MediaType&gt; allSupportedMediaTypes = new ArrayList&lt;MediaType&gt;();
+    if (this.messageConverters != null) {
+        for (HttpMessageConverter&lt;?&gt; messageConverter : this.messageConverters) {
+            allSupportedMediaTypes.addAll(messageConverter.getSupportedMediaTypes());
+            if (messageConverter.canRead(paramType, contentType)) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Reading [" + paramType.getName() + "] as \"" + contentType
+                            +"\" using [" + messageConverter + "]");
+                }
+                return messageConverter.read(paramType, inputMessage);
+            }
+        }
+    }
+    throw new HttpMediaTypeNotSupportedException(contentType, allSupportedMediaTypes);
+} 复制代码 @ResponseBody注解时： 根据Request对象header部分的Accept属性（逗号分隔），逐一按accept中的类型，去遍历找到能处理的HttpMessageConverter；
+</code></pre></div></div>
+
+<p>源代码如下：</p>
+
+<p>复制代码
+private void writeWithMessageConverters(Object returnValue,
+                HttpInputMessage inputMessage, HttpOutputMessage outputMessage)
+                throws IOException, HttpMediaTypeNotAcceptableException {
+            List<MediaType> acceptedMediaTypes = inputMessage.getHeaders().getAccept();
+            if (acceptedMediaTypes.isEmpty()) {
+                acceptedMediaTypes = Collections.singletonList(MediaType.ALL);
+            }
+            MediaType.sortByQualityValue(acceptedMediaTypes);
+            Class&lt;?&gt; returnValueType = returnValue.getClass();
+            List<MediaType> allSupportedMediaTypes = new ArrayList<MediaType>();
+            if (getMessageConverters() != null) {
+                for (MediaType acceptedMediaType : acceptedMediaTypes) {
+                    for (HttpMessageConverter messageConverter : getMessageConverters()) {
+                        if (messageConverter.canWrite(returnValueType, acceptedMediaType)) {
+                            messageConverter.write(returnValue, acceptedMediaType, outputMessage);
+                            if (logger.isDebugEnabled()) {
+                                MediaType contentType = outputMessage.getHeaders().getContentType();
+                                if (contentType == null) {
+                                    contentType = acceptedMediaType;
+                                }
+                                logger.debug("Written [" + returnValue + "] as \"" + contentType +
+                                        "\" using [" + messageConverter + "]");
+                            }
+                            this.responseArgumentUsed = true;
+                            return;
+                        }
+                    }
+                }
+                for (HttpMessageConverter messageConverter : messageConverters) {
+                    allSupportedMediaTypes.addAll(messageConverter.getSupportedMediaTypes());
+                }
+            }
+            throw new HttpMediaTypeNotAcceptableException(allSupportedMediaTypes);
+        }
+复制代码
+补充：
+MappingJacksonHttpMessageConverter 调用了 objectMapper.writeValue(OutputStream stream, Object)方法，使用@ResponseBody注解返回的对象就传入Object参数内。若返回的对象为已经格式化好的json串时，不使用@RequestBody注解，而应该这样处理：
+1、response.setContentType("application/json; charset=UTF-8");
+2、response.getWriter().print(jsonStr);
+直接输出到body区，然后的视图为void。</MediaType></MediaType></MediaType></p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/03/31/Ubuntu%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/" data-toggle="tooltip" data-placement="top" title="Linux下FTP的搭建与配置">
+                        Previous<br>
+                        <span>Linux下FTP的搭建与配置</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/04/14/%E5%90%84%E7%A7%8D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AE%89%E8%A3%85/" data-toggle="tooltip" data-placement="top" title="各种数据库的安装">
+                        Next<br>
+                        <span>各种数据库的安装</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+                <!--Gitalk评论start  -->
+                
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="/js/md5.min.js"></script>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: '7194056b4e3867bdf12c',
+                    clientSecret: '0ee17ceedb52c45e6a8553399a0fbeaab0e9f43f',
+                    repo: 'lizhizhi7.github.io',
+                    owner: 'lizhizhi7',
+                    admin: ['lizhizhi7'],
+                    distractionFreeMode: true,
+                    id: md5(location.pathname),
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Git" title="Git" rel="5">
+                                    Git
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Android" title="Android" rel="10">
+                                    Android
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#YAML" title="YAML" rel="2">
+                                    YAML
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python" title="Python" rel="5">
+                                    Python
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Jupyter" title="Jupyter" rel="2">
+                                    Jupyter
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Android View" title="Android View" rel="4">
+                                    Android View
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MATLAB" title="MATLAB" rel="8">
+                                    MATLAB
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Java" title="Java" rel="13">
+                                    Java
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Spring" title="Spring" rel="2">
+                                    Spring
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#NETWORK" title="NETWORK" rel="2">
+                                    NETWORK
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#HTTP" title="HTTP" rel="2">
+                                    HTTP
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#MySQL" title="MySQL" rel="3">
+                                    MySQL
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#DataBase" title="DataBase" rel="4">
+                                    DataBase
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#化学前沿" title="化学前沿" rel="3">
+                                    化学前沿
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#DATA" title="DATA" rel="2">
+                                    DATA
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Python3" title="Python3" rel="3">
+                                    Python3
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Docker" title="Docker" rel="4">
+                                    Docker
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#容器" title="容器" rel="4">
+                                    容器
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#分布式" title="分布式" rel="2">
+                                    分布式
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Kafka" title="Kafka" rel="2">
+                                    Kafka
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Linux" title="Linux" rel="4">
+                                    Linux
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#CentOS" title="CentOS" rel="3">
+                                    CentOS
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="https://apple.com">Apple</a></li>
+                    
+                        <li><a href="https://developer.apple.com/">Apple Developer</a></li>
+                    
+                        <li><a href="https://www.android.com/">Android</a></li>
+                    
+                        <li><a href="https://developer.android.com/">Android Developer</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!--MathJax-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    showProcessingMessages: false,
+    messageStyle: "none",
+    tex2jax: {
+        inlineMath: [["$","$"],["\\(","\\)"]],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+    },
+  });
+</script>
+<script type="text/javascript" src="/js/MathJax/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+ <!--Sequence css font js-->
+<link rel="stylesheet" href="/js/Sequence/css/sequence-diagram-min.css">
+<script src="/js/Sequence/js/underscore-min.js"></script>
+<!-- Snap.svg -->
+<script src="/js/Sequence/js/snap.svg-min.js"></script>
+<!-- or Raphael -->
+<!--<script src="../js/raphael.min.js"></script>-->
+<script src="/js/Sequence/fonts/daniel/daniel_700.font.js"></script>
+<script src="/js/Sequence/js/webfont.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-min.js"></script>
+<script src="/js/Sequence/js/sequence-diagram-snap-min.js"></script>
+
+<!--Sequence JS-->
+<script>
+  $(".language-sequence").sequenceDiagram({theme: 'hand'});
+</script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a5f544474e9c">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/li-zhi-93-94">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/lee.minizhi">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/lizhizhi7">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; XiaoZhi Blog 2019
+                    <br>
+                    Theme on <a href="https://github.com/lizhizhi7/lizhizhi7.github.io">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=lizhizhi7&repo=lizhizhi7.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
