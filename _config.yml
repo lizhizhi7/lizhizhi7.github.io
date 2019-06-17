@@ -1,18 +1,18 @@
 # Site settings
-title: XiaoZhi Blog
-SEOTitle: 尖耳熊的博客 | XZ Blog
+title: Oliver Blog
+SEOTitle: 尖耳熊的博客 | Oliver Blog
 header-img: img/bg.jpg
 email: lizhizhi7@outlook.com
 description: "Right here waiting for you."
-keyword: "LZ Blog, MATLAB, R, ML, Python, Machine Learning"
-url: "https://minizhi.cn"          # your host, for absolute URL
-baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
+keyword: "Oliver Blog, MATLAB, R, ML, Python, Machine Learning"
+url: "https://minizhi.cn"                                       # your host, for absolute URL
+baseurl: ""                                                     # for example, '/blog' if your blog hosted on 'host/blog'
 github_repo: "https://github.com/lizhizhi7/lizhizhi7.github.io" # you code repository
 
 # Sidebar settings
-sidebar: true                           # whether or not using Sidebar.
+sidebar: true                                                   # whether or not using Sidebar.
 sidebar-about-description: "Good Good Study , Day Day Up"
-sidebar-avatar: /img/about_me.JPG     # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-avatar: /img/about_me.JPG                               # use absolute URL, seeing it's used in both `/` and `/about/`
 
 # SNS settings
 RSS: false
@@ -30,7 +30,7 @@ picURL: "http://img.intellizhi.cn/"
 # from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
 permalink: pretty
 paginate: 10
-exclude: ["less","node_modules","Gruntfile.js","package.json","README.md","MySchedule-Source"]
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
 anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
 
 # Gems
