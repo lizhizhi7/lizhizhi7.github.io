@@ -70,3 +70,44 @@ getPhotoInfo:function(e){
     }
 },
  
+
+ nginx常用的基础命令总结
+#默认方式启动：
+./sbin/nginx 
+
+#指定配置文件启动 
+./sbing/nginx -c /tmp/nginx.conf 
+
+#指定nginx程序目录启动
+./sbin/nginx -p /usr/local/nginx/
+
+#快速停止
+./sbin/nginx -s stop
+
+#优雅停止 (会等当前的请求先处理完再杀死)
+./sbin/nginx -s quit
+
+# 热装载配置文件 
+./sbin/nginx -s reload
+# 重新打开日志文件
+./sbin/nginx -s reopen
+
+# 检测配置是否正确
+./sbin/nginx -t
+
+
+启动nginx之后，可以通过日志来查看进程的相关信息
+
+[root@idea-centos nginx]# ./sbin/nginx
+[root@idea-centos nginx]# ps -ef|grep nginx
+root      11059      1  0 16:34 ?        00:00:00 nginx: master process ./sbin/nginx
+nobody    11060  11059  0 16:34 ?        00:00:00 nginx: worker process
+root      11062   8193  0 16:34 pts/1    00:00:00 grep --color=auto nginx
+master process 主要是负责日志的更新，热装载 主进程
+worker process 工作进程 处理客户端的连接，处理请求
+
+nginx的日志
+
+在nginx的log文件夹底下，我们在重新访问服务器之后，相应的access日志就会增加新的属性内容。
+
+这里面的日志寻找，实际上是根据对象句柄来进行查找指定的文件。
