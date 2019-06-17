@@ -2,7 +2,7 @@
 layout:     post
 title:      Fragment懒加载
 subtitle:   Android笔记
-date:       2018-12-06
+date:       2018-12-6
 author:     Lee
 header-img: img/background-android.png
 catalog: true

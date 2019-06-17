@@ -2,7 +2,7 @@
 layout:     post
 title:      Android View 常用技巧
 subtitle:   Android View 系列文章
-date:       2019-2-25
+date:       2018-12-6
 author:     Lee
 header-img: img/background-android.png
 catalog: true
@@ -12,6 +12,7 @@ tags:
 ---
 
 ### 更改ImageView的图片内容
+
 ```xml
 <ImageView
             android:id="@+id/topic_notice_iv"
@@ -21,7 +22,9 @@ tags:
             android:padding="@dimen/pad_height_15"
             android:src="@drawable/topic_recommend_remind" />
 ```
+
 代码中的两种使用方法
+
 ```java
 notcieIv.setImageDrawable(getResources().getDrawable((R.drawable.remind2)));
 searchIv.setBackgroundResource(R.drawable.search2);
@@ -30,7 +33,6 @@ searchIv.setBackgroundResource(R.drawable.search2);
 ### 图片缩放模式调整
 
 **Android ImageView android:scaleType属性**
-
 Scaletype是ImageView控件的一个属性，ImageView 的Scaletype属性决定了图片在View上显示时的样子，如进行按比例的缩放，及显示图片的整体还是部分。设置的方式包括：
 
 1. 在layout xml中定义Android:scaleType="center"
