@@ -19,7 +19,7 @@ ADD命令有两个参数，源和目标。它的基本作用是从源系统的�
 
 ```Dockerfile
 # Usage: ADD [source directory or URL] [destination directory]
-ADD /my_app_folder /my_app_folder 
+ADD /my_app_folder /my_app_folder
 ```
 
 #### CMD
