@@ -283,3 +283,212 @@ abc.domian.com/sort/2 => abc.domian.com/index.php?act=sort&name=abc&id=2
 7.                  rewrite ^/(.*) http://www.c1gstudio.com/$1 last;
 8.                  access_log  off;
 9.          }
+
+
+```
+# For more information on configuration, see:
+#   * Official English Documentation: http://nginx.org/en/docs/
+#   * Official Russian Documentation: http://nginx.org/ru/docs/
+
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log;
+pid /run/nginx.pid;
+
+# Load dynamic modules. See /usr/share/nginx/README.dynamic.
+include /usr/share/nginx/modules/*.conf;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile            on;
+    tcp_nopush          on;
+    tcp_nodelay         on;
+    keepalive_timeout   65;
+    types_hash_max_size 2048;
+
+    include             /etc/nginx/mime.types;
+    default_type        application/octet-stream;
+
+    client_max_body_size         200M;
+    client_header_buffer_size    128k;
+    large_client_header_buffers  4 128k;
+    # Load modular configuration files from the /etc/nginx/conf.d directory.
+    # See http://nginx.org/en/docs/ngx_core_module.html#include
+    # for more information.
+    include /etc/nginx/conf.d/*.conf;
+
+    server {
+        listen       80 default_server;
+        listen       [::]:80 default_server;
+        server_name  www.intellizhi.cn;
+        rewrite ^(.*)$ https://$host$1 permanent;
+    }
+
+    server {
+        listen       443 ssl http2 default_server;
+        listen       [::]:443 ssl http2 default_server;
+        server_name  www.intellizhi.cn;
+#        root         /usr/share/nginx/html;
+
+        ssl_certificate     "/root/cert/www/server.crt";
+        ssl_certificate_key "/root/cert/www/server.key";
+        ssl_session_cache   shared:SSL:1m;
+        ssl_session_timeout 10m;
+        ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+        ssl_ciphers         ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;
+        ssl_prefer_server_ciphers on;
+
+#        # Load configuration files for the default server block.
+#        include /etc/nginx/default.d/*.conf;
+
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html;
+        }
+
+        error_page 404 /404.html;
+            location = /40x.html {
+        }
+
+        error_page 500 502 503 504 /50x.html;
+            location = /50x.html {
+        }
+    }
+
+}
+```
+
+
+```
+user  root;
+worker_processes  1;
+ 
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+ 
+ 
+events {
+    worker_connections  1024;
+} 
+ 
+http {
+    include         /etc/nginx/mime.types;
+    include         /etc/nginx/conf.d/*.conf;
+    default_type    application/octet-stream;
+ 
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+    access_log      /var/log/nginx/access.log main;
+ 
+    sendfile           on;
+    #tcp_nopush        on;
+    #tcp_nodelay       on;
+    autoindex          on;
+    #gzip              on;
+    keepalive_timeout  65;
+
+    client_max_body_size         100M;
+    client_header_buffer_size    128k;
+    large_client_header_buffers  4 128k;
+
+    server {
+        listen 80;
+        server_name www.intellizhi.cn;
+        rewrite ^(.*)$ https://$host$1 permanent;#把http的域名请求转成https
+    }
+
+    server {
+        listen                    443;
+        server_name               www.intellizhi.cn;
+        ssl                       on;
+        ssl_certificate           cert/1_www.zoolina.cn_bundle.crt;
+        ssl_certificate_key       cert/2_www.zoolina.cn.key;
+        ssl_session_timeout       5m;
+        ssl_protocols             TLSv1 TLSv1.1 TLSv1.2; #按照这个协议配置
+        ssl_ciphers               ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;#按照这个套件配置
+        ssl_prefer_server_ciphers on;
+        #Internal Location
+        location /gk/ {
+            proxy_pass       http://minigk/;
+            proxy_redirect   off;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_connect_timeout 90; # 连接代理服务超时时间
+            proxy_send_timeout 90;    # 请求发送最大时间
+            proxy_read_timeout 90;    # 读取最大时间
+            proxy_buffer_size 4k;
+            proxy_buffers 4 32k;
+            proxy_busy_buffers_size 64k;
+            proxy_temp_file_write_size 64k;
+        }
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html;
+        }
+        #这里面添加映射static的记录
+        location /static {
+            alias /usr/local/static/;
+        }
+
+        #这里的~是指忽略大小写
+        location  ~* \.(gif|png|jpg|css|js) {
+            root /usr/local/static/;
+        }
+
+         # 防盗链配置
+        location ~* \.(gif|png|jpg|css|js) {
+            valid_referers none blocked *.idea.com;
+            if ($invalid_referer) {
+                return 403;
+            }
+            root /usr/local/static/;
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
+
+    server {
+        listen 80;
+        server_name ocr.intellizhi.cn;
+        location / {
+            proxy_pass http://127.0.0.1:8888;
+            #proxy_redirect off;
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;    
+        }
+    }
+
+    
+
+    upstream minigk{
+        ip_hash;
+        server 10.154.129.88:8088 weight=5 max_fails=5 fail_timeout=10s;
+    }
+
+    upstream registry{
+        least_time;
+        server 10.154.129.88:8088;
+    }
+
+    upstream static {
+        url_hash;
+    }
+
+}
+
+```

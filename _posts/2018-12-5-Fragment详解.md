@@ -2,7 +2,7 @@
 layout:     post
 title:      Fragment&Activity详解
 subtitle:   Android笔记
-date:       2018-12-21
+date:       2018-12-5
 author:     Lee
 header-img: img/background-android.png
 catalog: true
@@ -14,9 +14,8 @@ tags:
 
 #### Activity 的生命周期
 
-![](https://ws1.sinaimg.cn/large/e6c519e9gy1g08m52jq8uj20f00kltaa.jpg)
+![Activity](https://pic.intellizhi.cn/blogimg/e6c519e9gy1g08m52jq8uj20f00kltaa.jpg)
 
 #### Fragment 的生命周期
 
-![](https://ws1.sinaimg.cn/large/e6c519e9gy1g08m3w4gn0j208t0njjs8.jpg)
-
+![Fragment](https://pic.intellizhi.cn/blogimg/e6c519e9gy1g08m3w4gn0j208t0njjs8.jpg)
