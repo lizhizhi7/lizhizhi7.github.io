@@ -12,9 +12,6 @@ nginx的location配置详解
 
 例子，有如下匹配规则：
 
- 
-
- 
 
 [plain] view plain copy
  

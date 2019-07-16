@@ -8,6 +8,7 @@ header-img: img/background-spring.jpg
 catalog: true
 tags:
     - Spring
+    - Spring Boot
 ---
 
 ## 声明bean的注解
