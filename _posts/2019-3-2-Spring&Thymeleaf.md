@@ -12,6 +12,8 @@ tags:
     - Thymeleaf
 ---
 
+## Examples
+
 ```xml
 <form action="#" th:action="@{/greeting}" th:object="${greeting}" method="post">
     <p>Id: <input type="text" th:field="*{id}" /></p>
