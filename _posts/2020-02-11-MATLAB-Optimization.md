@@ -1,14 +1,14 @@
-# MCM/ICM
-
-## Paper Resources
-
-* [Google Scholar](http://scholar.google.com/)
-
-* [Elsevier](http://www.scirus.com)
-
-* [Bielefeld Academic Search Engine](http://www.base-search.net/BASE) 德国比勒费尔德(Bielefeld)大学图书馆开发的一个多学科的学术搜索引擎，提供对全球异构学术资源的集成检索服务。它整合了德国比勒费尔德大学图书馆的图书馆目录和大约160 个开放资源（超过200 万个文档）的数据。
-
-* [Online Journal Search Engine](http://www.ojose.com/ojose_home.html) 一个强大的免费科学搜索引擎，通过OJOSE，你能查找、下载或购买到近60个数据库的资源。
+---
+layout:     post
+title:      MATLAB Optimization
+subtitle:   Matlab 优化算法及工具箱使用
+date:       2020-2-11
+author:     Oliver Li
+header-img: img/background-matlab.jpg
+catalog: true
+tags:
+    - Matlab
+---
 
 ## Global Optimization
 
@@ -58,6 +58,7 @@ Nonsmooth, and you want a local solution|[patternsearch](https://www.mathworks.c
 |Nonsmooth, and you want a global solution or multiple local solutions|[surrogateopt](https://www.mathworks.com/help/gads/surrogateopt.html) or [patternsearch](https://www.mathworks.com/help/gads/patternsearch.html) with several initial points x0|
 
 **Functions**
+
 |||
 |:-:|:-:|
 |ga|Find minimum of function using genetic algorithm|
