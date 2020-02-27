@@ -3,7 +3,7 @@ layout:     post
 title:      Spring Annotations
 subtitle:   Spring
 date:       2019-3-2
-author:     Lee
+author:     Oliver Li
 header-img: img/background-spring.jpg
 catalog: true
 tags:
@@ -104,17 +104,16 @@ Spring支持AspectJ的注解式切面编程。
 
 ### 注入配置文件
 
-Value("${book.name}")String bookName;
+```java
+@Value("${book.name}")
+String bookName;
+```
 
 注入配置使用方法：
 
-* 编写配置文件（test.properties）
+* 编写配置文件（test.properties）: `book.name="hhhh"`
 
-book.name=《三体》
-
-* @PropertySource 加载配置文件(类上)
-
-@PropertySource("classpath:com/hgs/hello/test/test.propertie")
+* @PropertySource 加载配置文件(类上) : `@PropertySource("classpath:com/hgs/hello/test/test.propertie")`
 
 * 还需配置一个PropertySourcesPlaceholderConfigurer的bean。
 
