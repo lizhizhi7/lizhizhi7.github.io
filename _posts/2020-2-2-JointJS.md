@@ -14,28 +14,28 @@ tags:
 
 ## 核心概念
 
-### paper和graph
+### Paper和Graph
 
-paper即画布，图形将在paper上绘制。graph即图形数据，可与paper进行绑定，对graph的修改会即时反映到paper上。一个graph可与多个paper绑定
+Paper即画布，图形将在Paper上绘制。Graph即图形数据，可与Paper进行绑定，对Graph的修改会即时反映到Paper上。一个Graph可与多个Paper绑定
 
-### cellView和cell
+### CellView和Cell
 
-* cellView: 视图元素，是paper的基本元素，用来处理UI交互
-* cell: 图形元素，是graph的基本元素，用来存储图形元素数据
+* CellView: 视图元素，是Paper的基本元素，用来处理UI交互
+* Cell: 图形元素，是Graph的基本元素，用来存储图形元素数据
 
-cellView可以通过.model属性获取它的cell  
-graph其实就是cell的集合
+> CellView可以通过.model属性获取它的Cell  
+> Graph其实就是Cell的集合
 
-### link和element
+### Link和Element
 
-cell有两种类型，link是连线，element是节点  
-他们的视图元素对应为linkView和elementView
+Cell有两种类型，Link是连线，Element是节点  
+他们的视图元素对应为LinkView和ElementView
 
-### source和target
+### Source和Target
 
 即连线的起点和终点
 
-### port
+### Port
 
 端口，依附于图形节点，可以被连线连接
 
@@ -48,11 +48,13 @@ cell有两种类型，link是连线，element是节点
 
 ## The joint namespace
 
+* joint.utils  
+工具库，包含setByPath/getByPath等函数
 * joint.dia  
 模型(类)库，包含: Paper Graph Cell CellView Element Link 等等
 * joint.shapes  
-图形元素样式库，包含多个分组(basic standard custom ...)
-以basic为例，其下有Circle Ellipse Rect Text等多个图形元素
+图形元素样式库，包含多个分组(basic standard custom ...)  
+以basic为例，其下有Circle Ellipse Rect Text Path等多个图形元素
 
 ## API
 
@@ -69,6 +71,10 @@ cell有两种类型，link是连线，element是节点
 * background: 背景
 * defaultLink: 默认连线样式
 * interactive: 控制元素的交互属性（例如是否可以移动）
+* clickThreshold: 当大于该值的鼠标点击次数被触发时，将不会再触发响应
+* sorting: 渲染SVG图时所采用的排序方法
+* connectionStrategy: 连接策略决定Link的Anchor在哪里
+* defaultConnectionPoint: 默认的连接点函数
 
 #### Paper prototype method
 
