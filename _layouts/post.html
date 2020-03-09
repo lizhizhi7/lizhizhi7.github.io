@@ -61,8 +61,7 @@ layout: default
 <article>
     <div class="container">
         <div class="row">
-
-    <!-- Post Container -->
+            <!-- Post Container -->
             <div class="
                 col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1
@@ -93,7 +92,6 @@ layout: default
 
                 <!-- Gitalk -->
                 {% if site.gitalk.enable %}
-                <!-- 引入Gitalk评论插件  -->
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
                 <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
                 <div id="gitalk-container"></div>
@@ -113,11 +111,10 @@ layout: default
                     gitalk.render('gitalk-container');
                 </script>
                 {% endif %}
-                <!-- Gitalk end -->
             </div>  
 
-    <!-- Side Catalog Container -->
-        {% if page.catalog %}
+            <!-- Side Catalog Container -->
+            {% if page.catalog %}
             <div class="
                 col-lg-2 col-lg-offset-0
                 visible-lg-block
@@ -131,9 +128,9 @@ layout: default
                     <ul class="catalog-body"></ul>
                 </div>
             </div>
-        {% endif %}
+            {% endif %}
 
-    <!-- Sidebar Container -->
+            <!-- Sidebar Container -->
             <div class="
                 col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1
@@ -173,39 +170,6 @@ layout: default
 
 <!-- jQuery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-
-<!--MathJax-->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    showProcessingMessages: false,
-    messageStyle: "none",
-    tex2jax: {
-        inlineMath: [["$","$"],["\\(","\\)"]],
-        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
-    },
-  });
-</script>
-<script type="text/javascript" src="{{ "/js/MathJax/MathJax.js?config=TeX-MML-AM_CHTML" | prepend: site.baseurl }}"></script>
-
-<!--Sequence css font js-->
-<link rel="stylesheet" href="{{ "/js/Sequence/css/sequence-diagram-min.css" | prepend: site.baseurl }}">
-<script src="{{ "/js/Sequence/js/underscore-min.js" | prepend: site.baseurl }}"></script>
-<!-- Snap.svg -->
-<script src="{{ "/js/Sequence/js/snap.svg-min.js" | prepend: site.baseurl }}"></script>
-<!-- or Raphael -->
-<!--<script src="../js/raphael.min.js"></script>-->
-<script src="{{ "/js/Sequence/fonts/daniel/daniel_700.font.js" | prepend: site.baseurl }}"></script>
-<script src="{{ "/js/Sequence/js/webfont.js" | prepend: site.baseurl }}"></script>
-<script src="{{ "/js/Sequence/js/sequence-diagram-min.js" | prepend: site.baseurl }}"></script>
-<script src="{{ "/js/Sequence/js/sequence-diagram-snap-min.js" | prepend: site.baseurl }}"></script>
-
-<!--Sequence JS-->
-<script>
-  $(".language-sequence").sequenceDiagram({theme: 'hand'});
-</script>
-
-{% if site.anchorjs %}
 <!-- async load function -->
 <script>
     function async(u, c) {
@@ -217,9 +181,47 @@ layout: default
       s.parentNode.insertBefore(o, s);
     }
 </script>
+
+<!--MathJax-->
+<script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["$","$"],["\\(","\\)"]],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        autoload: {
+          color: [],
+          colorV2: ['color']
+        },
+        packages: {'[+]': ['noerrors']}
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+      },
+      loader: {
+        load: ['input/asciimath', '[tex]/noerrors']
+      }
+    };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script"></script>
+
+{% if page.enable_sequence %}
+<!--Sequence css font js-->
+<script src="https://cdn.jsdelivr.net/npm/webfontloader@1.6.6/webfontloader.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/snapsvg@0.5.1/dist/snap.svg.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/underscore@1.8.3/underscore.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@rokt33r/js-sequence-diagrams@2.0.6-2/dist/sequence-diagram-min.min.js"></script>
+
+<script>
+  $(".language-sequence").sequenceDiagram({theme: 'simple'});
+</script>
+{% endif %}
+
+{% if site.anchorjs %}
 <!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
 <script>
-    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+    async("https://cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
         // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
         // anchors.options = {
         //   visible: 'always',
