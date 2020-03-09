@@ -23,53 +23,13 @@ facebook_username:  lee.minizhi
 jianshu_username:   a5f544474e9c
 #twitter_username:
 
-# Markdown settings
-# replace redcarpet to kramdown,
-# although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
-# document: http://jekyllrb.com/docs/configuration/#kramdown
-markdown: kramdown
-highlighter: rouge
-kramdown:
-  input: GFM                            # use Github Flavored Markdown !important
-
-# Build settings from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
-permalink: pretty
-paginate: 10
-exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
-anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
-
-# Featured Tags
-featured-tags: true                     # 是否使用首页标签
-featured-condition-size: 2              # 相同标签数量大于这个数，才会出现在首页
-
 # Progressive Web Apps
 chrome-tab-theme-color: "#000000"
 service-worker: true
 
-# Analytics
-ba_track_id: b945c62a0417a859c3c7fbea0d9c29d3
-ga_track_id: 'UA-142225576-1'
-
-# Gems from PR#40, to support local preview for Jekyll 3.0
-plugins: [jekyll-paginate]
-
-
-# 评论系统
-# Disqus（https://disqus.com/）
-# disqus_username:
-
-# Gitalk
-gitalk:
-  enable: true    #是否开启Gitalk评论
-  clientID: 7194056b4e3867bdf12c                            #生成的clientID
-  clientSecret: 0ee17ceedb52c45e6a8553399a0fbeaab0e9f43f    #生成的clientSecret
-  repo: lizhizhi7.github.io    #仓库名称
-  owner: lizhizhi7    #github用户名
-  admin: lizhizhi7
-  distractionFreeMode: true #是否启用类似FB的阴影遮罩
-
-
-
+# Featured Tags
+featured-tags: true              # 是否使用首页标签
+featured-condition-size: 2       # 相同标签数量大于这个数，才会出现在首页
 
 # Friends
 friends: [
@@ -87,3 +47,35 @@ friends: [
         href: "https://developer.android.com/"
     }
 ]
+
+# Gitalk
+gitalk:
+  enable: true
+  clientID: 7194056b4e3867bdf12c                            #Github clientID
+  clientSecret: 0ee17ceedb52c45e6a8553399a0fbeaab0e9f43f    #Github clientSecret
+  repo: lizhizhi7.github.io    #仓库名称
+  owner: lizhizhi7    #repo拥有者
+  admin: lizhizhi7    #repo管理员
+  distractionFreeMode: true #是否启用类似FB的阴影遮罩
+
+# Gems from PR#40, to support local preview for Jekyll 3.0
+plugins: [jekyll-paginate]
+
+# Markdown&Highlighter settings
+# using kramdown and rouge for official support
+# http://jekyllrb.com/docs/configuration/#kramdown
+# https://github.blog/2016-02-01-github-pages-now-faster-and-simpler-with-jekyll-3-0/
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM       # use Github Flavored Markdown !important
+
+# Build setting
+permalink: pretty # https://jekyllrb.com/docs/permalinks/
+paginate: 10
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
+anchorjs: true    # if you want to customize anchor. check out line:181 of `post.html`
+
+# Analytics
+ba_track_id: b945c62a0417a859c3c7fbea0d9c29d3
+ga_track_id: 'UA-142225576-1'
