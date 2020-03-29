@@ -3,12 +3,12 @@
     "name": "Oliver's Blog",
     "icons": [
       {
-        "src": "../img/favicon.ico",
+        "src": "./img/favicon.ico",
         "sizes": "64x64 32x32 24x24 16x16",
         "type": "image/x-icon"
       },
       {
-        "src": "../img/apple-touch-icon.png",
+        "src": "./img/apple-touch-icon.png",
         "type": "image/png",
         "sizes": "200x200"
       }
