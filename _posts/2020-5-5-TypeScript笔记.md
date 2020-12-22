@@ -44,7 +44,7 @@ type SetUser = (name: string, age: number): void;
 
 interface 和 type 都可以拓展，并且两者并不是相互独立的，也就是说 interface 可以 extends type, type 也可以 extends interface 。 虽然效果差不多，但是两者语法不同。
 
-interface extends interface
+* interface extends interface
 
 ```ts
 interface Name { 
@@ -74,7 +74,7 @@ interface User extends Name {
 }
 ```
 
-type extends interface
+* type extends interface
 
 ```ts
 interface Name { 
