@@ -20,7 +20,8 @@ steps:
     image: ruby:3.0
     commands:
       - gem install bundler jekyll
-      - bundle install --path vendor/ruby
+      - bundle config set --local path 'vendor/ruby'
+      - bundle install
       - bundle exec jekyll build
   
   - name: rebuild-cache
@@ -38,7 +39,14 @@ steps:
 
   - name: deploy-south-cn
     image: node:15.13.0-alpine3.10
+    environment:
+      TENCENT_TEMP_SECRET_ID:
+        from_secret: TENCENT_TEMP_SECRET_ID
+      TENCENT_TEMP_SECRET_KEY:
+        from_secret: TENCENT_TEMP_SECRET_KEY
     commands:
+      - cd _site
+      - pwd
       - env
       - date
       - echo TENCENT_SECRET_ID=$TENCENT_TEMP_SECRET_ID >> .env
@@ -48,7 +56,7 @@ steps:
       - echo SERVERLESS_PLATFORM_VENDOR=tencent >> .env
       - echo SERVERLESS_PLATFORM_STAGE=$SERVERLESS_PLATFORM_STAGE >> .env
       - npm install -g serverless
-      - sls -v
+      - serverless info
 trigger:
   branch:
     - master
