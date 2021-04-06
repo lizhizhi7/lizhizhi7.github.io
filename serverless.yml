@@ -1,0 +1,14 @@
+component: website
+name: website-9xtjJjSHz
+org: '1255628083'
+app: blog-south-cn
+stage: prod
+inputs:
+  src:
+    src: ./
+    index: index.html
+    error: index.html
+  region: ap-guangzhou
+  bucketName: my-bucket
+  protocol: http
+  isAutoCiDeploy: false
