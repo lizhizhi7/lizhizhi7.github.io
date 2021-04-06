@@ -1,0 +1,26 @@
+language: ruby
+env:
+  global:
+    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+install: 
+  - gem install bundle
+  - bundle install
+script: 
+  - bundle exec jekyll build
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
+kind: pipeline
+type: docker
+name: build-jekyll-website
+
+steps:
+  - name: build-resource
+    image: ruby:3.0
+    commands:
+      - gem install bundler jekyll
+      - jekyll build
+
+trigger:
+  branch:
+    - master
