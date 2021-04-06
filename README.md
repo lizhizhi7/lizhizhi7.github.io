@@ -1,1 +1,1 @@
-[![Build Status](https://travis-ci.com/lizhizhi7/lizhizhi7.github.io.svg?branch=master)](https://travis-ci.com/lizhizhi7/lizhizhi7.github.io)
+[![Build Status](https://ci.minizhi.cn/api/badges/oliver/lizhizhi7.github.io/status.svg)](https://ci.minizhi.cn/oliver/lizhizhi7.github.io)

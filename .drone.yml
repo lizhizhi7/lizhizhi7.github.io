@@ -23,7 +23,26 @@ steps:
       - bundle config set --local path 'vendor/ruby'
       - bundle install
       - bundle exec jekyll build
-  
+
+  - name: deploy-south-cn
+    image: node:15.13.0-alpine3.10
+    environment:
+      TENCENT_TEMP_SECRET_ID:
+        from_secret: TENCENT_TEMP_SECRET_ID
+      TENCENT_TEMP_SECRET_KEY:
+        from_secret: TENCENT_TEMP_SECRET_KEY
+    commands:
+      - date
+      - echo TENCENT_SECRET_ID=$TENCENT_TEMP_SECRET_ID >> .env
+      - echo TENCENT_SECRET_KEY=$TENCENT_TEMP_SECRET_KEY >> .env
+      - echo TENCENT_TOKEN=$TENCENT_TEMP_TOKEN >> .env
+      - echo TENCENT_APP_ID=$TENCENT_APP_ID >> .env
+      - echo SERVERLESS_PLATFORM_VENDOR=tencent >> .env
+      - echo SERVERLESS_PLATFORM_STAGE=$SERVERLESS_PLATFORM_STAGE >> .env
+      - npm install -g serverless
+      - serverless info
+      - serverless deploy
+
   - name: rebuild-cache
     image: meltwater/drone-cache:dev
     settings:
@@ -37,26 +56,6 @@ steps:
       - name: cache
         path: /tmp/cache
 
-  - name: deploy-south-cn
-    image: node:15.13.0-alpine3.10
-    environment:
-      TENCENT_TEMP_SECRET_ID:
-        from_secret: TENCENT_TEMP_SECRET_ID
-      TENCENT_TEMP_SECRET_KEY:
-        from_secret: TENCENT_TEMP_SECRET_KEY
-    commands:
-      - cd _site
-      - pwd
-      - env
-      - date
-      - echo TENCENT_SECRET_ID=$TENCENT_TEMP_SECRET_ID >> .env
-      - echo TENCENT_SECRET_KEY=$TENCENT_TEMP_SECRET_KEY >> .env
-      - echo TENCENT_TOKEN=$TENCENT_TEMP_TOKEN >> .env
-      - echo TENCENT_APP_ID=$TENCENT_APP_ID >> .env
-      - echo SERVERLESS_PLATFORM_VENDOR=tencent >> .env
-      - echo SERVERLESS_PLATFORM_STAGE=$SERVERLESS_PLATFORM_STAGE >> .env
-      - npm install -g serverless
-      - serverless info
 trigger:
   branch:
     - master
