@@ -1,6 +1,5 @@
 component: website
 name: website-9xtjJjSHz
-org: '1255628083'
 app: blog-south-cn
 stage: prod
 inputs:
@@ -10,6 +9,6 @@ inputs:
     error: index.html
   region: ap-guangzhou
   bucketName: my-bucket
-  protocol: http
+  protocol: https
   replace: true # 是否覆盖式部署
   isAutoCiDeploy: false
