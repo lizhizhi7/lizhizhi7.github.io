@@ -1,26 +1,46 @@
-language: ruby
-env:
-  global:
-    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-install: 
-  - gem install bundle
-  - bundle install
-script: 
-  - bundle exec jekyll build
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
-
 kind: pipeline
 type: docker
 name: build-jekyll-website
 
 steps:
+  - name: restore-cache
+    image: meltwater/drone-cache:dev
+    settings:
+      backend: "filesystem"
+      restore: true
+      cache_key: '{{ .Repo.Name }}_{{ checksum "Gemfile" }}_{{ checksum "Gemfile.lock" }}_{{ arch }}_{{ os }}'
+      archive_format: "gzip"
+      mount:
+        - 'vendor'
+    volumes:
+      - name: cache
+        path: /meltwater-cache
+   
   - name: build-resource
     image: ruby:3.0
     commands:
       - gem install bundler jekyll
-      - jekyll build
+      - bundle install --path vendor/ruby
+      - bundle exec jekyll build
+  
+  - name: rebuild-cache
+    image: meltwater/drone-cache:dev
+    settings:
+      backend: "filesystem"
+      rebuild: true
+      cache_key: '{{ .Repo.Name }}_{{ checksum "Gemfile" }}_{{ checksum "Gemfile.lock" }}_{{ arch }}_{{ os }}'
+      archive_format: "gzip"
+      mount:
+        - 'vendor'
+    volumes:
+      - name: cache
+        path: /meltwater-cache
 
 trigger:
   branch:
     - master
+
+volumes:
+  - name: cache
+    host:
+      path: /ext-data/drone-cache
