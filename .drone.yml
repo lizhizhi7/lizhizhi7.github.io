@@ -35,6 +35,10 @@ steps:
         from_secret: BUCKET_NAME
       BUCKET_REGION:
         from_secret: BUCKET_REGION
+      PIC_BUCKET_NAME:
+        from_secret: PIC_BUCKET_NAME
+      PIC_BUCKET_REGION:
+        from_secret: PIC_BUCKET_REGION
     commands:
       - date
       - npm install

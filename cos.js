@@ -9,6 +9,12 @@ const DEBUG = process.env.DEBUG;
 const SOURCE_PATH = './_site';
 const MAX_UPLOAD_FILES = 2000;
 
+items = traverseDirSync(SOURCE_PATH, {
+    nodir: true,
+});
+console.log(items.length);
+return;
+
 var cos = new COS({
     SecretId: SECRET_ID,
     SecretKey: SECRET_KEY
@@ -19,7 +25,17 @@ cos.headBucket({
 }, function (err, data) {
     if (err) {
         console.error(err.error);
-        console.error('Bucket Not Exists!');
+        console.error('WebSite Bucket Not Exists!');
+        process.exit(1);
+    }
+});
+cos.headBucket({
+    Bucket: PIC_BUCKET_NAME,
+    Region: PIC_BUCKET_REGION,
+}, function (err, data) {
+    if (err) {
+        console.error(err.error);
+        console.error('Pic Bucket Not Exists!');
         process.exit(1);
     }
 });
@@ -28,13 +44,21 @@ let FILE_NUMBER = 0;
 const uploadFiles = async (items) => {
     // First Call.
     if (!items) {
-        items = traverseDirSync(SOURCE_PATH, { nodir: true });
+        items = traverseDirSync(SOURCE_PATH, {
+            nodir: true,
+            filter: ({ path, stats }) => {
+                if (!stats.isDirectory() && path.indexOf('/img/background-') > 0) {
+                    return false
+                }
+                return true;
+            }
+        });
         console.log("Files Counting:", items.length);
         FILE_NUMBER = items.length;
     }
     // Upload Successfully.
-    if(items.length == 0) {
-        console.log("Uploading Successfully!");
+    if (items.length == 0) {
+        console.log("Files Uploading Successfully!");
         return;
     }
     let key;
@@ -61,13 +85,64 @@ const uploadFiles = async (items) => {
     try {
         await Promise.all(promises);
     } catch (err) {
-        console.error(`Uploading Error`, err);
+        console.error(`Files Uploading Error`, err);
     } finally {
-        console.log(`Progress: ${parseInt((1 - items.length / FILE_NUMBER) * 100)}%`);
+        console.log(`Files Progress: ${parseInt((1 - items.length / FILE_NUMBER) * 100)}%`);
         await uploadFiles(items);
     }
 }
 
+let PIC_NUMBER = 0;
+const uploadPics = async (items) => {
+    // First Call.
+    if (!items) {
+        items = traverseDirSync(SOURCE_PATH, {
+            nodir: true,
+            filter: ({ path, stats }) => {
+                if (!stats.isDirectory() && path.indexOf('/img/background-') > 0) {
+                    return true;
+                }
+                return false;
+            }
+        });
+        console.log("Pics Counting:", items.length);
+        PIC_NUMBER = items.length;
+    }
+    // Upload Successfully.
+    if (items.length == 0) {
+        console.log("Pics Uploading Successfully!");
+        return;
+    }
+    let key;
+    const promises = [];
+
+    items.splice(0, MAX_UPLOAD_FILES).forEach((item) => {
+        key = path.relative(SOURCE_PATH, item.path);
+        if (path.sep === '\\') {
+            key = key.replace(/\\/g, '/');
+        }
+        const itemParams = {
+            Bucket: PIC_BUCKET_NAME,
+            Region: PIC_BUCKET_REGION,
+            Key: key,
+            Body: fs.createReadStream(item.path),
+            onProgress: (progressData) => {
+                if (DEBUG) {
+                    console.log(filePath, JSON.stringify(progressData));
+                }
+            },
+        };
+        promises.push(cos.putObject(itemParams));
+    });
+    try {
+        await Promise.all(promises);
+    } catch (err) {
+        console.error(`Pics Uploading Error`, err);
+    } finally {
+        console.log(`Pics Progress: ${parseInt((1 - items.length / FILE_NUMBER) * 100)}%`);
+        await uploadPics(items);
+    }
+}
 
 /**
  * Read filesystem recursively.
@@ -114,3 +189,4 @@ function traverseDirSync(dir, opts, ls) {
 }
 console.log("Uploading Start");
 uploadFiles();
+uploadPics();
