@@ -43,7 +43,7 @@ const uploadFiles = async (items) => {
         items = traverseDirSync(SOURCE_PATH, {
             nodir: true,
             filter: ({ path, stats }) => {
-                if (stats.isDirectory() || (!stats.isDirectory() && path.indexOf('/img/background-') > 0)) {
+                if (!stats.isDirectory() && path.indexOf('/img/background-') > 0) {
                     return false
                 }
                 return true;
@@ -95,7 +95,7 @@ const uploadPics = async (items) => {
         items = traverseDirSync(SOURCE_PATH, {
             nodir: true,
             filter: ({ path, stats }) => {
-                if (!stats.isDirectory() && path.indexOf('/img/background-') > 0) {
+                if (stats.isDirectory() || (!stats.isDirectory() && path.indexOf('/img/background-') > 0)) {
                     return true;
                 }
                 return false;
