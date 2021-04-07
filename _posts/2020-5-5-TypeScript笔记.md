@@ -1,7 +1,6 @@
 ---
 layout:     post
 title:      TypeScript笔记
-subtitle:   TypeScript
 date:       2020-5-5
 author:     Oliver Li
 header-img: img/background-ts.png

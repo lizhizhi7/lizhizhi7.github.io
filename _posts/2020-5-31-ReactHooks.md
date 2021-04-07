@@ -1,7 +1,6 @@
 ---
 layout:     post
 title:      React Hooks
-subtitle:   React Hooks
 date:       2020-5-31
 author:     Oliver Li
 header-img: img/background-ts.png

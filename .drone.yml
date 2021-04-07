@@ -19,7 +19,7 @@ steps:
   - name: build-resource
     image: ruby:3.0
     commands:
-      - gem install bundler jekyll
+      - gem install bundler
       - bundle config set --local path 'vendor/ruby'
       - bundle install
       - bundle exec jekyll build
