@@ -27,19 +27,14 @@ steps:
   - name: deploy-south-cn
     image: node:15.13.0-alpine3.10
     environment:
-      TENCENT_SLS_SECRET_ID:
-        from_secret: TENCENT_SLS_SECRET_ID
-      TENCENT_SLS_SECRET_KEY:
-        from_secret: TENCENT_SLS_SECRET_KEY
+      TENCENT_COS_SECRET_ID:
+        from_secret: TENCENT_COS_SECRET_ID
+      TENCENT_COS_SECRET_KEY:
+        from_secret: TENCENT_COS_SECRET_KEY
     commands:
       - date
-      - echo TENCENT_SECRET_ID=$TENCENT_SLS_SECRET_ID >> .env
-      - echo TENCENT_SECRET_KEY=$TENCENT_SLS_SECRET_KEY >> .env
-      - echo SERVERLESS_PLATFORM_VENDOR=tencent >> .env
-      - echo SERVERLESS_PLATFORM_STAGE=$SERVERLESS_PLATFORM_STAGE >> .env
-      - npm install -g serverless
-      - serverless info
-      - serverless deploy
+      - npm install
+      - node cos.js
 
   - name: rebuild-cache
     image: meltwater/drone-cache:dev
