@@ -9,12 +9,6 @@ const DEBUG = process.env.DEBUG;
 const SOURCE_PATH = './_site';
 const MAX_UPLOAD_FILES = 2000;
 
-items = traverseDirSync(SOURCE_PATH, {
-    nodir: true,
-});
-console.log(items.length);
-return;
-
 var cos = new COS({
     SecretId: SECRET_ID,
     SecretKey: SECRET_KEY
