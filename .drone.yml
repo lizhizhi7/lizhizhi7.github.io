@@ -31,6 +31,10 @@ steps:
         from_secret: TENCENT_COS_SECRET_ID
       TENCENT_COS_SECRET_KEY:
         from_secret: TENCENT_COS_SECRET_KEY
+      BUCKET_NAME:
+        from_secret: BUCKET_NAME
+      BUCKET_REGION:
+        from_secret: BUCKET_REGION
     commands:
       - date
       - npm install
