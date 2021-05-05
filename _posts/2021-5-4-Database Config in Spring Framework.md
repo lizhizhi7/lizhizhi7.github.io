@@ -33,6 +33,14 @@ We can consider Spring Data as a new ORM-API Spring proposed.
 ### MyBatis
 MyBatis is one of the most commonly used open-source frameworks for implementing SQL database access in Java applications.
 
+MyBatis does four main things:
+1. It executes SQL safely and abstracts away all the intricacies of JDBC
+2. It maps parameter objects to JDBC prepared statement parameters
+3. It maps rows in JDBC result sets to objects
+4. It can generate dynamic SQL with special tags in XML, or through the use of various templating engines
+
+This library takes full advantage of the first three capabilities in MyBatis and essentially becomes another templating engine for generating dynamic SQL.
+
 ### Hibernate
 Hibernate is one of the implementations of JPA.
 
