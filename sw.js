@@ -1,17 +1,16 @@
 /* ===========================================================
  * sw.js
  * ===========================================================
- * Copyright 2016 @huxpro
+ * Copyright 2017 @huxpro @lizhizhi7
  * Licensed under Apache 2.0 
  * Register service worker.
  * ========================================================== */
 
-const PRECACHE = 'precache-v1';
+const PRE_CACHE_TAG = 'precache-v1';
 const RUNTIME = 'runtime';
 const HOSTNAME_WHITELIST = [
   self.location.hostname,
   "minizhi.cn",
-  "yanshuo.io",
   "cdnjs.cloudflare.com"
 ]
 
@@ -70,15 +69,15 @@ const getRedirectUrl = (req) => {
 
 /**
  *  @Lifecycle Install
- *  Precache anything static to this version of your app.
+ *  Pre-cache anything static to this version of your app.
  *  e.g. App Shell, 404, JS/CSS dependencies...
  *
- *  waitUntil() : installing ====> installed
- *  skipWaiting() : waiting(installed) ====> activating
+ *  waitUntil(somePromise): extend installing stage until somePromise is resolved
+ *  skipWaiting(): installed ====> activating
  */
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(PRECACHE).then(cache => {
+    caches.open(PRE_CACHE_TAG).then(cache => {
       return cache.add('offline.html')
       .then(self.skipWaiting())
       .catch(err => console.log(err))
@@ -89,12 +88,12 @@ self.addEventListener('install', e => {
 
 /**
  *  @Lifecycle Activate
- *  New one activated when old isnt being used.
+ *  New one activated when old isn't being used.
  *
  *  waitUntil(): activating ====> activated
  */
 self.addEventListener('activate',  event => {
-  console.log('service worker activated.')
+  console.log('service-worker activated.')
   event.waitUntil(self.clients.claim());
 });
 
@@ -107,7 +106,7 @@ self.addEventListener('activate',  event => {
  */
 self.addEventListener('fetch', event => {
   // logs for debugging
-  console.log(`fetch ${event.request.url}`)
+  console.log(`sw fetch ${event.request.url}`)
   //console.log(` - type: ${event.request.type}; destination: ${event.request.destination}`)
   //console.log(` - mode: ${event.request.mode}, accept: ${event.request.headers.get('accept')}`)
 

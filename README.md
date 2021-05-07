@@ -10,3 +10,8 @@ After install ruby and bundler.
 
 * use `bundle install` to install some needed gems.
 * run `bundle exec jekyll s --incremental` to start the preview server.
+
+## About COS
+
+Upload All files except `background-*` files in `img` folder.  
+Upload All images begin with `background`.
