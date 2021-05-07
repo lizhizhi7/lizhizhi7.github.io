@@ -50,6 +50,8 @@ Hibernate is one of the implementations of JPA.
 
 * Spring Data JDBC is a group of tools to interact with JDBC directly.
 
+[Reference](https://docs.spring.io/spring-data/jdbc/docs/1.0.10.RELEASE/reference/html/#jdbc.repositories)
+
 ### Spring Data JPA
 
 * Spring Data JPA is not a JPA provider, it’s a library which adds extra layer on JPA provider.

@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      SQL 索引
-subtitle:   SQL index
+title:      MySQL Index
+subtitle:   有关 MySQL 索引
 date:       2021-04-19
 author:     Oliver Li
 catalog:    true
